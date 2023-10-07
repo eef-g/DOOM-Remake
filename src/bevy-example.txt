@@ -1,0 +1,64 @@
+use bevy::prelude::*;
+
+
+fn main() {
+    App::new()
+        // Add plugins to the app (For this example we use the default plugins)
+        .add_plugins((DefaultPlugins, HelloPlugin))
+        // You use .run() to begin the application, but can add stuff before it
+        .run();
+}
+
+
+// Systems examples 
+
+// This is an example system of creating entities in the world
+fn add_people(mut commands: Commands){
+    commands.spawn((Person, Name("Ethan Gray".to_string())));
+    commands.spawn((Person, Name("Kate Droscher".to_string())));
+}
+
+// This is an example system of querying a specific entitiy in the world
+fn greet_people(
+    time: Res<Time>, mut timer: ResMut<GreetTimer>, query: Query<&Name, With<Person>>) {
+    // Update the timer with the timer elapsed since the last update -- If timer finished, say
+    // hello
+
+    if timer.0.tick(time.delta()).just_finished(){
+        for name in &query {
+            println!("Hello {}!", name.0);
+        }
+    }
+}
+
+
+// Example resources -- This example we just have time to keep track of the time that has elapsed
+#[derive(Resource)]
+struct GreetTimer(Timer);
+
+
+// Example components -- Notice how there's no info inside of them
+#[derive(Component)]
+struct Person;
+
+// Make name it's own component because other entities besides a Person might have a name
+#[derive(Component)]
+struct Name(String);
+
+
+// Example Plugin Creation -- All features in Bevy are considered plugins so you can enable and
+// disable what you want with ease
+
+// We put what we used to have in our app creation into this HelloPlugin so that way we can just
+// add everything with one line instead of the multiple lines we had earlier
+pub struct HelloPlugin;
+impl Plugin for HelloPlugin {
+    fn build(&self, app: &mut App) {
+        // Add a timer resource
+        app.insert_resource(GreetTimer(Timer::from_seconds(2.0, TimerMode::Repeating)));
+
+        // This is where we add things to the App
+        app.add_systems(Startup, add_people)
+            .add_systems(Update, greet_people);
+    }
+}

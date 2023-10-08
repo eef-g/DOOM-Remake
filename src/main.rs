@@ -25,7 +25,7 @@ fn main() {
             .build(),
         )
         .insert_resource(gr::Money(100.0))
-        .add_systems(Startup, gs::setup)
+        .add_systems(Startup, (gs::spawn_level, gs::setup))
         .add_systems(Update, 
             (
                 // Player systems

@@ -1,8 +1,23 @@
 use bevy::prelude::*;
 use rand::Rng;
+use crate::plugins::{Player, Money};
 
-use crate::resources::Money;
-use crate::components::{Player, Pig};
+pub struct PigPlugin;
+
+impl Plugin for PigPlugin {
+    fn build(&self, app: &mut App) {
+        app
+            .add_systems(Update, (spawn_pig, pig_lifetime, pig_move));
+    }
+}
+
+#[derive(Component)]
+pub struct Pig {
+    pub lifetime: Timer,
+    pub movetime: Timer,
+    pub movedir: i32,
+}
+
 
 // This will spawn a pig
 pub fn spawn_pig(
@@ -27,7 +42,14 @@ pub fn spawn_pig(
         commands.spawn((
             SpriteBundle {
                 texture,
-                transform: *player_transform,
+                transform: Transform {
+                    translation: Vec3::new(
+                                     player_transform.translation.x + 15.0,
+                                     player_transform.translation.y + 15.0,
+                                     0.0
+                                     ),
+                    ..default()
+                },
                 ..default()
             },
             Pig {
@@ -82,7 +104,10 @@ pub fn pig_move(
                 transform.translation.x += move_amount;
                  sprite.flip_x = false;
             },
-            _ => transform.translation.x += move_amount,
+            _ => {
+                transform.translation.x += move_amount;
+                sprite.flip_x = false;
+            }
         }
     }
 }

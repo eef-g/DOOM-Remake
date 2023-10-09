@@ -1,12 +1,6 @@
 use bevy::prelude::*;
 
-mod systems;
-mod components;
-mod resources;
-
-use crate::systems as gs;
-use crate::resources as gr;
-
+mod plugins;
 
 fn main() {
     App::new()
@@ -24,14 +18,13 @@ fn main() {
             })
             .build(),
         )
-        .insert_resource(gr::Money(100.0))
-        .add_systems(Startup, (gs::spawn_level, gs::setup))
-        .add_systems(Update, 
-            (
-                // Player systems
-                gs::character_movement,
-                // Pig systems
-                gs::spawn_pig, gs::pig_lifetime, gs::pig_move
-            ))
+        .add_plugins((
+                // Debug plugin goes first -- comment out if not wanting to debug
+                plugins::DebugPlugin,
+                plugins::PlayerPlugin, 
+                plugins::PigPlugin 
+                // Commenting out the level plugin for now
+                //plugins::LevelPlugin
+        ))
         .run();
 }

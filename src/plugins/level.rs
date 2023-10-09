@@ -1,7 +1,24 @@
 use bevy::prelude::*;
-use crate::components as gc;
 use rand::Rng;
 
+pub struct LevelPlugin;
+
+impl Plugin for LevelPlugin{
+    fn build(&self, app: &mut App) {
+        app
+            .add_systems(Startup, spawn_level);
+    }
+}
+
+// Component structs
+#[derive(Component)]
+pub struct Tile{}
+
+#[derive(Component)]
+pub struct Level {}
+
+
+// Systems 
 
 pub fn spawn_level(
    mut commands: Commands,
@@ -10,8 +27,8 @@ pub fn spawn_level(
     let texture_paths = ["ground.png", "wall.png"];
     let mut rng = rand::thread_rng();
 
-    for x in 0..100{
-        for y in 0..100{
+    for x in 0..5{
+        for y in 0..5{
             let index = rng.gen_range(0..2);
             let texture = asset_server.load(texture_paths[index]);
             commands.spawn((
@@ -23,7 +40,7 @@ pub fn spawn_level(
                     },
                     ..default()
                 },
-                gc::Tile{}
+                Tile{}
             ));  
         } 
     }

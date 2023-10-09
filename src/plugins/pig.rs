@@ -1,17 +1,25 @@
 use bevy::prelude::*;
+use bevy::sprite::collide_aabb::collide;
 use rand::Rng;
 use crate::plugins::{Player, Money};
+
+use super::TileCollider;
 
 pub struct PigPlugin;
 
 impl Plugin for PigPlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(Update, (spawn_pig, pig_lifetime, pig_move));
+            .add_systems(Update, (spawn_pig, pig_lifetime, pig_move))
+            .register_type::<Pig>(); // This register type lets the debug menu see it ONLY after
+                                     // deriving default and reflect & reflecting the component
     }
 }
 
-#[derive(Component)]
+
+// Doing this allows us to edit the component's values with the debug menu
+#[derive(Component, Default, Reflect)]
+#[reflect(Component)]
 pub struct Pig {
     pub lifetime: Timer,
     pub movetime: Timer,
@@ -56,7 +64,8 @@ pub fn spawn_pig(
                 lifetime: Timer::from_seconds(10.0, TimerMode::Once),
                 movetime: Timer::from_seconds(1.0, TimerMode::Once),
                 movedir: 0,
-            }
+            },
+            Name::new("Pig")
         ));
     }
 }
@@ -82,32 +91,59 @@ pub fn pig_lifetime(
 pub fn pig_move(
     time: Res<Time>,
     mut pigs: Query<(&mut Transform, &mut Pig, &mut Sprite)>,
+   wall_query: Query<&Transform, (With<TileCollider>, Without<Pig>)>
 ) {
     let mut rng = rand::thread_rng();
     for (mut transform, mut pig, mut sprite) in &mut pigs {
         pig.movetime.tick(time.delta());
         if pig.movetime.finished(){
             pig.movedir = rng.gen_range(0..6);
-            let new_time = rng.gen_range(0.0..2.5);
+            let new_time = rng.gen_range(1.0..2.5);
             pig.movetime = Timer::from_seconds(new_time, TimerMode::Once);
         }
         let move_amount = 100.0 * time.delta_seconds();
+        let mut delta_x = 0.0;
+        let mut delta_y = 0.0;
         match pig.movedir { 
             0 => return,
-            1 => transform.translation.y -= move_amount,
-            2 => transform.translation.y += move_amount,
+            1 => delta_y -= move_amount,
+            2 => delta_y += move_amount,
             3 => {
-                transform.translation.x -= move_amount;
+                delta_x -= move_amount;
                 sprite.flip_x = true;
             },
             4 => {
-                transform.translation.x += move_amount;
-                 sprite.flip_x = false;
+                delta_x += move_amount;
+                sprite.flip_x = false;
             },
             _ => {
                 transform.translation.x += move_amount;
                 sprite.flip_x = false;
             }
         }
+        let target = Vec3::new(delta_x, 0.0, 0.0);
+        if !collision_check(target, &wall_query) {
+            transform.translation = target;
+        }
+
+        let target = Vec3::new(0.0, delta_y, 0.0);
+        if !collision_check(target, &wall_query) {
+            transform.translation = target;
+        }
     }
+}
+
+fn collision_check(target_pos: Vec3, wall_query: &Query<&Transform, (With<TileCollider>, Without<Pig>)>) -> bool{
+    for wall_transform in wall_query.iter() {
+        let collision = collide(
+            target_pos, 
+            Vec2::splat(16.0),
+            wall_transform.translation,
+            Vec2::splat(16.0) // This has to be <= the tile_size that we are using
+        );
+        if collision.is_some() {
+            return true;
+        }
+    }
+    return false;
 }

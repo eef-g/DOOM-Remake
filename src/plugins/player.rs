@@ -1,4 +1,6 @@
-use bevy::{prelude::*, render::camera::ScalingMode};
+use bevy::{prelude::*, render::camera::ScalingMode, sprite::collide_aabb::collide};
+
+use super::TileCollider;
 
 
 pub struct PlayerPlugin;
@@ -41,11 +43,16 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
         SpriteBundle {
             sprite: Sprite { ..default() },
             texture,
+            transform: Transform {
+                translation: Vec3::new(50.0, 50.0, 1.0),
+                ..default()
+            },
             ..default()
         },
         Player{
             speed: 100.0,
-        }
+        },
+        Name::new("Player")
     ))
     // Add the camera as a child so that way it automatically follows the player
     .with_children(|parent| {
@@ -55,26 +62,57 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
 
 pub fn player_movement(
     mut characters: Query<(&mut Transform, &Player, &mut Sprite)>,
+    wall_query: Query<&Transform, (With<TileCollider>, Without<Player>)>,
     input: Res<Input<KeyCode>>,
     time: Res<Time>,
 ) {
     for (mut transform, player, mut sprite) in &mut characters {
         let move_amount = player.speed * time.delta_seconds();
+        let mut x_delta = 0.0;
+        let mut y_delta = 0.0;
+
         if input.pressed(KeyCode::W) {
-            transform.translation.y += move_amount;
+            y_delta += move_amount;
         }
         if input.pressed(KeyCode::S) {
-            transform.translation.y -= move_amount;
+            y_delta -= move_amount;
         }
         if input.pressed(KeyCode::D) {
-            transform.translation.x += move_amount;
+            x_delta += move_amount;
             sprite.flip_x = false;
             
         }
         if input.pressed(KeyCode::A) {
-            transform.translation.x -= move_amount;
+            x_delta -= move_amount;
             sprite.flip_x = true;
+        }
+
+        let target = transform.translation + Vec3::new(x_delta, 0.0, 0.0);
+        if !collision_check(target, &wall_query) {
+            transform.translation = target;
+        }
+
+        let target = transform.translation + Vec3::new(0.0, y_delta, 0.0);
+        if !collision_check(target, &wall_query) {
+            transform.translation = target;
         }
     }
 }
 
+pub fn collision_check(
+    target_pos: Vec3,
+    wall_query: &Query<&Transform, (With<TileCollider>, Without<Player>)>
+) -> bool{ 
+    for wall_transform in wall_query.iter() {
+        let collision = collide(
+            target_pos, 
+            Vec2::splat(16.0 * 0.9),
+            wall_transform.translation,
+            Vec2::splat(16.0) // This has to be <= the tile_size that we are using
+        );
+        if collision.is_some() {
+            return true;
+        }
+    }
+    return false;
+}

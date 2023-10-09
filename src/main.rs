@@ -22,9 +22,10 @@ fn main() {
                 // Debug plugin goes first -- comment out if not wanting to debug
                 plugins::DebugPlugin,
                 plugins::PlayerPlugin, 
-                plugins::PigPlugin 
-                // Commenting out the level plugin for now
-                //plugins::LevelPlugin
+                plugins::PigPlugin,
+                // Commenting out the level plugin for now -- replacing w/ Tilemap
+                // plugins::LevelPlugin
+                plugins::TilemapPlugin
         ))
         .run();
 }

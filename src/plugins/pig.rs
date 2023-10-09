@@ -1,7 +1,6 @@
 use bevy::prelude::*;
-use bevy::sprite::collide_aabb::collide;
 use rand::Rng;
-use crate::plugins::{Player, Money};
+use crate::plugins::*;
 
 use super::TileCollider;
 
@@ -65,6 +64,11 @@ pub fn spawn_pig(
                 movetime: Timer::from_seconds(1.0, TimerMode::Once),
                 movedir: 0,
             },
+            Mob{
+                is_colliding: false,
+                target_delta_x: Vec3::new(0.0, 0.0, 0.0),
+                target_delta_y: Vec3::new(0.0, 0.0, 0.0)
+            },
             Name::new("Pig")
         ));
     }
@@ -90,11 +94,10 @@ pub fn pig_lifetime(
 
 pub fn pig_move(
     time: Res<Time>,
-    mut pigs: Query<(&mut Transform, &mut Pig, &mut Sprite)>,
-   wall_query: Query<&Transform, (With<TileCollider>, Without<Pig>)>
+    mut pigs: Query<(&mut Transform, &mut Pig, &mut Sprite, &mut Mob)>,
 ) {
     let mut rng = rand::thread_rng();
-    for (mut transform, mut pig, mut sprite) in &mut pigs {
+    for (mut transform, mut pig, mut sprite, mut mob) in &mut pigs {
         pig.movetime.tick(time.delta());
         if pig.movetime.finished(){
             pig.movedir = rng.gen_range(0..6);
@@ -117,33 +120,15 @@ pub fn pig_move(
                 sprite.flip_x = false;
             },
             _ => {
-                transform.translation.x += move_amount;
+                delta_x += move_amount;
                 sprite.flip_x = false;
             }
         }
-        let target = Vec3::new(delta_x, 0.0, 0.0);
-        if !collision_check(target, &wall_query) {
-            transform.translation = target;
-        }
-
-        let target = Vec3::new(0.0, delta_y, 0.0);
-        if !collision_check(target, &wall_query) {
+        mob.target_delta_x = Vec3::new(delta_x, 0.0, 0.0);
+        mob.target_delta_y = Vec3::new(0.0, delta_y, 0.0);
+        let target = mob.target_delta_y + mob.target_delta_x;
+        if !mob.is_colliding {
             transform.translation = target;
         }
     }
-}
-
-fn collision_check(target_pos: Vec3, wall_query: &Query<&Transform, (With<TileCollider>, Without<Pig>)>) -> bool{
-    for wall_transform in wall_query.iter() {
-        let collision = collide(
-            target_pos, 
-            Vec2::splat(16.0),
-            wall_transform.translation,
-            Vec2::splat(16.0) // This has to be <= the tile_size that we are using
-        );
-        if collision.is_some() {
-            return true;
-        }
-    }
-    return false;
 }

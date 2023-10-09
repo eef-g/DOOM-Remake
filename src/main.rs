@@ -21,8 +21,7 @@ fn main() {
         .add_plugins((
                 // Debug plugin goes first -- comment out if not wanting to debug
                 plugins::DebugPlugin,
-                plugins::PlayerPlugin, 
-                plugins::PigPlugin,
+                plugins::MobPlugin,
                 // Commenting out the level plugin for now -- replacing w/ Tilemap
                 // plugins::LevelPlugin
                 plugins::TilemapPlugin

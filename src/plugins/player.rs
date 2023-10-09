@@ -1,7 +1,7 @@
 use bevy::{prelude::*, render::camera::ScalingMode, sprite::collide_aabb::collide};
 
 use super::TileCollider;
-
+use crate::plugins::*;
 
 pub struct PlayerPlugin;
 
@@ -52,6 +52,11 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
         Player{
             speed: 100.0,
         },
+        Mob{
+            is_colliding: false,
+            target_delta_x: Vec3::splat(0.0),
+            target_delta_y: Vec3::splat(0.0)
+        },
         Name::new("Player")
     ))
     // Add the camera as a child so that way it automatically follows the player
@@ -61,12 +66,11 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
 }
 
 pub fn player_movement(
-    mut characters: Query<(&mut Transform, &Player, &mut Sprite)>,
-    wall_query: Query<&Transform, (With<TileCollider>, Without<Player>)>,
+    mut characters: Query<(&mut Transform, &Player, &mut Sprite, &mut Mob)>,
     input: Res<Input<KeyCode>>,
     time: Res<Time>,
 ) {
-    for (mut transform, player, mut sprite) in &mut characters {
+    for (mut transform, player, mut sprite, mut mob) in &mut characters {
         let move_amount = player.speed * time.delta_seconds();
         let mut x_delta = 0.0;
         let mut y_delta = 0.0;
@@ -86,33 +90,11 @@ pub fn player_movement(
             x_delta -= move_amount;
             sprite.flip_x = true;
         }
-
-        let target = transform.translation + Vec3::new(x_delta, 0.0, 0.0);
-        if !collision_check(target, &wall_query) {
-            transform.translation = target;
-        }
-
-        let target = transform.translation + Vec3::new(0.0, y_delta, 0.0);
-        if !collision_check(target, &wall_query) {
+        mob.target_delta_x = Vec3::new(x_delta, 0.0, 0.0);
+        mob.target_delta_y = Vec3::new(0.0, y_delta, 0.0);
+        let target = mob.target_delta_x + mob.target_delta_y;
+        if !mob.is_colliding {
             transform.translation = target;
         }
     }
-}
-
-pub fn collision_check(
-    target_pos: Vec3,
-    wall_query: &Query<&Transform, (With<TileCollider>, Without<Player>)>
-) -> bool{ 
-    for wall_transform in wall_query.iter() {
-        let collision = collide(
-            target_pos, 
-            Vec2::splat(16.0 * 0.9),
-            wall_transform.translation,
-            Vec2::splat(16.0) // This has to be <= the tile_size that we are using
-        );
-        if collision.is_some() {
-            return true;
-        }
-    }
-    return false;
 }

@@ -2,8 +2,6 @@ use bevy::prelude::*;
 use rand::Rng;
 use crate::plugins::*;
 
-use super::TileCollider;
-
 pub struct PigPlugin;
 
 impl Plugin for PigPlugin {
@@ -65,9 +63,8 @@ pub fn spawn_pig(
                 movedir: 0,
             },
             Mob{
-                is_colliding: false,
-                target_delta_x: Vec3::new(0.0, 0.0, 0.0),
-                target_delta_y: Vec3::new(0.0, 0.0, 0.0)
+                target_delta_x: Vec3::new(player_transform.translation.x + 15.0, player_transform.translation.y, 0.0),
+                target_delta_y: Vec3::new(player_transform.translation.x, player_transform.translation.y + 15.0, 0.0)
             },
             Name::new("Pig")
         ));
@@ -95,6 +92,7 @@ pub fn pig_lifetime(
 pub fn pig_move(
     time: Res<Time>,
     mut pigs: Query<(&mut Transform, &mut Pig, &mut Sprite, &mut Mob)>,
+    wall_query: Query<&Transform, (With<TileCollider>, Without<Mob>)>
 ) {
     let mut rng = rand::thread_rng();
     for (mut transform, mut pig, mut sprite, mut mob) in &mut pigs {
@@ -124,11 +122,6 @@ pub fn pig_move(
                 sprite.flip_x = false;
             }
         }
-        mob.target_delta_x = Vec3::new(delta_x, 0.0, 0.0);
-        mob.target_delta_y = Vec3::new(0.0, delta_y, 0.0);
-        let target = mob.target_delta_y + mob.target_delta_x;
-        if !mob.is_colliding {
-            transform.translation = target;
-        }
+        move_mob(&wall_query, &mut transform, &mut mob, delta_x, delta_y);
     }
 }

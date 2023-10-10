@@ -23,7 +23,6 @@ fn main() {
                 plugins::DebugPlugin,
                 plugins::MobPlugin,
                 // Commenting out the level plugin for now -- replacing w/ Tilemap
-                // plugins::LevelPlugin
                 plugins::TilemapPlugin
         ))
         .run();

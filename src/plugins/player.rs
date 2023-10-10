@@ -1,6 +1,5 @@
-use bevy::{prelude::*, render::camera::ScalingMode, sprite::collide_aabb::collide};
+use bevy::{prelude::*, render::camera::ScalingMode};
 
-use super::TileCollider;
 use crate::plugins::*;
 
 pub struct PlayerPlugin;
@@ -37,6 +36,8 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
         min_height: default_height * 2.5
     }; 
     let texture = asset_server.load("character.png");
+    let pos_x = Vec3::new(100.0, 0.0, 0.5);
+    let pos_y = Vec3::new(0.0, 50.0, 0.5);
     // Now spawn a SpriteBundle -- This is a collection of components that let us use a sprite
     commands.spawn(( // We have 2 parenthesis here since if we want multiple components then we
         // pass in a tuple of the components to the spawn function
@@ -44,7 +45,7 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
             sprite: Sprite { ..default() },
             texture,
             transform: Transform {
-                translation: Vec3::new(50.0, 50.0, 1.0),
+                translation: pos_x + pos_y,
                 ..default()
             },
             ..default()
@@ -53,9 +54,8 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
             speed: 100.0,
         },
         Mob{
-            is_colliding: false,
-            target_delta_x: Vec3::splat(0.0),
-            target_delta_y: Vec3::splat(0.0)
+            target_delta_x: pos_x,
+            target_delta_y: pos_y,
         },
         Name::new("Player")
     ))
@@ -67,34 +67,30 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
 
 pub fn player_movement(
     mut characters: Query<(&mut Transform, &Player, &mut Sprite, &mut Mob)>,
+    wall_query: Query<&Transform, (With<TileCollider>, Without<Mob>)>,
     input: Res<Input<KeyCode>>,
     time: Res<Time>,
 ) {
     for (mut transform, player, mut sprite, mut mob) in &mut characters {
         let move_amount = player.speed * time.delta_seconds();
-        let mut x_delta = 0.0;
-        let mut y_delta = 0.0;
+        let mut delta_x = 0.0;
+        let mut delta_y = 0.0;
 
         if input.pressed(KeyCode::W) {
-            y_delta += move_amount;
+            delta_y += move_amount;
         }
         if input.pressed(KeyCode::S) {
-            y_delta -= move_amount;
+            delta_y -= move_amount;
         }
         if input.pressed(KeyCode::D) {
-            x_delta += move_amount;
+            delta_x += move_amount;
             sprite.flip_x = false;
             
         }
         if input.pressed(KeyCode::A) {
-            x_delta -= move_amount;
+            delta_x -= move_amount;
             sprite.flip_x = true;
         }
-        mob.target_delta_x = Vec3::new(x_delta, 0.0, 0.0);
-        mob.target_delta_y = Vec3::new(0.0, y_delta, 0.0);
-        let target = mob.target_delta_x + mob.target_delta_y;
-        if !mob.is_colliding {
-            transform.translation = target;
-        }
+        move_mob(&wall_query, &mut transform, &mut mob, delta_x, delta_y);
     }
 }

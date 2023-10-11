@@ -19,11 +19,15 @@ fn main() {
             .build(),
         )
         .add_plugins((
-                // Debug plugin goes first -- comment out if not wanting to debug
-                plugins::DebugPlugin,
-                plugins::MobPlugin,
-                // Commenting out the level plugin for now -- replacing w/ Tilemap
-                plugins::TilemapPlugin
+            // Debug plugin goes first -- comment out if not wanting to debug
+            plugins::DebugPlugin,
+            
+            // Main Game Plugins
+            // plugins::MobPlugin,
+            // plugins::TilemapPlugin
+            
+            // Rapier Testing Plugins
+            plugins::RapierExamplePlugin
         ))
         .run();
 }

@@ -28,6 +28,7 @@ fn main() {
 
             // Main Game Plugins
             plugins::PlayerPlugin,
+            plugins::InteractionPlugin,
             // plugins::MobPlugin,
             plugins::TilemapPlugin
         ))

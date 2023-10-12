@@ -16,5 +16,6 @@ fn test_conversion_small_neg() {
 
 #[test]
 fn test_edge_cases() {
-    
+    let edge_pos = Vec2::new(104.66668, 62.928074);
+    assert_eq!(mouse_to_grid_pos(edge_pos), Vec2::new(112.0, 48.0));
 }

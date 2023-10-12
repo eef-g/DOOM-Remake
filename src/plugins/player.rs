@@ -1,4 +1,4 @@
-use bevy::{prelude::*, render::camera::ScalingMode, window::PrimaryWindow, input::mouse::MouseButtonInput};
+use bevy::{prelude::*, render::camera::ScalingMode};
 use bevy_rapier2d::prelude::*;
 
 pub struct PlayerPlugin;
@@ -9,7 +9,6 @@ impl Plugin for PlayerPlugin{
             .add_systems(Startup, spawn_player)
             .add_systems(Update, (
                 player_movement,
-                mouse_button_events
             ))
             .insert_resource(Money(100.0));
     }
@@ -125,59 +124,3 @@ pub fn player_movement(
 
 }
 
-// Mining mechanics
-fn mouse_button_events(
-    mut mousebtn_evr: EventReader<MouseButtonInput>,
-    q_windows: Query<&Window, With<PrimaryWindow>>,
-    camera_q: Query<(&Camera, &GlobalTransform)>,
-    rapier_context: Res<RapierContext>,
-    asset_server: Res<AssetServer>,
-    mut commands: Commands
-) {
-    use bevy::input::ButtonState;
-
-    for ev in mousebtn_evr.iter() {
-        match ev.state {
-            ButtonState::Pressed => {
-                let filter = QueryFilter::default();
-                let (camera, camera_transform) = camera_q.single();
-                let Some(mouse_position) = q_windows.single().cursor_position()
-                    .and_then(|cursor| camera.viewport_to_world_2d(camera_transform, cursor))
-                else {
-                    return 
-                };
-                rapier_context.intersections_with_point(mouse_position, filter, |entity| {
-                    let Some(mut entity_commands) = commands.get_entity(entity) else { todo!() }; {
-                        entity_commands.remove::<SpriteBundle>();
-                        entity_commands.remove::<Collider>();
-                        let texture = asset_server.load("ground.png");
-                        let new_translation = mouse_to_grid_pos(mouse_position);
-                        println!("{:?}", new_translation);
-                        entity_commands.insert(SpriteBundle {
-                            texture,
-                            transform: Transform {
-                                translation: Vec3::new(new_translation.x, new_translation.y, 0.0),
-                                ..default()
-                            },
-                            ..default()
-                        });
-                    }
-                    // Return `false` instead if we want to stop searching for other colliders containing this point.
-                    true
-                });
-            }
-            ButtonState::Released => {
-                println!("Mouse button release: {:?}", ev.button);
-            }
-        }
-    }
-}
-
-
-pub fn mouse_to_grid_pos(mouse_pos: Vec2) -> Vec2{
-    println!("Input position: {:?}", mouse_pos);
-    let new_x = ( (mouse_pos.x / 16.0) as i32 ) as f32 * 16.0;
-    let new_y = ( (mouse_pos.y / 16.0) as i32 ) as f32 * 16.0;
-
-    return Vec2::new(new_x, new_y);
-}

@@ -1,6 +1,8 @@
 use bevy::prelude::*;
+use bevy_rapier2d::prelude::*;
 use std::fs::File;
 use std::io::*;
+use rand::Rng;
 
 pub struct TilemapPlugin;
 
@@ -16,17 +18,13 @@ impl Plugin for TilemapPlugin {
 #[derive(Component)]
 pub struct Tile{}
 
-#[derive(Component)]
-pub struct TileCollider{}
-
-
-
 // Systems 
 fn create_simple_map(
     mut commands: Commands,
     asset_server: Res<AssetServer>
 ) {
-    let file = File::open("assets/map.txt").expect("No map file found");
+    let _ = generate_map(15);
+    let file = File::open("assets/saves/generated.txt").expect("No map file found");
     let tile_size = 16;
     let mut map = Vec::new();
 
@@ -55,6 +53,33 @@ fn create_simple_map(
         .push_children(&map);
 }
 
+fn generate_map(size: i32) -> Result<()> {
+    let path = "assets/saves/generated.txt".to_string();
+    let mut world_string = "".to_string();
+    let mut rng = rand::thread_rng();
+    for x in 0..size{
+        for y in 0..size {
+            info!("Generating tile [{},{}]", x, y);
+            if x == 0 || x == size-1 || y == 0 || y == size-1 {
+                world_string += "#";
+            } else {
+                let wall = rng.gen_bool(0.3);
+                if wall {
+                    world_string += "#";
+                } else {
+                    world_string += ".";
+                }
+            }
+        }
+        world_string += "\n";
+    }
+    let mut output = File::create(path)?;
+    write!(output, "{}", world_string)?;
+
+    Ok(())
+}
+
+
 fn decode_from_ascii(ch: char) -> String {
     match ch {
         '.' => return "ground.png".to_string(),
@@ -78,11 +103,9 @@ fn spawn_ascii_tile(commands: &mut Commands, asset_server: &Res<AssetServer>, ch
     )).id();
 
     if ch == '#' { 
-        commands.entity(tile).insert(TileCollider{});
-        commands.entity(tile).insert(Name::new("Wall Tile"));
+        commands.entity(tile).insert(Collider::cuboid(8.0, 8.0));
     }
-    else {
-        commands.entity(tile).insert(Name::new("Tile"));
-    }
+    let tile_name = format!("[{}, {}]", x, y);
+    commands.entity(tile).insert(Name::new(tile_name));
     return tile;
 }

@@ -1,6 +1,8 @@
 use bevy::prelude::*;
+use bevy_rapier2d::prelude::*;
 
 mod plugins;
+mod tests;
 
 fn main() {
     App::new()
@@ -19,15 +21,15 @@ fn main() {
             .build(),
         )
         .add_plugins((
+            // Add physics to the Game
+            RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(16.0),
             // Debug plugin goes first -- comment out if not wanting to debug
             plugins::DebugPlugin,
-            
+
             // Main Game Plugins
+            plugins::PlayerPlugin,
             // plugins::MobPlugin,
-            // plugins::TilemapPlugin
-            
-            // Rapier Testing Plugins
-            plugins::RapierExamplePlugin
+            plugins::TilemapPlugin
         ))
         .run();
 }

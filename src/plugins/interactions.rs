@@ -5,10 +5,50 @@ pub struct InteractionPlugin;
 
 impl Plugin for InteractionPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, mouse_button_events);
+        app.add_systems(Startup, spawn_grid_highlight);
+        app.add_systems(Update, (
+            mouse_button_events,
+            highlight_selected_grid
+        ));
     }
 }
 
+#[derive(Component)]
+pub struct SelectSquare{}
+
+pub fn spawn_grid_highlight(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>
+) {
+    let texture = asset_server.load("selection.png");
+    commands.spawn((
+        SpriteBundle {
+            texture,
+            ..default()
+        },
+        SelectSquare{},
+        Name::new("SelectSquare")
+    ));
+}
+
+// Showing selected grid square
+pub fn highlight_selected_grid(
+    q_windows: Query<&Window, With<PrimaryWindow>>,
+    camera_q: Query<(&Camera, &GlobalTransform)>,
+    mut cursor_event: EventReader<CursorMoved>,
+    mut select_q: Query<(&SelectSquare, &mut Transform)>
+) {
+    let (camera, camera_transform) = camera_q.single();
+    if let Some(position) = q_windows.single().cursor_position()
+        .and_then(|cursor| camera.viewport_to_world_2d(camera_transform, cursor)) {
+        for _ in cursor_event.iter() {
+            let translated_pos = mouse_to_grid_pos(Vec2::new(position.x, position.y));
+            for (_, mut transform) in &mut select_q {
+                transform.translation = Vec3::new(translated_pos.x, translated_pos.y, 0.0);
+            }
+        }
+    }
+}
 
 // Mining mechanics
 pub fn mouse_button_events(

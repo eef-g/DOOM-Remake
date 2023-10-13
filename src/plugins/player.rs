@@ -1,6 +1,5 @@
 use bevy::{prelude::*, render::camera::ScalingMode};
-
-use crate::plugins::*;
+use bevy_rapier2d::prelude::*;
 
 pub struct PlayerPlugin;
 
@@ -8,7 +7,9 @@ impl Plugin for PlayerPlugin{
     fn build(&self, app: &mut App) {
         app
             .add_systems(Startup, spawn_player)
-            .add_systems(Update, player_movement)
+            .add_systems(Update, (
+                player_movement,
+            ))
             .insert_resource(Money(100.0));
     }
 }
@@ -41,6 +42,9 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
     // Now spawn a SpriteBundle -- This is a collection of components that let us use a sprite
     commands.spawn(( // We have 2 parenthesis here since if we want multiple components then we
         // pass in a tuple of the components to the spawn function
+        RigidBody::KinematicPositionBased,
+        Collider::capsule(Vec2::new(0.0, 0.0), Vec2::new(0.0, 2.0), 5.0),
+        KinematicCharacterController::default(),
         SpriteBundle {
             sprite: Sprite { ..default() },
             texture,
@@ -53,10 +57,6 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
         Player{
             speed: 100.0,
         },
-        Mob{
-            target_delta_x: pos_x,
-            target_delta_y: pos_y,
-        },
         Name::new("Player")
     ))
     // Add the camera as a child so that way it automatically follows the player
@@ -64,15 +64,43 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
         parent.spawn(main_camera);
     });
 }
-
+//
+// pub fn player_movement(
+//     mut characters: Query<(&mut Transform, &Player, &mut Sprite, &mut Mob)>,
+//     wall_query: Query<&Transform, (With<TileCollider>, Without<Mob>)>,
+//     input: Res<Input<KeyCode>>,
+//     time: Res<Time>,
+// ) {
+//     for (mut transform, player, mut sprite, mut mob) in &mut characters {
+//         let move_amount = player.speed * time.delta_seconds();
+//         let mut delta_x = 0.0;
+//         let mut delta_y = 0.0;
+//
+//         if input.pressed(KeyCode::W) {
+//             delta_y += move_amount;
+//         }
+//         if input.pressed(KeyCode::S) {
+//             delta_y -= move_amount;
+//         }
+//         if input.pressed(KeyCode::D) {
+//             delta_x += move_amount;
+//             sprite.flip_x = false;
+//             
+//         }
+//         if input.pressed(KeyCode::A) {
+//             delta_x -= move_amount;
+//             sprite.flip_x = true;
+//         }
+//         move_mob(&wall_query, &mut transform, &mut mob, delta_x, delta_y);
+//     }
+// }
 pub fn player_movement(
-    mut characters: Query<(&mut Transform, &Player, &mut Sprite, &mut Mob)>,
-    wall_query: Query<&Transform, (With<TileCollider>, Without<Mob>)>,
-    input: Res<Input<KeyCode>>,
+    mut controllers: Query<( &mut KinematicCharacterController, &mut Sprite, &Player)>,
     time: Res<Time>,
+    input: Res<Input<KeyCode>>
 ) {
-    for (mut transform, player, mut sprite, mut mob) in &mut characters {
-        let move_amount = player.speed * time.delta_seconds();
+    for (mut controller, mut sprite, player) in controllers.iter_mut() {
+        let move_amount =  player.speed * time.delta_seconds();
         let mut delta_x = 0.0;
         let mut delta_y = 0.0;
 
@@ -91,6 +119,8 @@ pub fn player_movement(
             delta_x -= move_amount;
             sprite.flip_x = true;
         }
-        move_mob(&wall_query, &mut transform, &mut mob, delta_x, delta_y);
+        controller.translation = Some(Vec2::new(delta_x, delta_y));
     }
+
 }
+

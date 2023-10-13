@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use bevy::input::common_conditions::input_toggle_active;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
+use bevy_rapier2d::prelude::*;
 
 pub struct DebugPlugin;
 
@@ -10,7 +11,9 @@ impl Plugin for DebugPlugin {
             .add_systems(Update,
                 bevy::window::close_on_esc,
             )
-            .add_plugins(WorldInspectorPlugin::default().run_if(input_toggle_active(false, KeyCode::Tab)));
-
+            .add_plugins((
+                WorldInspectorPlugin::default().run_if(input_toggle_active(false, KeyCode::Tab)),
+                RapierDebugRenderPlugin::default()
+            ));
     }
 }

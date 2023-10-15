@@ -16,7 +16,15 @@ impl Plugin for TilemapPlugin {
 
 // Components
 #[derive(Component)]
-pub struct Tile{}
+pub struct Tile{
+    pub tile_type: TileType
+}
+
+pub enum TileType {
+    GROUND,
+    STONE,
+    BEDROCK
+}
 
 // Systems 
 fn create_simple_map(
@@ -61,7 +69,7 @@ fn generate_map(size: i32) -> Result<()> {
         for y in 0..size {
             info!("Generating tile [{},{}]", x, y);
             if x == 0 || x == size-1 || y == 0 || y == size-1 {
-                world_string += "#";
+                world_string += "b";
             } else {
                 let wall = rng.gen_bool(0.3);
                 if wall {
@@ -99,12 +107,31 @@ fn spawn_ascii_tile(commands: &mut Commands, asset_server: &Res<AssetServer>, ch
             },
             ..default()
         },
-        Tile{},
     )).id();
 
-    if ch == '#' { 
-        commands.entity(tile).insert(Collider::cuboid(8.0, 8.0));
+    // Run through different tile types and assign proper values
+    match ch {
+        // Stone
+        '#' => {
+            commands.entity(tile).insert(Tile{tile_type: TileType::STONE});
+            commands.entity(tile).insert(Collider::cuboid(8.0, 8.0));
+        },
+        // Bedrock
+        'b' => {
+            commands.entity(tile).insert(Tile{tile_type: TileType::BEDROCK});
+            commands.entity(tile).insert(Collider::cuboid(8.0, 8.0));
+        },
+        // Ground
+        '.' => {
+            commands.entity(tile).insert(Tile{tile_type: TileType::GROUND});
+        }
+        // Default
+        _ => {
+            commands.entity(tile).insert(Tile{tile_type: TileType::GROUND});
+        }
     }
+
+    // Final tile prep
     let tile_name = format!("[{}, {}]", x, y);
     commands.entity(tile).insert(Name::new(tile_name));
     return tile;

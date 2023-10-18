@@ -27,8 +27,11 @@ fn main() {
             plugins::DebugPlugin,
 
             // Main Game Plugins
+
+            // Right now, we're working on having the player sprite animated
             plugins::PlayerPlugin,
-            plugins::InteractionPlugin,
+
+            // plugins::InteractionPlugin,
             // plugins::MobPlugin,
             plugins::TilemapPlugin
         ))

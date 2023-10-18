@@ -9,6 +9,7 @@ impl Plugin for PlayerPlugin{
             .add_systems(Startup, spawn_player)
             .add_systems(Update, (
                 player_movement,
+                animate_sprite,
             ))
             .insert_resource(Money(100.0));
     }
@@ -20,6 +21,15 @@ pub struct Player {
     pub speed: f32,
 }
 
+#[derive(Component)]
+pub struct AnimationIndicies {
+    pub first: usize,
+    pub last: usize
+}
+
+#[derive(Component)]
+pub struct AnimationTimer(Timer);
+
 
 // Resources
 #[derive(Resource)]
@@ -27,7 +37,11 @@ pub struct Money(pub f32);
 
 
 // Systems
-pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
+pub fn spawn_player(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    mut texture_atlases: ResMut<Assets<TextureAtlas>>
+) {
     // Spawn a camera that lets us actually treat this like a game
     let mut main_camera = Camera2dBundle::default();
     let default_width = 256.00;
@@ -35,8 +49,16 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
     main_camera.projection.scaling_mode = ScalingMode::AutoMin{ 
         min_width: default_width * 2.5,
         min_height: default_height * 2.5
-    }; 
-    let texture = asset_server.load("character.png");
+    };
+
+    // Set up the player sprite sheets (For now, it's just the idle animation)
+    let texture_handle = asset_server.load("player_idle_sheet.png");
+    let texture_atlas = 
+        TextureAtlas::from_grid(texture_handle, Vec2::new(16.0, 19.0), 6, 1, None, None);
+    let texture_atlas_handle = texture_atlases.add(texture_atlas);
+    let animation_indicies = AnimationIndicies { first: 0, last: 5};
+
+    // Set the starting position of the player (Later, we'll read a save file)
     let pos_x = Vec3::new(100.0, 0.0, 0.5);
     let pos_y = Vec3::new(0.0, 50.0, 0.5);
     // Now spawn a SpriteBundle -- This is a collection of components that let us use a sprite
@@ -45,15 +67,17 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
         RigidBody::KinematicPositionBased,
         Collider::capsule(Vec2::new(0.0, 0.0), Vec2::new(0.0, 2.0), 5.0),
         KinematicCharacterController::default(),
-        SpriteBundle {
-            sprite: Sprite { ..default() },
-            texture,
-            transform: Transform {
+        SpriteSheetBundle {
+            texture_atlas: texture_atlas_handle,
+            sprite: TextureAtlasSprite::new(animation_indicies.first),
+            transform: Transform { 
                 translation: pos_x + pos_y,
                 ..default()
             },
             ..default()
         },
+        animation_indicies,
+        AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
         Player{
             speed: 100.0,
         },
@@ -64,38 +88,30 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
         parent.spawn(main_camera);
     });
 }
-//
-// pub fn player_movement(
-//     mut characters: Query<(&mut Transform, &Player, &mut Sprite, &mut Mob)>,
-//     wall_query: Query<&Transform, (With<TileCollider>, Without<Mob>)>,
-//     input: Res<Input<KeyCode>>,
-//     time: Res<Time>,
-// ) {
-//     for (mut transform, player, mut sprite, mut mob) in &mut characters {
-//         let move_amount = player.speed * time.delta_seconds();
-//         let mut delta_x = 0.0;
-//         let mut delta_y = 0.0;
-//
-//         if input.pressed(KeyCode::W) {
-//             delta_y += move_amount;
-//         }
-//         if input.pressed(KeyCode::S) {
-//             delta_y -= move_amount;
-//         }
-//         if input.pressed(KeyCode::D) {
-//             delta_x += move_amount;
-//             sprite.flip_x = false;
-//             
-//         }
-//         if input.pressed(KeyCode::A) {
-//             delta_x -= move_amount;
-//             sprite.flip_x = true;
-//         }
-//         move_mob(&wall_query, &mut transform, &mut mob, delta_x, delta_y);
-//     }
-// }
+
+
+pub fn animate_sprite(
+    time: Res<Time>,
+    mut query: Query<(
+        &AnimationIndicies,
+        &mut AnimationTimer,
+        &mut TextureAtlasSprite,
+    )>
+) {
+    for (indicies, mut timer, mut sprite) in &mut query {
+        timer.0.tick(time.delta());
+        if timer.0.just_finished() {
+            sprite.index = if sprite.index == indicies.last {
+                indicies.first
+            } else {
+                sprite.index + 1
+            };
+        }
+    }
+}
+
 pub fn player_movement(
-    mut controllers: Query<( &mut KinematicCharacterController, &mut Sprite, &Player)>,
+    mut controllers: Query<( &mut KinematicCharacterController, &mut TextureAtlasSprite, &Player)>,
     time: Res<Time>,
     input: Res<Input<KeyCode>>
 ) {

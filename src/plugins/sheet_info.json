@@ -1,0 +1,104 @@
+{
+  "Animations": {
+    "Walk": {
+      "Offset": 0,
+      "Frames": 7,
+      "Timer": 0.15
+    },
+    "Carry": {
+      "Offset": 8,
+      "Frames": 8,
+      "Timer": 0.15
+    },
+    "Idle": {
+      "Offset": 15,
+      "Frames": 6,
+      "Timer": 0.15
+    },
+    "Watering": {
+      "Offset": 21,
+      "Frames": 5,
+      "Timer": 0.15
+    },
+    "Hit": {
+      "Offset": 26,
+      "Frames": 6,
+      "Timer": 0.15
+    },
+    "Death": {
+      "Offset": 32,
+      "Frames": 8,
+      "Timer": 0.15
+    },
+    "Doing": {
+      "Offset": 40,
+      "Frames": 8,
+      "Timer": 0.15
+    },
+    "Running": {
+      "Offset": 48,
+      "Frames": 8,
+      "Timer": 0.15
+    },
+    "Jumping": {
+      "Offset": 56,
+      "Frames": 7,
+      "Timer": 0.15
+    },
+    "Rolling": {
+      "Offset": 63,
+      "Frames": 10,
+      "Timer": 0.15
+    },
+    "Axe": {
+      "Offset": 73,
+      "Frames": 10,
+      "Timer": 0.15
+    },
+    "Pickaxe": {
+      "Offset": 83,
+      "Frames": 10,
+      "Timer": 0.15
+    },
+    "Swimming": {
+      "Offset": 93,
+      "Frames": 4,
+      "Timer": 0.15
+    },
+    "Hammer": {
+      "Offset": 97,
+      "Frames": 23,
+      "Timer": 0.15
+    },
+    "Sword": {
+      "Offset": 110,
+      "Frames": 10,
+      "Timer": 0.15
+    },
+    "Casting": {
+      "Offset": 120,
+      "Frames": 15,
+      "Timer": 0.15
+    },
+    "Waiting": {
+      "Offset": 135,
+      "Frames": 8,
+      "Timer": 0.15
+    },
+    "Caught": {
+      "Offset": 143,
+      "Frames": 13,
+      "Timer": 0.15
+    },
+    "Reeling": {
+      "Offset": 156,
+      "Frames": 10,
+      "Timer": 0.15
+    },
+    "Shovel": {
+      "Offset": 166,
+      "Frames": 13,
+      "Timer": 0.15
+    }
+  }
+}

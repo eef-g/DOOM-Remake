@@ -35,8 +35,35 @@ pub struct AnimationTimer(Timer);
 #[derive(Resource)]
 pub struct Money(pub f32);
 
+#[derive(Resource)]
+pub struct PlayerStatus(pub PlayerState);
+
 
 // Systems
+//
+pub enum PlayerState {
+    WALK,
+    CARRY,
+    IDLE,
+    WATERING,
+    HIT,
+    DEATH,
+    DOING,
+    RUNNING,
+    JUMPING,
+    ROLLING,
+    AXE,
+    PICKAXE,
+    SWIMMING,
+    HAMMER,
+    SWORD,
+    CASTING,
+    WAITING,
+    CAUGHT,
+    REELING,
+    SHOVEL
+}
+
 pub fn spawn_player(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
@@ -52,9 +79,9 @@ pub fn spawn_player(
     };
 
     // Set up the player sprite sheets (For now, it's just the idle animation)
-    let texture_handle = asset_server.load("player_idle_sheet.png");
+    let texture_handle = asset_server.load("character_sheet.png");
     let texture_atlas = 
-        TextureAtlas::from_grid(texture_handle, Vec2::new(16.0, 19.0), 6, 1, None, None);
+        TextureAtlas::from_grid(texture_handle, Vec2::new(64.0, 64.0), 23, 20, None, None);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
     let animation_indicies = AnimationIndicies { first: 0, last: 5};
 
@@ -77,7 +104,7 @@ pub fn spawn_player(
             ..default()
         },
         animation_indicies,
-        AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
+        AnimationTimer(Timer::from_seconds(0.2, TimerMode::Repeating)),
         Player{
             speed: 100.0,
         },
@@ -140,3 +167,8 @@ pub fn player_movement(
 
 }
 
+pub fn animation_swap(
+    status: ResMut<PlayerStatus>
+) {
+    // Use serde to read the JSON file and get the correct response
+}

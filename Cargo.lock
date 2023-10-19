@@ -3426,7 +3426,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "the_caverns"
+name = "the_isle"
 version = "0.1.0"
 dependencies = [
  "bevy",

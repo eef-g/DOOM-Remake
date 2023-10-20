@@ -1,7 +1,7 @@
 use bevy::{prelude::*, render::camera::ScalingMode};
 use bevy_rapier2d::prelude::*;
 use serde::Deserialize;
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt};
 
 
 pub struct PlayerPlugin;
@@ -46,7 +46,7 @@ pub struct PlayerStatus(pub PlayerState);
 
 
 // Systems
-//
+
 pub enum PlayerState {
     WALK,
     CARRY,
@@ -68,6 +68,33 @@ pub enum PlayerState {
     CAUGHT,
     REELING,
     SHOVEL
+}
+
+impl fmt::Display for PlayerState {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            PlayerState::WALK => write!(f, "WALK"),
+            PlayerState::CARRY => write!(f, "CARRY"),
+            PlayerState::IDLE => write!(f, "IDLE"),
+            PlayerState::WATERING => write!(f, "WATERING"),
+            PlayerState::HIT => write!(f, "HIT"),
+            PlayerState::DEATH => write!(f, "DEATH"),
+            PlayerState::DOING => write!(f, "DOING"),
+            PlayerState::RUNNING => write!(f, "RUNNING"),
+            PlayerState::JUMPING => write!(f, "JUMPING"),
+            PlayerState::ROLLING => write!(f, "ROLLING"),
+            PlayerState::AXE => write!(f, "AXE"),
+            PlayerState::PICKAXE => write!(f, "PICKAXE"),
+            PlayerState::SWIMMING => write!(f, "SWIMMING"),
+            PlayerState::HAMMER => write!(f, "HAMMER"),
+            PlayerState::SWORD => write!(f, "SWORD"),
+            PlayerState::CASTING => write!(f, "CASTING"),
+            PlayerState::WAITING => write!(f, "WAITING"),
+            PlayerState::CAUGHT => write!(f, "CAUGHT"),
+            PlayerState::REELING => write!(f, "REELING"),
+            PlayerState::SHOVEL => write!(f, "SHOVEL")
+        }
+    }
 }
 
 pub fn spawn_player(
@@ -191,9 +218,11 @@ pub fn animation_swap(
     // Read the JSON file that stores the animation information
     let json_file = fs::read_to_string("assets/data/sheet_info.json").expect("Unable to read file");
     let data : AnimationData = from_str(&json_file).unwrap();
-    for (key, value) in &data.animations {
-        println!("{:?} : [{:?}, {:?}, {:?}]", key, value["Offset"], value["Frames"], value["Timer"]);
-    }
-    println!("{:?}", data.animations["AXE"]["Timer"]);
+    // for (key, value) in &data.animations {
+    //     println!("{:?} : [{:?}, {:?}, {:?}]", key, value["Offset"], value["Frames"], value["Timer"]);
+    // }
+    let player_state: PlayerState = PlayerState::AXE;
+    println!("{:?}", &player_state.to_string());
+    println!("{:?}", data.animations[&player_state.to_string()]["Timer"]);
     // println!("{:?}", data.animations.get("AXE").unwrap().offset);
 }

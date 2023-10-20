@@ -218,11 +218,12 @@ pub fn animation_swap(
     // Read the JSON file that stores the animation information
     let json_file = fs::read_to_string("assets/data/sheet_info.json").expect("Unable to read file");
     let data : AnimationData = from_str(&json_file).unwrap();
-    // for (key, value) in &data.animations {
-    //     println!("{:?} : [{:?}, {:?}, {:?}]", key, value["Offset"], value["Frames"], value["Timer"]);
-    // }
+    // Get the player's current state (Will do this with a query later)
     let player_state: PlayerState = PlayerState::AXE;
-    println!("{:?}", &player_state.to_string());
-    println!("{:?}", data.animations[&player_state.to_string()]["Timer"]);
-    // println!("{:?}", data.animations.get("AXE").unwrap().offset);
+    // Get the animation data object
+    let anim_data = &data.animations[&player_state.to_string()];
+    // Info to output
+    println!("{:?}", anim_data["Offset"].as_i64());
+    println!("{:?}", anim_data["Frames"].as_i64());
+    println!("{:?}", anim_data["Timer"].as_f64());
 }

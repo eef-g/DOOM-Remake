@@ -67,7 +67,7 @@ fn generate_map(size: i32) -> Result<()> {
     let mut rng = rand::thread_rng();
     for x in 0..size{
         for y in 0..size {
-            info!("Generating tile [{},{}]", x, y);
+            // info!("Generating tile [{},{}]", x, y);
             if x == 0 || x == size-1 || y == 0 || y == size-1 {
                 world_string += "b";
             } else {

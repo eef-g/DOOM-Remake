@@ -1,12 +1,18 @@
 use bevy::{prelude::*, render::camera::ScalingMode};
 use bevy_rapier2d::prelude::*;
+use serde::Deserialize;
+use std::collections::HashMap;
+
 
 pub struct PlayerPlugin;
 
 impl Plugin for PlayerPlugin{
     fn build(&self, app: &mut App) {
         app
-            .add_systems(Startup, spawn_player)
+            .add_systems(Startup, (
+                animation_swap,
+                spawn_player
+            ))
             .add_systems(Update, (
                 player_movement,
                 animate_sprite,
@@ -69,6 +75,7 @@ pub fn spawn_player(
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>
 ) {
+    
     // Spawn a camera that lets us actually treat this like a game
     let mut main_camera = Camera2dBundle::default();
     let default_width = 256.00;
@@ -167,8 +174,26 @@ pub fn player_movement(
 
 }
 
+//Animation structs
+#[derive(Deserialize, Debug)]
+struct AnimationData {
+    #[serde(flatten)]
+    animations: HashMap<String, serde_json::Value>
+}
+
 pub fn animation_swap(
-    status: ResMut<PlayerStatus>
+    // status: ResMut<PlayerStatus>
 ) {
     // Use serde to read the JSON file and get the correct response
+    use serde_json::from_str;
+    use std::fs;
+
+    // Read the JSON file that stores the animation information
+    let json_file = fs::read_to_string("assets/data/sheet_info.json").expect("Unable to read file");
+    let data : AnimationData = from_str(&json_file).unwrap();
+    for (key, value) in &data.animations {
+        println!("{:?} : [{:?}, {:?}, {:?}]", key, value["Offset"], value["Frames"], value["Timer"]);
+    }
+    println!("{:?}", data.animations["AXE"]["Timer"]);
+    // println!("{:?}", data.animations.get("AXE").unwrap().offset);
 }

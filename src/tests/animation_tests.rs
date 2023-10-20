@@ -1,5 +1,5 @@
-use crate::plugins::*;
 use bevy::prelude::*;
+use crate::plugins::*;
 
 #[test]
 fn test_conversion_small_pos() {

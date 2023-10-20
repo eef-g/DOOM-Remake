@@ -1,0 +1,102 @@
+{
+  "WALK": {
+    "Offset": 0,
+    "Frames": 7,
+    "Timer": 0.15
+  },
+  "CARRY": {
+    "Offset": 8,
+    "Frames": 8,
+    "Timer": 0.15
+  },
+  "IDLE": {
+    "Offset": 15,
+    "Frames": 6,
+    "Timer": 0.15
+  },
+  "WATERING": {
+    "Offset": 21,
+    "Frames": 5,
+    "Timer": 0.15
+  },
+  "HIT": {
+    "Offset": 26,
+    "Frames": 6,
+    "Timer": 0.15
+  },
+  "DEATH": {
+    "Offset": 32,
+    "Frames": 8,
+    "Timer": 0.15
+  },
+  "DOING": {
+    "Offset": 40,
+    "Frames": 8,
+    "Timer": 0.15
+  },
+  "RUNNING": {
+    "Offset": 48,
+    "Frames": 8,
+    "Timer": 0.15
+  },
+  "JUMPING": {
+    "Offset": 56,
+    "Frames": 7,
+    "Timer": 0.15
+  },
+  "ROLLING": {
+    "Offset": 63,
+    "Frames": 10,
+    "Timer": 0.15
+  },
+  "AXE": {
+    "Offset": 73,
+    "Frames": 10,
+    "Timer": 0.15
+  },
+  "PICKAXE": {
+    "Offset": 83,
+    "Frames": 10,
+    "Timer": 0.15
+  },
+  "SWIMMING": {
+    "Offset": 93,
+    "Frames": 4,
+    "Timer": 0.15
+  },
+  "HAMMER": {
+    "Offset": 97,
+    "Frames": 23,
+    "Timer": 0.15
+  },
+  "SWORD": {
+    "Offset": 110,
+    "Frames": 10,
+    "Timer": 0.15
+  },
+  "CASTING": {
+    "Offset": 120,
+    "Frames": 15,
+    "Timer": 0.15
+  },
+  "WAITING": {
+    "Offset": 135,
+    "Frames": 8,
+    "Timer": 0.15
+  },
+  "CAUGHT": {
+    "Offset": 143,
+    "Frames": 13,
+    "Timer": 0.15
+  },
+  "REELING": {
+    "Offset": 156,
+    "Frames": 10,
+    "Timer": 0.15
+  },
+  "SHOVEL": {
+    "Offset": 166,
+    "Frames": 13,
+    "Timer": 0.15
+  }
+}

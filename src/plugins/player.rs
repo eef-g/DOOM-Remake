@@ -130,7 +130,7 @@ pub fn spawn_player(
     commands.spawn(( // We have 2 parenthesis here since if we want multiple components then we
         // pass in a tuple of the components to the spawn function
         RigidBody::KinematicPositionBased,
-        Collider::capsule(Vec2::new(0.0, -1.0), Vec2::new(0.0, 2.0), 5.0),
+        Collider::cuboid(5.0, 5.5),
         KinematicCharacterController::default(),
         SpriteSheetBundle {
             texture_atlas: texture_atlas_handle,

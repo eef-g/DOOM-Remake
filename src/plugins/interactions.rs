@@ -1,5 +1,6 @@
 use bevy::{prelude::*, window::PrimaryWindow, input::mouse::MouseButtonInput};
 use bevy_rapier2d::prelude::*;
+use super::player::*;
 
 pub struct InteractionPlugin;
 
@@ -61,7 +62,8 @@ pub fn mouse_button_events(
     camera_q: Query<(&Camera, &GlobalTransform)>,
     rapier_context: Res<RapierContext>,
     asset_server: Res<AssetServer>,
-    mut commands: Commands
+    mut commands: Commands,
+    mut player_q: Query<&mut Player>
 ) {
     use bevy::input::ButtonState;
 
@@ -77,7 +79,9 @@ pub fn mouse_button_events(
                 else {
                     return 
                 };
-
+                for mut player in player_q.iter_mut() {
+                    player.curr_state = PlayerState::PICKAXE;
+                }
                 // Check if click location is overlapping with a rapier physics object
                 rapier_context.intersections_with_point(mouse_position, filter, |entity| {
                     // Modify the tile that we click to now be a ground tile

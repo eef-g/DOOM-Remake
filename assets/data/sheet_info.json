@@ -57,7 +57,7 @@
   "PICKAXE": {
     "Row": 11,
     "Frames": 10,
-    "Timer": 0.15
+    "Timer": 0.1
   },
   "SWIMMING": {
     "Row": 12,

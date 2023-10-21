@@ -210,7 +210,7 @@ pub fn player_movement(
 
         if delta_x != 0.0 || delta_y != 0.0 {
             player.curr_state = PlayerState::RUNNING;
-        } else if player.curr_state != PlayerState::IDLE {
+        } else if player.curr_state == PlayerState::RUNNING {
             player.curr_state = PlayerState::IDLE;
         }
         controller.translation = Some(Vec2::new(delta_x, delta_y));

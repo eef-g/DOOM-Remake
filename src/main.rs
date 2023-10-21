@@ -31,8 +31,7 @@ fn main() {
             // Right now, we're working on having the player sprite animated
             plugins::PlayerPlugin,
 
-            // plugins::InteractionPlugin,
-            // plugins::MobPlugin,
+            plugins::InteractionPlugin,
             plugins::TilemapPlugin
         ))
         .run();

@@ -9,9 +9,7 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin{
     fn build(&self, app: &mut App) {
         app
-            .add_systems(Startup, (
-                spawn_player
-            ))
+            .add_systems(Startup, spawn_player)
             .add_systems(Update, (
                 player_movement,
                 animate_sprite,
@@ -34,7 +32,8 @@ pub struct Player {
 #[reflect(Component)]
 pub struct AnimationIndicies {
     pub first: usize,
-    pub last: usize
+    pub last: usize,
+    pub curr: usize
 }
 
 #[derive(Component)]
@@ -121,7 +120,7 @@ pub fn spawn_player(
     let texture_atlas = 
         TextureAtlas::from_grid(texture_handle, Vec2::new(64.0, 64.0), 23, 20, None, None);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
-    let animation_indicies = AnimationIndicies { first: 46, last: 46+5};
+    let animation_indicies = AnimationIndicies { first: 0, last: 6, curr: 0};
 
     // Set the starting position of the player (Later, we'll read a save file)
     let pos_x = Vec3::new(100.0, 0.0, 0.5);
@@ -130,7 +129,7 @@ pub fn spawn_player(
     commands.spawn(( // We have 2 parenthesis here since if we want multiple components then we
         // pass in a tuple of the components to the spawn function
         RigidBody::KinematicPositionBased,
-        Collider::capsule(Vec2::new(0.0, 0.0), Vec2::new(0.0, 2.0), 5.0),
+        Collider::capsule(Vec2::new(0.0, -1.0), Vec2::new(0.0, 2.0), 5.0),
         KinematicCharacterController::default(),
         SpriteSheetBundle {
             texture_atlas: texture_atlas_handle,
@@ -159,29 +158,36 @@ pub fn spawn_player(
 pub fn animate_sprite(
     time: Res<Time>,
     mut query: Query<(
-        &AnimationIndicies,
+        &mut AnimationIndicies,
         &mut AnimationTimer,
         &mut TextureAtlasSprite,
     )>
 ) {
-    for (indicies, mut timer, mut sprite) in &mut query {
+    for (mut indicies, mut timer, mut sprite) in &mut query {
         timer.0.tick(time.delta());
         if timer.0.just_finished() {
+            if sprite.index < indicies.first {
+                sprite.index = indicies.first;
+            } else if sprite.index > indicies.last {
+                sprite.index = indicies.first;
+            }
+
             sprite.index = if sprite.index == indicies.last {
                 indicies.first
             } else {
                 sprite.index + 1
             };
+            indicies.curr = sprite.index;
         }
     }
 }
 
 pub fn player_movement(
-    mut controllers: Query<( &mut KinematicCharacterController, &mut TextureAtlasSprite, &Player)>,
+    mut controllers: Query<( &mut KinematicCharacterController, &mut TextureAtlasSprite, &mut Player)>,
     time: Res<Time>,
     input: Res<Input<KeyCode>>
 ) {
-    for (mut controller, mut sprite, player) in controllers.iter_mut() {
+    for (mut controller, mut sprite, mut player) in controllers.iter_mut() {
         let move_amount =  player.speed * time.delta_seconds();
         let mut delta_x = 0.0;
         let mut delta_y = 0.0;
@@ -201,6 +207,12 @@ pub fn player_movement(
             delta_x -= move_amount;
             sprite.flip_x = true;
         }
+
+        if delta_x != 0.0 || delta_y != 0.0 {
+            player.curr_state = PlayerState::RUNNING;
+        } else if player.curr_state != PlayerState::IDLE {
+            player.curr_state = PlayerState::IDLE;
+        }
         controller.translation = Some(Vec2::new(delta_x, delta_y));
     }
 
@@ -214,24 +226,25 @@ struct AnimationData {
 }
 
 pub fn animation_swap(
-    status: ResMut<PlayerStatus>,
-    // mut controllers: Query<( &mut AnimationTimer, &mut AnimationIndicies, &Player)>,
-    mut controllers: Query<( &mut AnimationIndicies, &mut Player)>
+    mut status: ResMut<PlayerStatus>,
+    mut controllers: Query<( &mut AnimationTimer, &mut AnimationIndicies, &Player)>,
 ) {
     // Use serde to read the JSON file and get the correct response
     use serde_json::from_str;
     use std::fs;
 
-    for(mut indicies, mut player) in controllers.iter_mut() {
+    for(mut timer, mut indicies, player) in controllers.iter_mut() {
         // We need to change our current animation!
         if player.curr_state != status.0 {
+            // Change the status before it starts to loop infinitely ;-;
+            status.0 = player.curr_state;
+
             // Read the JSON file that stores the animation information
             let json_file = fs::read_to_string("assets/data/sheet_info.json").expect("Unable to read file");
             let data : AnimationData = from_str(&json_file).unwrap();
             // Get the player's current state (Will do this with a query later)
-            let player_state: PlayerState = PlayerState::AXE;
             // Get the animation data object
-            let anim_data = &data.animations[&player_state.to_string()];
+            let anim_data = &data.animations[&player.curr_state.to_string()];
 
             // Change the offset & frame count of the current animation
             let start_index = anim_data["Row"].as_u64().unwrap();
@@ -239,7 +252,10 @@ pub fn animation_swap(
             frame_count -= 1;
             indicies.first = ((start_index * 23) as u32) as usize;
             indicies.last = indicies.first + (frame_count as usize);
-            player.curr_state = status.0;
+
+            // Change the timer's duration
+            let duration = anim_data["Timer"].as_f64().unwrap();
+            *timer = AnimationTimer(Timer::from_seconds(duration as f32, TimerMode::Repeating));
         }
     }
 }

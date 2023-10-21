@@ -2,7 +2,7 @@
   "WALK": {
     "Row": 0,
     "Frames": 7,
-    "Timer": 0.15
+    "Timer": 0.10
   },
   "CARRY": {
     "Row": 1,
@@ -37,7 +37,7 @@
   "RUNNING": {
     "Row": 7,
     "Frames": 8,
-    "Timer": 0.15
+    "Timer": 0.1
   },
   "JUMPING": {
     "Row": 8,

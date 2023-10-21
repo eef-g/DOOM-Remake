@@ -50,6 +50,7 @@ pub struct PlayerStatus(pub PlayerState);
 
 // Systems
 #[derive(PartialEq, Clone, Copy, Debug)]
+#[allow(dead_code)]
 pub enum PlayerState {
     WALK,
     CARRY,
@@ -123,8 +124,8 @@ pub fn spawn_player(
     let animation_indicies = AnimationIndicies { first: 0, last: 6, curr: 0};
 
     // Set the starting position of the player (Later, we'll read a save file)
-    let pos_x = Vec3::new(100.0, 0.0, 0.5);
-    let pos_y = Vec3::new(0.0, 50.0, 0.5);
+    let pos_x = Vec3::new(0.0, 0.0, 0.5);
+    let pos_y = Vec3::new(0.0, 0.0, 0.5);
     // Now spawn a SpriteBundle -- This is a collection of components that let us use a sprite
     commands.spawn(( // We have 2 parenthesis here since if we want multiple components then we
         // pass in a tuple of the components to the spawn function

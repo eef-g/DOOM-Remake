@@ -10,14 +10,16 @@ impl Plugin for PlayerPlugin{
     fn build(&self, app: &mut App) {
         app
             .add_systems(Startup, (
-                animation_swap,
                 spawn_player
             ))
             .add_systems(Update, (
                 player_movement,
                 animate_sprite,
+                animation_swap,
             ))
-            .insert_resource(Money(100.0));
+            .insert_resource(Money(100.0))
+            .insert_resource(PlayerStatus(PlayerState::RUNNING))
+            .register_type::<AnimationIndicies>();
     }
 }
 
@@ -28,7 +30,8 @@ pub struct Player {
     pub curr_state: PlayerState,
 }
 
-#[derive(Component)]
+#[derive(Component, Default, Reflect)]
+#[reflect(Component)]
 pub struct AnimationIndicies {
     pub first: usize,
     pub last: usize
@@ -42,12 +45,12 @@ pub struct AnimationTimer(Timer);
 #[derive(Resource)]
 pub struct Money(pub f32);
 
-#[derive(Resource)]
+#[derive(Resource, Debug)]
 pub struct PlayerStatus(pub PlayerState);
 
 
 // Systems
-#[derive(PartialEq)]
+#[derive(PartialEq, Clone, Copy, Debug)]
 pub enum PlayerState {
     WALK,
     CARRY,
@@ -212,13 +215,14 @@ struct AnimationData {
 
 pub fn animation_swap(
     status: ResMut<PlayerStatus>,
-    mut controllers: Query<( &mut AnimationTimer, &mut AnimationIndicies, &Player)>,
+    // mut controllers: Query<( &mut AnimationTimer, &mut AnimationIndicies, &Player)>,
+    mut controllers: Query<( &mut AnimationIndicies, &mut Player)>
 ) {
     // Use serde to read the JSON file and get the correct response
     use serde_json::from_str;
     use std::fs;
 
-    for(mut timer, mut indicies, mut player) in controllers.iter_mut() {
+    for(mut indicies, mut player) in controllers.iter_mut() {
         // We need to change our current animation!
         if player.curr_state != status.0 {
             // Read the JSON file that stores the animation information
@@ -228,17 +232,14 @@ pub fn animation_swap(
             let player_state: PlayerState = PlayerState::AXE;
             // Get the animation data object
             let anim_data = &data.animations[&player_state.to_string()];
-            // Info to output
-            //
-            //
 
-            // TODO -- Need to figure out how to convert from i64 to usize
-            indicies.first = (anim_data["Row"].as_i64().unwrap() * 23).try_into().unwrap();
-            indicies.last = (anim_data["Frames"].as_i64().unwrap() - 1).try_into().unwrap();
-            println!("{:?}", anim_data["Offset"].as_i64());
-            println!("{:?}", anim_data["Frames"].as_i64());
-            println!("{:?}", anim_data["Timer"].as_f64());
+            // Change the offset & frame count of the current animation
+            let start_index = anim_data["Row"].as_u64().unwrap();
+            let mut frame_count = anim_data["Frames"].as_u64().unwrap();
+            frame_count -= 1;
+            indicies.first = ((start_index * 23) as u32) as usize;
+            indicies.last = indicies.first + (frame_count as usize);
+            player.curr_state = status.0;
         }
     }
-    
 }

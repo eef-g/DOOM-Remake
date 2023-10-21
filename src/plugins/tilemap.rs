@@ -114,12 +114,12 @@ fn spawn_ascii_tile(commands: &mut Commands, asset_server: &Res<AssetServer>, ch
         // Stone
         '#' => {
             commands.entity(tile).insert(Tile{tile_type: TileType::STONE});
-            commands.entity(tile).insert(Collider::cuboid(8.0, 8.0));
+            commands.entity(tile).insert(Collider::cuboid(7.5, 7.5));
         },
         // Bedrock
         'b' => {
             commands.entity(tile).insert(Tile{tile_type: TileType::BEDROCK});
-            commands.entity(tile).insert(Collider::cuboid(8.0, 8.0));
+            commands.entity(tile).insert(Collider::cuboid(7.5, 7.5));
         },
         // Ground
         '.' => {

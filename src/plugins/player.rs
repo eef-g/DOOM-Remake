@@ -25,6 +25,7 @@ impl Plugin for PlayerPlugin{
 #[derive(Component)]
 pub struct Player {
     pub speed: f32,
+    pub curr_state: PlayerState,
 }
 
 #[derive(Component)]
@@ -46,7 +47,7 @@ pub struct PlayerStatus(pub PlayerState);
 
 
 // Systems
-
+#[derive(PartialEq)]
 pub enum PlayerState {
     WALK,
     CARRY,
@@ -117,7 +118,7 @@ pub fn spawn_player(
     let texture_atlas = 
         TextureAtlas::from_grid(texture_handle, Vec2::new(64.0, 64.0), 23, 20, None, None);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
-    let animation_indicies = AnimationIndicies { first: 0, last: 5};
+    let animation_indicies = AnimationIndicies { first: 46, last: 46+5};
 
     // Set the starting position of the player (Later, we'll read a save file)
     let pos_x = Vec3::new(100.0, 0.0, 0.5);
@@ -141,6 +142,7 @@ pub fn spawn_player(
         AnimationTimer(Timer::from_seconds(0.2, TimerMode::Repeating)),
         Player{
             speed: 100.0,
+            curr_state: PlayerState::IDLE,
         },
         Name::new("Player")
     ))
@@ -209,21 +211,34 @@ struct AnimationData {
 }
 
 pub fn animation_swap(
-    // status: ResMut<PlayerStatus>
+    status: ResMut<PlayerStatus>,
+    mut controllers: Query<( &mut AnimationTimer, &mut AnimationIndicies, &Player)>,
 ) {
     // Use serde to read the JSON file and get the correct response
     use serde_json::from_str;
     use std::fs;
 
-    // Read the JSON file that stores the animation information
-    let json_file = fs::read_to_string("assets/data/sheet_info.json").expect("Unable to read file");
-    let data : AnimationData = from_str(&json_file).unwrap();
-    // Get the player's current state (Will do this with a query later)
-    let player_state: PlayerState = PlayerState::AXE;
-    // Get the animation data object
-    let anim_data = &data.animations[&player_state.to_string()];
-    // Info to output
-    println!("{:?}", anim_data["Offset"].as_i64());
-    println!("{:?}", anim_data["Frames"].as_i64());
-    println!("{:?}", anim_data["Timer"].as_f64());
+    for(mut timer, mut indicies, mut player) in controllers.iter_mut() {
+        // We need to change our current animation!
+        if player.curr_state != status.0 {
+            // Read the JSON file that stores the animation information
+            let json_file = fs::read_to_string("assets/data/sheet_info.json").expect("Unable to read file");
+            let data : AnimationData = from_str(&json_file).unwrap();
+            // Get the player's current state (Will do this with a query later)
+            let player_state: PlayerState = PlayerState::AXE;
+            // Get the animation data object
+            let anim_data = &data.animations[&player_state.to_string()];
+            // Info to output
+            //
+            //
+
+            // TODO -- Need to figure out how to convert from i64 to usize
+            indicies.first = (anim_data["Row"].as_i64().unwrap() * 23).try_into().unwrap();
+            indicies.last = (anim_data["Frames"].as_i64().unwrap() - 1).try_into().unwrap();
+            println!("{:?}", anim_data["Offset"].as_i64());
+            println!("{:?}", anim_data["Frames"].as_i64());
+            println!("{:?}", anim_data["Timer"].as_f64());
+        }
+    }
+    
 }

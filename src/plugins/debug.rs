@@ -1,5 +1,8 @@
-use bevy::prelude::*;
-use bevy::input::common_conditions::input_toggle_active;
+use bevy::{
+    prelude::*, 
+    input::common_conditions::input_toggle_active,
+    diagnostic::FrameTimeDiagnosticsPlugin
+};
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_rapier2d::prelude::*;
 
@@ -12,8 +15,14 @@ impl Plugin for DebugPlugin {
                 bevy::window::close_on_esc,
             )
             .add_plugins((
+                FrameTimeDiagnosticsPlugin,
                 WorldInspectorPlugin::default().run_if(input_toggle_active(false, KeyCode::Tab)),
                 RapierDebugRenderPlugin::default()
             ));
     }
 }
+
+
+// Systems
+//
+//

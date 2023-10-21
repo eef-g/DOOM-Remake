@@ -161,9 +161,10 @@ pub fn animate_sprite(
         &mut AnimationIndicies,
         &mut AnimationTimer,
         &mut TextureAtlasSprite,
+        &mut Player
     )>
 ) {
-    for (mut indicies, mut timer, mut sprite) in &mut query {
+    for (mut indicies, mut timer, mut sprite, mut player) in &mut query {
         timer.0.tick(time.delta());
         if timer.0.just_finished() {
             if sprite.index < indicies.first {
@@ -171,12 +172,17 @@ pub fn animate_sprite(
             } else if sprite.index > indicies.last {
                 sprite.index = indicies.first;
             }
-
-            sprite.index = if sprite.index == indicies.last {
-                indicies.first
+            
+            if sprite.index == indicies.last {
+                if player.curr_state != PlayerState::IDLE || player.curr_state != PlayerState::RUNNING {
+                    player.curr_state = PlayerState::IDLE;
+                    sprite.index = 2 * 23;
+                    return;
+                }
+                sprite.index = indicies.first;
             } else {
-                sprite.index + 1
-            };
+                sprite.index += 1;
+            }
             indicies.curr = sprite.index;
         }
     }

@@ -8,8 +8,8 @@
   <h3 align="center">Technologies used:</h3>
   <span>
       <p align="center">
-        <a href="https://www.rust-lang.org" target="_blank" rel="noreferrer"> <img src="https://rustacean.net/assets/rustacean-flat-noshadow.svg" alt="rust" width="40" height="40"/> </a> 
-        <a href="https://bevyengine.org/" target="_blank" rel="noreferrer"> <img src="https://seeklogo.com/images/B/bevy-engine-logo-25F6DD58BF-seeklogo.com.png?v=638240880890000000" alt="Bevy" width="40" height="40"/> </a> 
+        <a href="https://cplusplus.com" target="_blank" rel="noreferrer"> <img src="https://cdn.worldvectorlogo.com/logos/c.svg" alt="C++" width="40" height="40"/> </a> 
+        <a href="https://www.libsdl.org/" target="_blank" rel="noreferrer"> <img src="https://upload.wikimedia.org/wikipedia/commons/1/16/Simple_DirectMedia_Layer%2C_Logo.svg" alt="SDL2" width="60" height="40"/> </a> 
       </p>
   </span>
 </span>

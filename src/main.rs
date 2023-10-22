@@ -32,7 +32,7 @@ fn main() {
             plugins::PlayerPlugin,
 
             plugins::InteractionPlugin,
-            plugins::TilemapPlugin
+            plugins::MapPlugin,
         ))
         .run();
 }

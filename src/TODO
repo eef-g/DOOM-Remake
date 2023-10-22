@@ -1,3 +1,4 @@
+-- ANIMATIONS --
 [X] Finish going through the animations and parsing the JSON file
   * What I want to do is have the ability to go through and set the animation state as an ENUM and then find that specific
     animation in the JSON file to have the information I need
@@ -5,5 +6,14 @@
 [X] Implement a way to use the JSON file to better use the texture atlas and modify the player's sprite when they're doing a specific action.
     * Look into Bevy documentation to see if we can edit a resource and then run a match case based off of the resource's value during the update loop. This way we'll be able to change what the player's animation should be. Sort of like a makeshift state machine, if you will.
 
+
+
+-- TILEMAP & LEVEL --
 [X] Switch tilemap generation to use bevy_ecs_tilemap plugin
-[~] Add colliders to specific tiles so that way we have collisions again
+
+[X] Add colliders to specific tiles so that way we have collisions again
+
+
+-- INTERACTIONS -- 
+[~] Change interaction square from wherever mouse is to the square in front of the player (Depending on which direction the player is facing).
+

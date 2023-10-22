@@ -61,7 +61,7 @@ pub fn mouse_button_events(
     q_windows: Query<&Window, With<PrimaryWindow>>,
     camera_q: Query<(&Camera, &GlobalTransform)>,
     rapier_context: Res<RapierContext>,
-    asset_server: Res<AssetServer>,
+    // asset_server: Res<AssetServer>,
     mut commands: Commands,
     mut player_q: Query<&mut Player>
 ) {
@@ -88,18 +88,17 @@ pub fn mouse_button_events(
                     // TODO: Check and see how many hits are left to mine the tile before breaking
                     // it
                     let Some(mut entity_commands) = commands.get_entity(entity) else { todo!() }; {
-                        entity_commands.remove::<SpriteBundle>();
                         entity_commands.remove::<Collider>();
-                        let texture = asset_server.load("ground.png");
-                        let new_translation = mouse_to_grid_pos(mouse_position);
-                        entity_commands.insert(SpriteBundle {
-                            texture,
-                            transform: Transform {
-                                translation: Vec3::new(new_translation.x, new_translation.y, 0.0),
-                                ..default()
-                            },
-                            ..default()
-                        });
+                    //     let texture = asset_server.load("ground.png");
+                    //     let new_translation = mouse_to_grid_pos(mouse_position);
+                    //     entity_commands.insert(SpriteBundle {
+                    //         texture,
+                    //         transform: Transform {
+                    //             translation: Vec3::new(new_translation.x, new_translation.y, 0.0),
+                    //             ..default()
+                    //         },
+                    //         ..default()
+                    //     });
                     }
                     // Return `false` instead if we want to stop searching for other colliders containing this point.
                     true

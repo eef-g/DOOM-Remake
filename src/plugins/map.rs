@@ -37,9 +37,10 @@ fn create_simple_map(
     let map_type = TilemapType::Square;
 
     // Get the tilemap x-y offsets
-    let x_offset = (map_size.x as f32 * tile_size.x) * -0.5;
-    let y_offset = map_size.y as f32 * tile_size.y * -0.5;
-    
+    let center_transform = get_tilemap_center_transform(&map_size, &grid_size, &map_type, 0.0);
+    let x_offset = center_transform.translation.x;
+    let y_offset = center_transform.translation.y;
+
     // Initialize RNG object
     let mut rng = rand::thread_rng();
 
@@ -61,8 +62,9 @@ fn create_simple_map(
                 .insert(Name::new(tile_name))
                 .id();
             if x == 0 || x == map_size.x -1 || y == 0 || y == map_size.y - 1 {
+                // TODO -- Eventually change this vec3 to be the tile's world position so that way
+                // we don't worry about offsets and whatnot
                 let translation = Vec3::new((tile_pos.x as f32 * tile_size.x) + x_offset, (tile_pos.y as f32 * tile_size.y) + y_offset, 0.1);
-                info!("{:?}", translation);
                 commands.entity(tile_entity).insert((
                     TransformBundle {
                         local: Transform { 

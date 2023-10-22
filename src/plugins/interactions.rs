@@ -49,7 +49,7 @@ pub fn highlight_selected_grid(
             // Convert to grid coordinates and move sprite transform
             let translated_pos = mouse_to_grid_pos(Vec2::new(position.x, position.y));
             for (_, mut transform) in &mut select_q {
-                transform.translation = Vec3::new(translated_pos.x, translated_pos.y, 0.0);
+                transform.translation = Vec3::new(translated_pos.x, translated_pos.y, 0.1);
             }
         }
     }

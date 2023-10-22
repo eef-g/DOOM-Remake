@@ -20,7 +20,7 @@ fn create_simple_map(
 ) {
 
     // Initialize the size of the map
-    let map_size = TilemapSize { x: 32, y: 32};
+    let map_size = TilemapSize { x: 64, y: 64};
 
     // Initialize the tilemap texture
     let texture_handle: Handle<Image> = asset_server.load("tilemap.png");
@@ -35,6 +35,10 @@ fn create_simple_map(
     let tile_size = TilemapTileSize { x: 16.0, y: 16.0 };
     let grid_size: TilemapGridSize = tile_size.into();
     let map_type = TilemapType::Square;
+
+    // Get the tilemap x-y offsets
+    let x_offset = (map_size.x as f32 * tile_size.x) * -0.5;
+    let y_offset = map_size.y as f32 * tile_size.y * -0.5;
     
     // Initialize RNG object
     let mut rng = rand::thread_rng();
@@ -52,18 +56,24 @@ fn create_simple_map(
                     texture_index: TileTextureIndex(rng.gen_range(0..4)),
                     ..Default::default()
                     },
-                    Transform {
-                        translation: Vec3::new(x as f32 * tile_size.x, y as f32 * tile_size.y, 0.0),
-                        ..Default::default()
-                    },
-                    RigidBody::Fixed,
-                    Collider::cuboid(7.0, 7.0)
+                    GlobalTransform::default()
                 ))
                 .insert(Name::new(tile_name))
                 .id();
-            if x != 0 && x != map_size.x -1 || y == 0 && y == map_size.y - 1 {
-                commands.entity(tile_entity).remove::<Collider>();
-                commands.entity(tile_entity).remove::<RigidBody>();
+            if x == 0 || x == map_size.x -1 || y == 0 || y == map_size.y - 1 {
+                let translation = Vec3::new((tile_pos.x as f32 * tile_size.x) + x_offset, (tile_pos.y as f32 * tile_size.y) + y_offset, 0.1);
+                info!("{:?}", translation);
+                commands.entity(tile_entity).insert((
+                    TransformBundle {
+                        local: Transform { 
+                            translation,
+                            ..Default::default()
+                        },
+                        ..Default::default()
+                    },
+                    // RigidBody::Fixed,
+                    Collider::cuboid(7.0, 7.0)
+                ));
             }
             // Add the tile to the tilemap storage
             tile_storage.set(&tile_pos, tile_entity);
@@ -78,9 +88,7 @@ fn create_simple_map(
         texture: TilemapTexture::Single(texture_handle),
         tile_size,
         visibility: Visibility::Visible,
-        transform: get_tilemap_center_transform(&map_size, &grid_size, &map_type, 0.5),
+        transform: get_tilemap_center_transform(&map_size, &grid_size, &map_type, 0.0),
         ..Default::default()
     });
-
-    
 }

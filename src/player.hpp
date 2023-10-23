@@ -16,15 +16,25 @@
 class Player {
     private:
         // Variables
+            // Spritesheet handling
+        sf::RectangleShape shape;
+        sf::IntRect uvRect;
+        sf::Texture spriteSheet;
+        sf::Vector2u spriteCount;
+        sf::Vector2u currentSprite;
+        int animFrames;
+        float animTimer;
+        float frameTime;
+
+            // Movement
         float movementSpeed;
-        sf::Sprite sprite;
-        sf::Texture texture;
         sf::Vector2f moveDir;
         sf::Vector2f velocity;
 
         // Functions
         void initVariables();
-
+        void updateAnimation(float deltaTime);
+        void updateVelocity();
     public:
         // Constructor/Destructor
         Player();
@@ -36,8 +46,6 @@ class Player {
         // Functions
         void move(float deltaTime);
         void update(float deltaTime);
-        // Update functions
-        void updateVelocity();
 
         void render(sf::RenderTarget* target);
 };

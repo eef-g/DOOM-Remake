@@ -1,4 +1,4 @@
-#include "../lib/game.hpp"
+#include "game.hpp"
 #include <iostream>
 
 Game::Game() {

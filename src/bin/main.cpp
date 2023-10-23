@@ -1,6 +1,7 @@
 #include <iostream>
 #include "SDL2/SDL.h"
-#include "lib/game.hpp"
+#include "SDL2/SDL_image.h"
+#include "game.hpp"
 
 int main(int argc, char* argv[]) {
   Game *game = new Game();

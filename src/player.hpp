@@ -16,10 +16,11 @@
 class Player {
     private:
         // Variables
-        sf::Vector2f movementSpeed;
+        float movementSpeed;
         sf::Sprite sprite;
         sf::Texture texture;
         sf::Vector2f moveDir;
+        sf::Vector2f velocity;
 
         // Functions
         void initVariables();
@@ -33,9 +34,11 @@ class Player {
         const sf::Vector2f& getPos() const;
 
         // Functions
-        void move(const float x, const float y);
-        void eventHandler(sf::Event* ev);
-        void update();
+        void move(float deltaTime);
+        void update(float deltaTime);
+        // Update functions
+        void updateVelocity();
+
         void render(sf::RenderTarget* target);
 };
 

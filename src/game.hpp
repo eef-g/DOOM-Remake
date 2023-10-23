@@ -35,8 +35,10 @@ class Game {
         // Accessors
         const bool running() const;
         // Functions
+        void run();
         void pollEvents();
-        void update();
+        void update(float frameTime);
         void render();
 };
+
 #endif

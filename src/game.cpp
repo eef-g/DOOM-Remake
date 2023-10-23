@@ -18,6 +18,23 @@ Game::~Game() {
 /// @brief Returns whether the game is running or not
 const bool Game::running() const { return this->window->isOpen(); }
 
+void Game::run() {
+    sf::Clock clock;
+    float deltaTime = 0.f;
+    float maxFPS = 60.f;
+    float frameTime = 1.f / maxFPS;
+    while (this->running()) {
+        deltaTime += clock.restart().asSeconds();
+        this->pollEvents();
+        while (deltaTime >= frameTime) {
+            this->update(frameTime);
+            deltaTime -= frameTime;
+        }
+        this->render();
+    }
+}
+
+
 /// @brief Polls events from the window
 void Game::pollEvents() {
     // Event Polling
@@ -27,38 +44,24 @@ void Game::pollEvents() {
                 this->window->close();
                 break;
             case sf::Event::KeyPressed:
-                float x_delta = 0;
-                float y_delta = 0;
                 if (this->ev.key.code == sf::Keyboard::Escape) {
                     this->window->close();
                 }
-                if (this->ev.key.code == sf::Keyboard::W) {
-                    y_delta -= 1.f;
-                }
-                if (this->ev.key.code == sf::Keyboard::A) {
-                    x_delta -= 1.f;
-                }
-                if (this->ev.key.code == sf::Keyboard::S) {
-                    y_delta += 1.f;
-                }
-                if (this->ev.key.code == sf::Keyboard::D) {
-                    x_delta += 1.f;
-                }
-                this->player.move(x_delta, y_delta);
                 break;
         }
     }
 }
 
 /// @brief Runs the game logic for each frame in the game loop
-void Game::update() {
-    this->pollEvents();
+void Game::update(float frameTime) {
+    sf::Vector2f velocity(0.f, 0.f);
+    this->player.update(frameTime);
 }
 
 /// @brief Runs the rendering logic for each frame in the game loop
 void Game::render() {
     // Clear the window
-    this->window->clear(sf::Color(255, 0, 0, 255));
+    this->window->clear(sf::Color(135, 207, 94, 255));
     // Render items
     this->player.render(this->window);
     // Display items

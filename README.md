@@ -9,7 +9,7 @@
   <span>
       <p align="center">
         <a href="https://cplusplus.com" target="_blank" rel="noreferrer"> <img src="https://cdn.worldvectorlogo.com/logos/c.svg" alt="C++" width="40" height="40"/> </a> 
-        <a href="https://www.libsdl.org/" target="_blank" rel="noreferrer"> <img src="https://upload.wikimedia.org/wikipedia/commons/1/16/Simple_DirectMedia_Layer%2C_Logo.svg" alt="SDL2" width="60" height="40"/> </a> 
+        <a href="https://www.sfml-dev.org/index.php" target="_blank" rel="noreferrer"> <img src="https://www.sfml-dev.org/download/goodies/sfml-logo.svg" alt="SFML" width="120" height="40"/> </a> 
       </p>
   </span>
 </span>

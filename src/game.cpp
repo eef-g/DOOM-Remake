@@ -1,4 +1,6 @@
 #include "game.hpp"
+
+
 // Constructor / Destructor
 Game::Game() {
     this->initVariables();
@@ -25,8 +27,24 @@ void Game::pollEvents() {
                 this->window->close();
                 break;
             case sf::Event::KeyPressed:
-                if (this->ev.key.code == sf::Keyboard::Escape)
+                float x_delta = 0;
+                float y_delta = 0;
+                if (this->ev.key.code == sf::Keyboard::Escape) {
                     this->window->close();
+                }
+                if (this->ev.key.code == sf::Keyboard::W) {
+                    y_delta -= 1.f;
+                }
+                if (this->ev.key.code == sf::Keyboard::A) {
+                    x_delta -= 1.f;
+                }
+                if (this->ev.key.code == sf::Keyboard::S) {
+                    y_delta += 1.f;
+                }
+                if (this->ev.key.code == sf::Keyboard::D) {
+                    x_delta += 1.f;
+                }
+                this->player.move(x_delta, y_delta);
                 break;
         }
     }
@@ -42,7 +60,7 @@ void Game::render() {
     // Clear the window
     this->window->clear(sf::Color(255, 0, 0, 255));
     // Render items
-    this->window->draw(this->sprite);
+    this->player.render(this->window);
     // Display items
     this->window->display();
 }
@@ -55,11 +73,6 @@ void Game::render() {
 /// @brief Initializes the game's variables
 void Game::initVariables() {
     this->window = nullptr;
-    if (!this->texture.loadFromFile("assets/character_single.png")) {
-        std::cout << "ERROR::GAME::INITVARIABLES::Failed to load texture" << std::endl;
-    } else {
-        this->sprite.setTexture(this->texture);
-    }
 }
 
 /// @brief Initializes the game's window

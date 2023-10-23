@@ -1,8 +1,7 @@
 all: compile link run
 
 compile: 
-	cmake -S . -B build
-	
+	cmake -S . -B build 
 link:
 	cmake --build build
 

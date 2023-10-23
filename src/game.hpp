@@ -12,7 +12,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
-
+#include "player.hpp"
 
 // Pro-tip: Press 'CRTL+.' to automatically create the function definition in the cpp file
 class Game {
@@ -21,8 +21,7 @@ class Game {
         sf::RenderWindow* window;
         sf::Event ev;
         sf::VideoMode videoMode;
-        sf::Texture texture;
-        sf::Sprite sprite;
+        Player player = Player();
 
         // Functions
         void initVariables();
@@ -39,6 +38,5 @@ class Game {
         void pollEvents();
         void update();
         void render();
-
 };
 #endif

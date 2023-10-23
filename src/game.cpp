@@ -42,7 +42,7 @@ void Game::render() {
     // Clear the window
     this->window->clear(sf::Color(255, 0, 0, 255));
     // Render items
-
+    this->window->draw(this->sprite);
     // Display items
     this->window->display();
 }
@@ -55,11 +55,17 @@ void Game::render() {
 /// @brief Initializes the game's variables
 void Game::initVariables() {
     this->window = nullptr;
+    if (!this->texture.loadFromFile("assets/character_single.png")) {
+        std::cout << "ERROR::GAME::INITVARIABLES::Failed to load texture" << std::endl;
+    } else {
+        this->sprite.setTexture(this->texture);
+    }
 }
 
 /// @brief Initializes the game's window
 void Game::initWindow() {
     this->videoMode.height = 480;
     this->videoMode.width = 640;
+
     window = new sf::RenderWindow(this->videoMode, "The Isle", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
 }

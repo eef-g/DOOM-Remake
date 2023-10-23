@@ -1,10 +1,10 @@
 all: compile link run
 
 compile: 
-	g++ -Isrc/include -c bin/*.cpp 
-
+	cmake -S . -B build
+	
 link:
-	g++ *.o -o bin/build/main.exe -Lsrc/lib -lsfml-graphics -lsfml-window -lsfml-system
+	cmake --build build
 
 run:
-	bin/build/main.exe
+	build/bin/Debug/TheIsle.exe

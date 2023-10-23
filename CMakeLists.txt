@@ -9,7 +9,12 @@ FetchContent_Declare(SFML
     GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(TheIsle src/main.cpp)
+file(GLOB Isle_SRC
+    "src/*.cpp"
+    "src/*.hpp"
+)
+
+add_executable(TheIsle ${Isle_SRC})
 target_link_libraries(TheIsle PRIVATE sfml-graphics)
 target_compile_features(TheIsle PRIVATE cxx_std_17)
 

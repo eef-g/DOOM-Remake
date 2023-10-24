@@ -6,6 +6,7 @@
     It will contain the game loop, and will be responsible for updating
     and rendering all of the game's objects.
 */
+
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>

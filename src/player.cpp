@@ -5,15 +5,13 @@
 /// @brief Initializes the player's variables
 void Player::initVariables() {
     this->movementSpeed = 150.f;
-    this->currentAnimation = IDLE;
     
     // Prep the spritesheet
     this->spriteSheet.loadFromFile("assets/character_sheet.png");
     this->spriteCount = sf::Vector2u(23, 20);
     this->currentSprite = sf::Vector2u(0, 2);
-    this->animFrames = 5;
-    this->frameTime = 0.15f;
-    this->animTimer = 0.f;
+
+    this->swapAnimationRepeat(IDLE);
 
     // Prep the uvRect
     this->uvRect.width = this->spriteSheet.getSize().x / float(this->spriteCount.x);
@@ -53,41 +51,70 @@ const sf::Vector2f& Player::getPos() const { return this->shape.getPosition(); }
             this->updateAnimation(deltaTime);
             this->updateVelocity();
             this->move(deltaTime);
+            this->mouseInteraction();
+        }
+
+
+
+        void Player::mouseInteraction() {
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                this->swapAnimationSingle(PICKAXE, IDLE);
+            }
         }
 
         /// @brief Updates the player's velocity based on input
         void Player::updateVelocity() {
+            // Prep empty velocity vector
             sf::Vector2f velocity(0.f, 0.f);
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-                velocity.y -= 1.f;
-            }
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-                this->shape.setScale(-1.f, 1.f);
-                velocity.x -= 1.f;
-            }
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-                velocity.y +=1.f;
-            }
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-                this->shape.setScale(1.f, 1.f);
-                velocity.x += 1.f;
-            }
-            if (velocity.x != 0.f && velocity.y != 0.f) {
-                velocity.x /= sqrt(2.f);
-                velocity.y /= sqrt(2.f);
-            }
 
+            // Only calculate player velocity if they can move
+            if (this->canMove) {
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+                    velocity.y -= 1.f;
+                }
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+                    this->shape.setScale(-1.f, 1.f);
+                    velocity.x -= 1.f;
+                }
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+                    velocity.y +=1.f;
+                }
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+                    this->shape.setScale(1.f, 1.f);
+                    velocity.x += 1.f;
+                }
+                if (velocity.x != 0.f && velocity.y != 0.f) {
+                    velocity.x /= sqrt(2.f);
+                    velocity.y /= sqrt(2.f);
+                }
+            }
+            // Update player's velocity
+            this->velocity = this->movementSpeed * velocity;
+            
+            // Animation handling
             if (velocity.x == 0.f && velocity.y == 0.f) {
-                if (this->currentAnimation != IDLE) {
-                    this->swapAnimation(IDLE);
+                switch (this->oneshotAnim) {
+                    case true:
+                        //Nothing happens
+                    break;
+                    case false:
+                        if (this->currentAnimation != IDLE) {
+                            this->swapAnimationRepeat(IDLE);
+                        }
+                    break;
                 }
             } else {
-                if (this->currentAnimation != RUNNING) {
-                    this->swapAnimation(RUNNING);
-                }  
+                switch (this->oneshotAnim) {
+                    case true:
+                        //Nothing happens
+                    break;
+                    case false:
+                        if (this->currentAnimation != RUNNING) {
+                            this->swapAnimationRepeat(RUNNING);
+                        }
+                    break;
+                }
             }
-
-            this->velocity = this->movementSpeed * velocity;
         }
 
         /// @brief Move the player sprite based on it's velocity
@@ -108,12 +135,11 @@ const sf::Vector2f& Player::getPos() const { return this->shape.getPosition(); }
             if (this->animTimer >= this->frameTime) {
                 // Reset the animation timer
                 this->animTimer = 0.f;
-                // Update the current sprite
                 if (this->currentSprite.x < this->animFrames) {
                     this->currentSprite.x++;
-                }
-                else {
-                    this->currentSprite.x = 0;
+                } else {
+                    if (this->oneshotAnim) { this->swapAnimationRepeat(this->queuedAnimation); }
+                    else { this->currentSprite.x = 0; }
                 }
             }
             // Update the uvRect
@@ -130,8 +156,14 @@ const sf::Vector2f& Player::getPos() const { return this->shape.getPosition(); }
             Render functions
         */
 
-
         void Player::render(sf::RenderTarget* target) {
+            if (this->mousePos.x < this->getPos().x) {
+                if(this->shape.getScale().x > 0.f) {
+                    this->shape.setScale(-1.f, 1.f);
+                }
+            } else {
+                this->shape.setScale(1.f, 1.f);
+            }
             this->shape.setTexture(&this->spriteSheet);
             this->shape.setTextureRect(this->uvRect);
             target->draw(this->shape);
@@ -150,21 +182,25 @@ const sf::Vector2f& Player::getPos() const { return this->shape.getPosition(); }
        void Player::swapAnimation(Animations animation) {
             this->animTimer = 0.f;
             this->currentAnimation = animation;
+            this->canMove = false;
             switch(animation) {
                 case WALK:
                     this->currentSprite = sf::Vector2u(0, 0);
                     this->frameTime = 0.1f;
                     this->animFrames = 6;
+                    this->canMove = true;
                     break;
                 case CARRY:
                     this->currentSprite = sf::Vector2u(0, 1);
                     this->frameTime = 0.15f;
                     this->animFrames = 7;
+                    this->canMove = true;
                     break;
                 case IDLE:
                     this->currentSprite = sf::Vector2u(0, 2);
                     this->frameTime = 0.15f;
                     this->animFrames = 5;
+                    this->canMove = true;
                     break;
                 case WATERING:
                     this->currentSprite = sf::Vector2u(0, 3);
@@ -190,16 +226,19 @@ const sf::Vector2f& Player::getPos() const { return this->shape.getPosition(); }
                     this->currentSprite = sf::Vector2u(0, 7);
                     this->frameTime = 0.1f;
                     this->animFrames = 7;
+                    this->canMove = true;
                     break;
                 case JUMPING:
                     this->currentSprite = sf::Vector2u(0, 8);
                     this->frameTime = 0.15f;
                     this->animFrames = 6;
+                    this->canMove = true;
                     break;
                 case ROLLING:
                     this->currentSprite = sf::Vector2u(0, 9);
                     this->frameTime = 0.15f;
                     this->animFrames = 9;
+                    this->canMove = true;
                     break;
                 case AXE:
                     this->currentSprite = sf::Vector2u(0, 10);
@@ -208,13 +247,14 @@ const sf::Vector2f& Player::getPos() const { return this->shape.getPosition(); }
                     break;
                 case PICKAXE:
                     this->currentSprite = sf::Vector2u(0, 11);
-                    this->frameTime = 0.15f;
+                    this->frameTime = 0.08f;
                     this->animFrames = 9;
                     break;
                 case SWIMMING:
                     this->currentSprite = sf::Vector2u(0, 12);
                     this->frameTime = 0.15f;
                     this->animFrames = 3;
+                    this->canMove = true;
                     break;
                 case HAMMER:
                     this->currentSprite = sf::Vector2u(0, 13);
@@ -256,7 +296,20 @@ const sf::Vector2f& Player::getPos() const { return this->shape.getPosition(); }
             }
        }
 
+       void Player::swapAnimationRepeat(Animations anim) {
+            this->oneshotAnim = false;
+            this->swapAnimation(anim);
+       }
 
+       void Player::swapAnimationSingle(Animations target_anim, Animations post_anim) {
+            this->oneshotAnim = true;        
+            this->swapAnimation(target_anim);
+            this->queuedAnimation = post_anim;
+       }
+
+       void Player::setMousePos(sf::Vector2f mousePos) {
+           this->mousePos = mousePos;
+       }
     #pragma endregion
 
 #pragma endregion

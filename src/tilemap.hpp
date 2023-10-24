@@ -17,11 +17,6 @@ class Tile {
     private:
         // Variables
         sf::RectangleShape shape;
-        sf::IntRect uvRect;
-        sf::Texture *tileset;
-        sf::Vector2u tileSize;
-        sf::Vector2u tilePos;
-        sf::Vector2u spritePos;
 
     public:
         Tile();

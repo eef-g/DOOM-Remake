@@ -23,7 +23,7 @@ const bool Game::running() const { return this->window->isOpen(); }
 void Game::run() {
     sf::Clock clock;
     float deltaTime = 0.f;
-    float maxFPS = 60.f;
+    float maxFPS = 30.f;
     float frameTime = 1.f / maxFPS;
     while (this->running()) {
         deltaTime += clock.restart().asSeconds();
@@ -60,6 +60,13 @@ void Game::update(float frameTime) {
     sf::Vector2f velocity(0.f, 0.f);
     this->player.update(frameTime);
     this->view.setCenter(this->player.getPos());
+    
+    // Get the mouse position in the world (Can be used for mouse interaction)
+    sf::Vector2i mousePos = sf::Mouse::getPosition(*this->window);
+    sf::Vector2f worldPos = this->window->mapPixelToCoords(mousePos);
+
+    // Set the mouse position for the player
+    this->player.setMousePos(worldPos);
 }
 
 /// @brief Runs the rendering logic for each frame in the game loop
@@ -67,6 +74,7 @@ void Game::render() {
     // Clear the window & update view
     this->window->clear(sf::Color(0, 153, 219, 255));
     this->window->setView(this->view);
+
 
     // Render items -- Make sure that the bototm-most layer is rendered first
     this->tilemap.render(this->window);

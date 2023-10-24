@@ -6,7 +6,7 @@
 #include <cmath>
 
 #include <SFML/Graphics.hpp>
-
+#include <SFML/System.hpp>
 /// @brief Enum for the different animations the player can have
 enum Animations {
     WALK,
@@ -48,14 +48,19 @@ class Player {
         sf::Texture spriteSheet;
         sf::Vector2u spriteCount;
         sf::Vector2u currentSprite;
-        int animFrames;
-        float animTimer;
-        float frameTime;
+        
+            // Animation logic
+        int animFrames = 0;
+        float animTimer = 0.f;
+        float frameTime =0.f;
+        bool oneshotAnim = false;
         Animations currentAnimation;
+        Animations queuedAnimation;
+        sf::Vector2f mousePos;
 
             // Movement
-
-        float movementSpeed;
+        bool canMove = true;
+        float movementSpeed = 0.f;
         sf::Vector2f moveDir;
         sf::Vector2f velocity;
 
@@ -65,7 +70,9 @@ class Player {
         void updateAnimation(float deltaTime);
         void updateVelocity();
         void swapAnimation(Animations animation);
-
+        void mouseInteraction();
+        void swapAnimationRepeat(Animations anim);
+        void swapAnimationSingle(Animations target_anim, Animations post_anim);
     public:
         // Constructor/Destructor
         Player();
@@ -75,9 +82,10 @@ class Player {
         const sf::Vector2f& getPos() const;
 
         // Functions
+        void setMousePos(sf::Vector2f mousePos);
+
         void move(float deltaTime);
         void update(float deltaTime);
-
         void render(sf::RenderTarget* target);
 };
 

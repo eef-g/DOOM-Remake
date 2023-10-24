@@ -59,12 +59,15 @@ void Game::pollEvents() {
 void Game::update(float frameTime) {
     sf::Vector2f velocity(0.f, 0.f);
     this->player.update(frameTime);
+    this->view.setCenter(this->player.getPos());
 }
 
 /// @brief Runs the rendering logic for each frame in the game loop
 void Game::render() {
-    // Clear the window
-    this->window->clear(sf::Color(135, 207, 94, 255));
+    // Clear the window & update view
+    this->window->clear(sf::Color(0, 153, 219, 255));
+    this->window->setView(this->view);
+
     // Render items -- Make sure that the bototm-most layer is rendered first
     this->tilemap.render(this->window);
     this->player.render(this->window);
@@ -87,5 +90,12 @@ void Game::initWindow() {
     this->videoMode.height = 480;
     this->videoMode.width = 854;
 
-    window = new sf::RenderWindow(this->videoMode, "The Isle", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
+
+
+    this->window = new sf::RenderWindow(this->videoMode, "The Isle", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
+
+    // Initialize the view
+    this->view.setSize(sf::Vector2f(this->videoMode.width, this->videoMode.height));
+    this->view.setCenter(sf::Vector2f(this->videoMode.width / 2.f, this->videoMode.height / 2.f));
+    this->window->setView(this->view);
 }

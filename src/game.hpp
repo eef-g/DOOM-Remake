@@ -18,10 +18,15 @@
 // Pro-tip: Press 'CRTL+.' to automatically create the function definition in the cpp file
 class Game {
     private:
-        // Variables
+        // Window handling
         sf::RenderWindow* window;
         sf::Event ev;
         sf::VideoMode videoMode;
+        
+        // View handling
+        sf::View view;
+
+        // Objects
         Player player = Player();
         Tilemap tilemap = Tilemap();
 

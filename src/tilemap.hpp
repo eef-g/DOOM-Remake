@@ -35,7 +35,6 @@ class Tilemap {
         sf::Vector2u tileSize;
         sf::Vector2u mapSize;
 
-
             // Map handling
         std::map<std::string, Tile> tileMap;
 

@@ -49,7 +49,7 @@
     void Tilemap::initVariables() {
         // Store how large the map is along with the size of each tile
         this->tileSize = sf::Vector2u(16, 16);
-        this->mapSize = sf::Vector2u(10, 10);
+        this->mapSize = sf::Vector2u(32, 32);
 
         // Load the tileset
         this->tileset.loadFromFile("assets/tilemap.png");

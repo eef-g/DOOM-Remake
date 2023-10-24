@@ -6,10 +6,6 @@
 #include <cmath>
 
 #include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/System.hpp>
-#include <SFML/Audio.hpp>
-#include <SFML/Network.hpp>
 
 /// @brief Enum for the different animations the player can have
 enum Animations {
@@ -40,10 +36,13 @@ enum Animations {
     It will contain the player's movement, and will be responsible for updating
     and rendering the player.
 */
+
+/// @brief The Player class acts as a container for all of the player's logic.
 class Player {
     private:
         // Variables
             // Spritesheet handling
+
         sf::RectangleShape shape;
         sf::IntRect uvRect;
         sf::Texture spriteSheet;
@@ -55,11 +54,13 @@ class Player {
         Animations currentAnimation;
 
             // Movement
+
         float movementSpeed;
         sf::Vector2f moveDir;
         sf::Vector2f velocity;
 
         // Functions
+
         void initVariables();
         void updateAnimation(float deltaTime);
         void updateVelocity();

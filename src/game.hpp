@@ -16,6 +16,8 @@
 #include "tilemap.hpp"
 
 // Pro-tip: Press 'CRTL+.' to automatically create the function definition in the cpp file
+
+/// @brief The Game class acts as a container for all of the game's logic.
 class Game {
     private:
         // Window handling

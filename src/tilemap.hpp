@@ -6,7 +6,13 @@
 #include <string>
 
 #include<SFML/Graphics.hpp>
+/*
+    The Tile class acts as a container for all of the tile's logic.
+    It will contain the tile's sprite, and will be responsible for updating
+    and rendering the tile.
+*/
 
+/// @brief The Tile class acts as a container for all of the tile's logic.
 class Tile {
     private:
         // Variables
@@ -27,6 +33,13 @@ class Tile {
 };
 
 
+/*
+    The Tilemap class acts as a container for all of the tilemap's logic.
+    It will contain the tilemap's tiles, and will be responsible for updating
+    and rendering the tilemap.
+*/
+
+/// @brief The Tilemap class acts as a container for all of the tilemap's logic.
 class Tilemap {
     private:
         //Variables

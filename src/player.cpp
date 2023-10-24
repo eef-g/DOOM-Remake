@@ -1,6 +1,8 @@
 #include "player.hpp"
 
 // Private functions
+
+/// @brief Initializes the player's variables
 void Player::initVariables() {
     this->movementSpeed = 150.f;
     this->currentAnimation = IDLE;

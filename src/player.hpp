@@ -1,12 +1,38 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
+#include <string>
 #include <iostream>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
+
+/// @brief Enum for the different animations the player can have
+enum Animations {
+    WALK,
+    CARRY,
+    IDLE,
+    WATERING,
+    HIT,
+    DEATH,
+    DOING,
+    RUNNING,
+    JUMPING,
+    ROLLING,
+    AXE,
+    PICKAXE,
+    SWIMMING,
+    HAMMER,
+    SWORD,
+    CASTING,
+    WAITING,
+    CAUGHT,
+    REELING,
+    SHOVEL
+};
 
 /*
     The Player class acts as a container for all of the player's logic.
@@ -25,6 +51,7 @@ class Player {
         int animFrames;
         float animTimer;
         float frameTime;
+        Animations currentAnimation;
 
             // Movement
         float movementSpeed;
@@ -35,6 +62,8 @@ class Player {
         void initVariables();
         void updateAnimation(float deltaTime);
         void updateVelocity();
+        void swapAnimation(Animations animation);
+
     public:
         // Constructor/Destructor
         Player();
@@ -49,6 +78,5 @@ class Player {
 
         void render(sf::RenderTarget* target);
 };
-
 
 #endif

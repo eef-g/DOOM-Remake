@@ -3,6 +3,7 @@
 // Private functions
 void Player::initVariables() {
     this->movementSpeed = 150.f;
+    this->currentAnimation = IDLE;
     
     // Prep the spritesheet
     this->spriteSheet.loadFromFile("assets/character_sheet.png");
@@ -21,6 +22,9 @@ void Player::initVariables() {
     // Prep the shape that is rendered
     this->shape.setTexture(&this->spriteSheet);
     this->shape.setSize(sf::Vector2f(this->uvRect.width, this->uvRect.height));
+
+    sf::FloatRect bounds = this->shape.getLocalBounds();
+    this->shape.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
 }
 
 
@@ -58,14 +62,30 @@ const sf::Vector2f& Player::getPos() const { return this->shape.getPosition(); }
                 velocity.y -= 1.f;
             }
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+                this->shape.setScale(-1.f, 1.f);
                 velocity.x -= 1.f;
             }
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
                 velocity.y += 1.f;
             }
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+                this->shape.setScale(1.f, 1.f);
                 velocity.x += 1.f;
             }
+            if (velocity.x != 0.f && velocity.y != 0.f) {
+                velocity /= sqrt(2.f);
+            }
+
+            if (velocity.x == 0.f && velocity.y == 0.f) {
+                if (this->currentAnimation != IDLE) {
+                    this->swapAnimation(IDLE);
+                }
+            } else {
+                if (this->currentAnimation != WALK) {
+                    this->swapAnimation(WALK);
+                }  
+            }
+
             this->velocity = this->movementSpeed * velocity;
         }
 
@@ -115,6 +135,126 @@ const sf::Vector2f& Player::getPos() const { return this->shape.getPosition(); }
             this->shape.setTextureRect(this->uvRect);
             target->draw(this->shape);
         }
+
+    #pragma endregion
+
+
+    #pragma region UtilityFunctions
+        /*
+            Utility functions
+        */
+
+       /// @brief Switches the current animation and refreshes the timer
+       /// @param animation The animation to switch to
+       void Player::swapAnimation(Animations animation) {
+            this->animTimer = 0.f;
+            this->currentAnimation = animation;
+            switch(animation) {
+                case WALK:
+                    this->currentSprite = sf::Vector2u(0, 0);
+                    this->frameTime = 0.1f;
+                    this->animFrames = 6;
+                    break;
+                case CARRY:
+                    this->currentSprite = sf::Vector2u(0, 1);
+                    this->frameTime = 0.15f;
+                    this->animFrames = 7;
+                    break;
+                case IDLE:
+                    this->currentSprite = sf::Vector2u(0, 2);
+                    this->frameTime = 0.15f;
+                    this->animFrames = 5;
+                    break;
+                case WATERING:
+                    this->currentSprite = sf::Vector2u(0, 3);
+                    this->frameTime = 0.15f;
+                    this->animFrames = 4;
+                    break;
+                case HIT:
+                    this->currentSprite = sf::Vector2u(0, 4);
+                    this->frameTime = 0.15f;
+                    this->animFrames = 5;
+                    break;
+                case DEATH:
+                    this->currentSprite = sf::Vector2u(0, 5);
+                    this->frameTime = 0.15f;
+                    this->animFrames = 7;
+                    break;
+                case DOING:
+                    this->currentSprite = sf::Vector2u(0, 6);
+                    this->frameTime = 0.15f;
+                    this->animFrames = 7;
+                    break;
+                case RUNNING:
+                    this->currentSprite = sf::Vector2u(0, 7);
+                    this->frameTime = 0.1f;
+                    this->animFrames = 7;
+                    break;
+                case JUMPING:
+                    this->currentSprite = sf::Vector2u(0, 8);
+                    this->frameTime = 0.15f;
+                    this->animFrames = 6;
+                    break;
+                case ROLLING:
+                    this->currentSprite = sf::Vector2u(0, 9);
+                    this->frameTime = 0.15f;
+                    this->animFrames = 9;
+                    break;
+                case AXE:
+                    this->currentSprite = sf::Vector2u(0, 10);
+                    this->frameTime = 0.15f;
+                    this->animFrames = 9;
+                    break;
+                case PICKAXE:
+                    this->currentSprite = sf::Vector2u(0, 11);
+                    this->frameTime = 0.15f;
+                    this->animFrames = 9;
+                    break;
+                case SWIMMING:
+                    this->currentSprite = sf::Vector2u(0, 12);
+                    this->frameTime = 0.15f;
+                    this->animFrames = 3;
+                    break;
+                case HAMMER:
+                    this->currentSprite = sf::Vector2u(0, 13);
+                    this->frameTime = 0.15f;
+                    this->animFrames = 22;
+                    break;
+                case SWORD:
+                    this->currentSprite = sf::Vector2u(0, 14);
+                    this->frameTime = 0.15f;
+                    this->animFrames = 9;
+                    break;
+                case CASTING:
+                    this->currentSprite = sf::Vector2u(0, 15);
+                    this->frameTime = 0.15f;
+                    this->animFrames = 14;
+                    break;
+                case WAITING:
+                    this->currentSprite = sf::Vector2u(0, 16);
+                    this->frameTime = 0.15f;
+                    this->animFrames = 7;
+                    break;
+                case CAUGHT:
+                    this->currentSprite = sf::Vector2u(0, 17);
+                    this->frameTime = 0.15f;
+                    this->animFrames = 12;
+                    break;
+                case REELING:
+                    this->currentSprite = sf::Vector2u(0, 18);
+                    this->frameTime = 0.15f;
+                    this->animFrames = 9;
+                    break;
+                case SHOVEL:
+                    this->currentSprite = sf::Vector2u(0, 19);
+                    this->frameTime = 0.15f;
+                    this->animFrames = 12;
+                    break;
+                default:
+                    break;
+            }
+       }
+
 
     #pragma endregion
 

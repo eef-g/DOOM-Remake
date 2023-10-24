@@ -13,6 +13,7 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
 #include "player.hpp"
+#include "tilemap.hpp"
 
 // Pro-tip: Press 'CRTL+.' to automatically create the function definition in the cpp file
 class Game {
@@ -22,6 +23,7 @@ class Game {
         sf::Event ev;
         sf::VideoMode videoMode;
         Player player = Player();
+        Tilemap tilemap = Tilemap();
 
         // Functions
         void initVariables();

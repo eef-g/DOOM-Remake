@@ -11,6 +11,7 @@ Game::~Game() {
     delete this->window;
 }
 
+
 /*
     Public Functions
 */
@@ -18,6 +19,7 @@ Game::~Game() {
 /// @brief Returns whether the game is running or not
 const bool Game::running() const { return this->window->isOpen(); }
 
+/// @brief Runs the game loop
 void Game::run() {
     sf::Clock clock;
     float deltaTime = 0.f;
@@ -34,7 +36,6 @@ void Game::run() {
     }
 }
 
-
 /// @brief Polls events from the window
 void Game::pollEvents() {
     // Event Polling
@@ -47,6 +48,8 @@ void Game::pollEvents() {
                 if (this->ev.key.code == sf::Keyboard::Escape) {
                     this->window->close();
                 }
+                break;
+            default:
                 break;
         }
     }
@@ -62,16 +65,17 @@ void Game::update(float frameTime) {
 void Game::render() {
     // Clear the window
     this->window->clear(sf::Color(135, 207, 94, 255));
-    // Render items
+    // Render items -- Make sure that the bototm-most layer is rendered first
+    this->tilemap.render(this->window);
     this->player.render(this->window);
     // Display items
     this->window->display();
 }
 
+
 /*
     Private Functions
 */
-
 
 /// @brief Initializes the game's variables
 void Game::initVariables() {
@@ -80,8 +84,8 @@ void Game::initVariables() {
 
 /// @brief Initializes the game's window
 void Game::initWindow() {
-    this->videoMode.height = 720;
-    this->videoMode.width = 1280;
+    this->videoMode.height = 480;
+    this->videoMode.width = 854;
 
     window = new sf::RenderWindow(this->videoMode, "The Isle", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
 }

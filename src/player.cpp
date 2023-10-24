@@ -64,7 +64,7 @@ const sf::Vector2f& Player::getPos() const { return this->shape.getPosition(); }
                 velocity.x -= 1.f;
             }
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-                velocity.y += 1.f;
+                velocity.y +=1.f;
             }
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
                 this->shape.setScale(1.f, 1.f);
@@ -79,8 +79,8 @@ const sf::Vector2f& Player::getPos() const { return this->shape.getPosition(); }
                     this->swapAnimation(IDLE);
                 }
             } else {
-                if (this->currentAnimation != WALK) {
-                    this->swapAnimation(WALK);
+                if (this->currentAnimation != RUNNING) {
+                    this->swapAnimation(RUNNING);
                 }  
             }
 

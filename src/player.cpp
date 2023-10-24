@@ -16,8 +16,6 @@ void Player::initVariables() {
     // Prep the uvRect
     this->uvRect.width = this->spriteSheet.getSize().x / float(this->spriteCount.x);
     this->uvRect.height = this->spriteSheet.getSize().y / float(this->spriteCount.y);
-    std::cout << "Texture Size: " << this->spriteSheet.getSize().x << ", " << this->spriteSheet.getSize().y << std::endl;
-    std::cout << "UV Rect: " << this->uvRect.left << ", " << this->uvRect.top << ", " << this->uvRect.width << ", " << this->uvRect.height << std::endl;
 
     // Prep the shape that is rendered
     this->shape.setTexture(&this->spriteSheet);

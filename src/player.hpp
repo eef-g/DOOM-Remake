@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include <cmath>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>

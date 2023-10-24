@@ -71,7 +71,8 @@ const sf::Vector2f& Player::getPos() const { return this->shape.getPosition(); }
                 velocity.x += 1.f;
             }
             if (velocity.x != 0.f && velocity.y != 0.f) {
-                velocity /= sqrt(2.f);
+                velocity.x /= sqrt(2.f);
+                velocity.y /= sqrt(2.f);
             }
 
             if (velocity.x == 0.f && velocity.y == 0.f) {

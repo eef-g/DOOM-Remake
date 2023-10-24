@@ -80,8 +80,8 @@ void Game::initVariables() {
 
 /// @brief Initializes the game's window
 void Game::initWindow() {
-    this->videoMode.height = 480;
-    this->videoMode.width = 640;
+    this->videoMode.height = 720;
+    this->videoMode.width = 1280;
 
     window = new sf::RenderWindow(this->videoMode, "The Isle", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
 }

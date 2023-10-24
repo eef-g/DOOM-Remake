@@ -34,9 +34,7 @@ Player::~Player() {
 }
 
 // Accessors
-const sf::Vector2f& Player::getPos() const {
-    return this->shape.getPosition();
-}
+const sf::Vector2f& Player::getPos() const { return this->shape.getPosition(); }
 
 #pragma region Functions
 
@@ -80,6 +78,8 @@ const sf::Vector2f& Player::getPos() const {
             this->shape.setPosition(newPos);
         }
 
+        /// @brief Updates the player's animation
+        /// @param deltaTime The time between frames
         void Player::updateAnimation(float deltaTime) {
             // Update the animation timer
             this->animTimer += deltaTime;

@@ -12,11 +12,18 @@
     and rendering the tile.
 */
 
+enum TileType {
+    GROUND,
+    OBJECT
+};
+
+
 /// @brief The Tile class acts as a container for all of the tile's logic.
 class Tile {
     private:
         // Variables
         sf::RectangleShape shape;
+        TileType type;
 
     public:
         Tile();
@@ -44,18 +51,19 @@ class Tilemap {
         sf::Vector2u mapSize;
 
             // Map handling
-        std::map<std::string, Tile> tileMap;
+        std::map<std::string, Tile> groundLayer;
+        std::map<std::string, Tile> objectLayer;
 
         void initVariables();
         void initTileset();
-        void addTile(int x, int y);
+        void addTile(int x, int y, int z, TileType type);
     public:
         Tilemap();
         virtual ~Tilemap();
 
         void update();
         void render(sf::RenderTarget *target);
-        Tile getTile(int x, int y);
+        Tile getTile(int x, int y, int z);
 };
 
 #endif

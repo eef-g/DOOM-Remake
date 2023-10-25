@@ -67,27 +67,53 @@
 
     /// @brief Initializes the tileset
     void Tilemap::initTileset() {
-        // Set up the tilemap
+        // Set up the ground layer
         for (int x = 0; x < this->mapSize.x; x++) {
             for (int y = 0; y < this->mapSize.y; y++) {
-                this->addTile(x, y);
+                this->addTile(x, y, 0, TileType::GROUND);
             }
+        }
+
+        // Set up the object layer
+        // Create the list of tiles that will have an object - -This is only temp
+        std::vector<sf::Vector2u> objectTiles;
+        objectTiles.push_back(sf::Vector2u(10, 12));
+        objectTiles.push_back(sf::Vector2u(11, 12));
+        objectTiles.push_back(sf::Vector2u(10, 13));
+        objectTiles.push_back(sf::Vector2u(11, 13));
+        for (auto &tile : objectTiles) {
+            this->addTile(tile.x, tile.y, 1, TileType::OBJECT);
         }
     }
 
     /// @brief  Adds a tile to the tilemap
     /// @param x The x position of the tile
     /// @param y The y position of the tile
-    void Tilemap::addTile(int x, int y) {
+    void Tilemap::addTile(int x, int y, int z, TileType type) {
         std::string tileName = "tile_" + std::to_string(x) + "_" + std::to_string(y);
         sf::Vector2u tilePos(x * this->tileSize.x, y * this->tileSize.y);
         sf::Vector2u spritePos(0, 0);
-        this->tileMap[tileName] = Tile(&this->tileset, this->tileSize, tilePos, spritePos);
+        switch(z) {
+            case 0:
+                this->groundLayer[tileName] = Tile(&this->tileset, this->tileSize, tilePos, spritePos);
+                break;
+            case 1:
+                this->objectLayer[tileName] = Tile(&this->tileset, this->tileSize, tilePos, spritePos);
+                break;
+            default:
+                break;
+        }
     }
 
     /// @brief Updates the tilemap
     void Tilemap::update() {
-        for( auto &tile : this->tileMap) {
+        // Update the ground layer
+        for( auto &tile : this->groundLayer) {
+            tile.second.update();
+        }
+
+        // Update the object layer
+        for( auto &tile : this->objectLayer) {
             tile.second.update();
         }
     }
@@ -95,20 +121,34 @@
     /// @brief Renders the tilemap
     /// @param target The render target to render the tilemap to
     void Tilemap::render(sf::RenderTarget *target) {
-        // Render the tilemap
-        for (auto &tile : this->tileMap) {
+        // Render the ground layer
+        for (auto &tile : this->groundLayer) {
+            tile.second.render(target);
+        }
+
+        // Render the object layer
+        for (auto &tile : this->objectLayer) {
             tile.second.render(target);
         }
     }
-
 
     /// @brief Gets a tile object from coordinates
     /// @param x The x coordinate of the tile
     /// @param y The y coordinate of the tile
     /// @return Tile object at the given coordinates 
-    Tile Tilemap::getTile(int x, int y) {
+    Tile Tilemap::getTile(int x, int y, int z) {
         std::string tileName = "tile_" + std::to_string(x) + "_" + std::to_string(y);
-        return this->tileMap[tileName];
+        switch (z) {
+            case 0:
+                return this->groundLayer[tileName];
+                break;
+            case 1:
+                return this->objectLayer[tileName];
+                break;
+            default:
+                return this->groundLayer[tileName];
+                break;
+        }
     }
 
 #pragma endregion

@@ -28,6 +28,19 @@
 
     }
 
+    /// @brief Gets the vertex of the tile
+    /// @return The vertex of the tile
+    sf::Vertex* Tile::getVerticies() {
+        sf::FloatRect bounds = this->shape.getGlobalBounds();
+
+        sf::Vertex quad[4];
+        quad[0].position = sf::Vector2f(bounds.left, bounds.top);
+        quad[1].position = sf::Vector2f(bounds.left + bounds.width, bounds.top);
+        quad[2].position = sf::Vector2f(bounds.left + bounds.width, bounds.top + bounds.height);
+        quad[3].position = sf::Vector2f(bounds.left, bounds.top + bounds.height);
+        return quad;
+    }
+    
     /// @brief Updates the tile
     void Tile::update() {
         // Empty for now but we'll do some checking eventually
@@ -63,13 +76,21 @@
 
         // Load the tileset
         this->tileset.loadFromFile("assets/tilemap.png");
+
+        // Allocate memory for the layers
+        this->groundLayer = new Tile*[this->mapSize.x];
+        this->objectLayer = new Tile*[this->mapSize.x];
+        for (int i = 0; i < this->mapSize.x; i++) {
+            this->groundLayer[i] = new Tile[this->mapSize.y];
+            this->objectLayer[i] = new Tile[this->mapSize.y];
+        }
     }
 
     /// @brief Initializes the tileset
     void Tilemap::initTileset() {
         // Set up the ground layer
-        for (int x = 0; x < this->mapSize.x; x++) {
-            for (int y = 0; y < this->mapSize.y; y++) {
+        for (int x = 0; x < this->mapSize.x - 1; x++) {
+            for (int y = 0; y < this->mapSize.y - 1; y++) {
                 this->addTile(x, y, 0, TileType::GROUND);
             }
         }
@@ -90,17 +111,18 @@
     /// @param x The x position of the tile
     /// @param y The y position of the tile
     void Tilemap::addTile(int x, int y, int z, TileType type) {
-        std::string tileName = "tile_" + std::to_string(x) + "_" + std::to_string(y);
         sf::Vector2u tilePos(x * this->tileSize.x, y * this->tileSize.y);
         sf::Vector2u spritePos;
         switch(z) {
             case 0:
                 spritePos = sf::Vector2u(0, 0);
-                this->groundLayer[tileName] = Tile(&this->tileset, this->tileSize, tilePos, spritePos);
+                this->groundLayer[x][y] = Tile(&this->tileset, this->tileSize, tilePos, spritePos);
+                this->groundLayer[x][y].isActive = true;
                 break;
             case 1:
-                spritePos = sf::Vector2u(32, 0);
-                this->objectLayer[tileName] = Tile(&this->tileset, this->tileSize, tilePos, spritePos);
+                spritePos = sf::Vector2u(2 * this->tileSize.x, 0);
+                this->objectLayer[x][y] = Tile(&this->tileset, this->tileSize, tilePos, spritePos);
+                this->objectLayer[x][y].isActive = true;
                 break;
             default:
                 break;
@@ -110,27 +132,56 @@
     /// @brief Updates the tilemap
     void Tilemap::update() {
         // Update the ground layer
-        for( auto &tile : this->groundLayer) {
-            tile.second.update();
+        for(int x = 0; x < this->mapSize.x - 1; x++) {
+            for(int y = 0; y < this->mapSize.y - 1; y++) {
+                this->groundLayer[x][y].update();
+            }
         }
 
         // Update the object layer
-        for( auto &tile : this->objectLayer) {
-            tile.second.update();
+        for(int x = 0; x < this->mapSize.x - 1; x++) {
+            for(int y = 0; y < this->mapSize.y - 1; y++) {
+                this->objectLayer[x][y].update();
+            }
         }
     }
 
     /// @brief Renders the tilemap
     /// @param target The render target to render the tilemap to
     void Tilemap::render(sf::RenderTarget *target) {
+        // // // Create a map for batch rendering
+        // std::map<const sf::Texture*, std::vector<sf::Vertex>> map;
+
+        // // Add the ground layer to the map
+        // for(int x = 0; x < this->mapSize.x -1; x++) {
+        //     for(int y = 0; y < this->mapSize.y -1; y++) {
+        //         const sf::Texture* texture = this->groundLayer[x][y].shape.getTexture();
+        //         sf::Vertex* verts = this->groundLayer[x][y].getVerticies();
+        //         for(int i = 0; i < 4; i++) {
+        //             map[texture].push_back(verts[i]);
+        //         }
+        //     }
+        // }
+
+        // // Render the tiles using batch rendering
+        // for (auto& pair : map) {
+        //     const sf::Texture* texture = pair.first;
+        //     const std::vector<sf::Vertex>& vertices = pair.second;
+        //     target->draw(&vertices[0], vertices.size(), sf::Quads, sf::RenderStates(texture));
+        // }
+
         // Render the ground layer
-        for (auto &tile : this->groundLayer) {
-            tile.second.render(target);
+        for(int x = 0; x < this->mapSize.x - 1; x++) {
+            for(int y = 0; y < this->mapSize.y - 1; y++) {
+                this->groundLayer[x][y].render(target);
+            }
         }
 
         // Render the object layer
-        for (auto &tile : this->objectLayer) {
-            tile.second.render(target);
+        for(int x = 0; x < this->mapSize.x - 1; x++) {
+            for(int y = 0; y < this->mapSize.y - 1; y++) {
+                this->objectLayer[x][y].render(target);
+            }
         }
     }
 
@@ -139,16 +190,15 @@
     /// @param y The y coordinate of the tile
     /// @return Tile object at the given coordinates 
     Tile Tilemap::getTile(int x, int y, int z) {
-        std::string tileName = "tile_" + std::to_string(x) + "_" + std::to_string(y);
         switch (z) {
             case 0:
-                return this->groundLayer[tileName];
+                return this->groundLayer[x][y];
                 break;
             case 1:
-                return this->objectLayer[tileName];
+                return this->objectLayer[x][y];
                 break;
             default:
-                return this->groundLayer[tileName];
+                return this->groundLayer[x][y];
                 break;
         }
     }

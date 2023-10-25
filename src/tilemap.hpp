@@ -3,8 +3,6 @@
 
 #include <iostream>
 #include <map>
-#include <string>
-
 #include<SFML/Graphics.hpp>
 /*
     The Tile class acts as a container for all of the tile's logic.
@@ -22,14 +20,15 @@ enum TileType {
 class Tile {
     private:
         // Variables
-        sf::RectangleShape shape;
         TileType type;
-
     public:
         Tile();
         Tile(sf::Texture *tileset, sf::Vector2u tileSize, sf::Vector2u tilePos, sf::Vector2u spritePos);
         virtual ~Tile();
+        bool isActive = false;
+        sf::RectangleShape shape;
 
+        sf::Vertex* getVerticies();
         void update();
         void render(sf::RenderTarget *target);
 };
@@ -50,9 +49,9 @@ class Tilemap {
         sf::Vector2u tileSize;
         sf::Vector2u mapSize;
 
-            // Map handling
-        std::map<std::string, Tile> groundLayer;
-        std::map<std::string, Tile> objectLayer;
+            // Map handling -- Use 2D array instead of map
+        Tile** groundLayer;
+        Tile** objectLayer;
 
         void initVariables();
         void initTileset();

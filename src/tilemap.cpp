@@ -92,12 +92,14 @@
     void Tilemap::addTile(int x, int y, int z, TileType type) {
         std::string tileName = "tile_" + std::to_string(x) + "_" + std::to_string(y);
         sf::Vector2u tilePos(x * this->tileSize.x, y * this->tileSize.y);
-        sf::Vector2u spritePos(0, 0);
+        sf::Vector2u spritePos;
         switch(z) {
             case 0:
+                spritePos = sf::Vector2u(0, 0);
                 this->groundLayer[tileName] = Tile(&this->tileset, this->tileSize, tilePos, spritePos);
                 break;
             case 1:
+                spritePos = sf::Vector2u(32, 0);
                 this->objectLayer[tileName] = Tile(&this->tileset, this->tileSize, tilePos, spritePos);
                 break;
             default:

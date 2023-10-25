@@ -106,4 +106,11 @@ void Game::initWindow() {
     this->view.setSize(sf::Vector2f(this->videoMode.width, this->videoMode.height));
     this->view.setCenter(sf::Vector2f(this->videoMode.width / 2.f, this->videoMode.height / 2.f));
     this->window->setView(this->view);
+
+
+    // Initialize the cursor
+    sf::Image cursorImage;
+    cursorImage.loadFromFile("assets/cursor.png");
+    this->cursor.loadFromPixels(cursorImage.getPixelsPtr(), cursorImage.getSize(), sf::Vector2u(0, 0));
+    this->window->setMouseCursor(this->cursor);
 }

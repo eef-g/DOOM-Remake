@@ -25,6 +25,7 @@ class Game {
         sf::RenderWindow* window;
         sf::Event ev;
         sf::VideoMode videoMode;
+        sf::Cursor cursor;
         
         // View handling
         sf::View view;

@@ -157,12 +157,14 @@ const sf::Vector2f& Player::getPos() const { return this->shape.getPosition(); }
         */
 
         void Player::render(sf::RenderTarget* target) {
-            if (this->mousePos.x < this->getPos().x) {
-                if(this->shape.getScale().x > 0.f) {
-                    this->shape.setScale(-1.f, 1.f);
+            if(!this->canMove && this->currentSprite.x == 0) {
+                if (this->mousePos.x < this->getPos().x) {
+                    if(this->shape.getScale().x > 0.f) {
+                        this->shape.setScale(-1.f, 1.f);
+                    }
+                } else {
+                    this->shape.setScale(1.f, 1.f);
                 }
-            } else {
-                this->shape.setScale(1.f, 1.f);
             }
             this->shape.setTexture(&this->spriteSheet);
             this->shape.setTextureRect(this->uvRect);

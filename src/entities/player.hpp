@@ -5,6 +5,10 @@
 #include <iostream>
 #include <cmath>
 
+// Include the components we need to use
+#include "../components/gameobject.hpp"
+#include "../components/hitbox.hpp"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 /// @brief Enum for the different animations the player can have
@@ -38,7 +42,7 @@ enum Animations {
 */
 
 /// @brief The Player class acts as a container for all of the player's logic.
-class Player {
+class Player : public GameObject {
     private:
         // Variables
             // Spritesheet handling
@@ -49,6 +53,7 @@ class Player {
         sf::Vector2u spriteCount;
         sf::Vector2u currentSprite;
         
+
             // Animation logic
         int animFrames = 0;
         float animTimer = 0.f;
@@ -63,6 +68,10 @@ class Player {
         float movementSpeed = 0.f;
         sf::Vector2f moveDir;
         sf::Vector2f velocity;
+
+            // GameObject Components
+        Hitbox* hitbox;
+
 
         // Functions
 

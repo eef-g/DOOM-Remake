@@ -13,8 +13,10 @@
 #include <SFML/System.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
-#include "player.hpp"
-#include "tilemap.hpp"
+#include <vector>
+#include "entities/player.hpp"
+#include "entities/tilemap.hpp"
+#include "components/gameobject.hpp"
 
 // Pro-tip: Press 'CRTL+.' to automatically create the function definition in the cpp file
 
@@ -31,6 +33,7 @@ class Game {
         sf::View view;
 
         // Objects
+        std::vector<GameObject> gameObjects;
         Player player = Player();
         Tilemap tilemap = Tilemap();
 

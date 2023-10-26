@@ -13,6 +13,10 @@ FetchContent_MakeAvailable(SFML)
 file(GLOB Isle_SRC
     "src/*.cpp"
     "src/*.hpp"
+    "src/components/*.cpp"
+    "src/components/*.hpp"
+    "src/entities/*.cpp"
+    "src/entities/*.hpp"
 )
 
 add_executable(TheIsle ${Isle_SRC})

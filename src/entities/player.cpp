@@ -23,6 +23,31 @@ void Player::initVariables() {
 
     sf::FloatRect bounds = this->shape.getLocalBounds();
     this->shape.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+
+
+    /*
+        Adding Components to GameObject
+    */
+
+    // Prep the hitbox & Add it to the player
+    sf::RectangleShape hitboxShape = sf::RectangleShape(sf::Vector2f(this->uvRect.width * 0.1f, this->uvRect.height * 0.1f));
+    this->hitbox = new Hitbox(
+        // Shape
+        hitboxShape,
+        // Position
+        this->shape.getPosition(),
+        // Size
+        sf::Vector2f(this->uvRect.width * 0.1f, this->uvRect.height * 0.1f),
+        // Offset
+        sf::Vector2f( (hitboxShape.getSize().x / 2.f) -7.f, (hitboxShape.getSize().y / 2.f) - 4.f),
+        // Scale
+        sf::Vector2f(1.f, 1.f),
+        // Rotation
+        0.f,
+        // Debug
+        true
+    );
+    this->addComponent(hitbox);
 }
 
 
@@ -52,6 +77,11 @@ const sf::Vector2f& Player::getPos() const { return this->shape.getPosition(); }
             this->updateVelocity();
             this->move(deltaTime);
             this->mouseInteraction();
+            // Update any variables inside the components
+            this->hitbox->position = this->shape.getPosition();
+
+            // Update the gameobject components
+            this->GameObject::update(deltaTime);
         }
 
 
@@ -169,6 +199,9 @@ const sf::Vector2f& Player::getPos() const { return this->shape.getPosition(); }
             this->shape.setTexture(&this->spriteSheet);
             this->shape.setTextureRect(this->uvRect);
             target->draw(this->shape);
+
+            // Draw all the gameobject components
+            this->GameObject::render(target);
         }
 
     #pragma endregion
@@ -249,7 +282,7 @@ const sf::Vector2f& Player::getPos() const { return this->shape.getPosition(); }
                     break;
                 case PICKAXE:
                     this->currentSprite = sf::Vector2u(0, 11);
-                    this->frameTime = 0.08f;
+                    this->frameTime = 0.05f;
                     this->animFrames = 9;
                     break;
                 case SWIMMING:

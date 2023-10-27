@@ -1,16 +1,27 @@
+CONFIG ?= Debug
+
 ifeq ($(OS), Windows_NT)
-    EXECUTABLE := build/bin/Debug/TheIsle
+    EXECUTABLE := build/bin/$(CONFIG)/TheIsle
 else
-    EXECUTABLE := build/bin/Debug/TheIsle.exe
+    EXECUTABLE := build/bin/$(CONFIG)/TheIsle.exe
 endif
+
 
 all: compile link run
 
 compile: 
-	cmake -S . -B build
+	cmake -S . -B build 
  
 link:
-	cmake --build build
+	cmake --build build --config $(CONFIG)
 
 run:
 	$(EXECUTABLE)
+
+.PHONY: set-config
+	$(eval CONFIG := $(filter-out $@,$(MAKECMDGOALS)))
+	@echo "Set config to $(CONFIG)"
+
+%:
+	@:
+

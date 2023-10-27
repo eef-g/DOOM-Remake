@@ -199,7 +199,7 @@
                 break;
             default:
                 return this->groundLayer[x][y];
-                break;
+               break;
         }
     }
 

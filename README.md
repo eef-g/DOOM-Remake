@@ -8,8 +8,8 @@
   <h3 align="center">Technologies used:</h3>
   <span>
       <p align="center">
-        <a href="https://www.rust-lang.org" target="_blank" rel="noreferrer"> <img src="https://rustacean.net/assets/rustacean-flat-noshadow.svg" alt="rust" width="40" height="40"/> </a> 
-        <a href="https://bevyengine.org/" target="_blank" rel="noreferrer"> <img src="https://seeklogo.com/images/B/bevy-engine-logo-25F6DD58BF-seeklogo.com.png?v=638240880890000000" alt="Bevy" width="40" height="40"/> </a> 
+        <a href="https://cplusplus.com" target="_blank" rel="noreferrer"> <img src="https://cdn.worldvectorlogo.com/logos/c.svg" alt="C++" width="40" height="40"/> </a> 
+        <a href="https://www.sfml-dev.org/index.php" target="_blank" rel="noreferrer"> <img src="https://www.sfml-dev.org/download/goodies/sfml-logo.svg" alt="SFML" width="120" height="40"/> </a> 
       </p>
   </span>
 </span>

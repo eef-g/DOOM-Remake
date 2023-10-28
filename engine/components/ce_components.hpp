@@ -9,8 +9,6 @@ namespace CE_Components {
 #include "icomponent.hpp"
 #include "hitbox.hpp"
 #include "ce_sprite.hpp"
-#include "transform.hpp"
-
-// TODO: Add a CharacterController component that will move a transform
+#include "player_controller.hpp"
 
 #endif

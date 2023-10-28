@@ -1,4 +1,6 @@
 #include "hitbox.hpp"
+using namespace CE_Components;
+
 namespace CE_Components {
     // Constructor
     Hitbox::Hitbox(
@@ -25,6 +27,27 @@ namespace CE_Components {
         }
     }
 
+
+    Hitbox::Hitbox(CE_Components::IComponent *sprite, float scale, float offset_x, float offset_y) {
+        if (sprite->getType() != "Sprite") {
+            throw std::invalid_argument("Hitbox::Hitbox: sprite must be of type Sprite");
+        }
+        CE_Components::Sprite *sprite_cast = dynamic_cast<CE_Components::Sprite*>(sprite);
+        this->shape = sf::RectangleShape(sf::Vector2f(sprite_cast->getSize().x * scale, sprite_cast->getSize().y * scale));
+        this->position = sprite_cast->getPosition();
+        this->size = sprite_cast->getSize();
+        this->offset = sf::Vector2f(offset_x, offset_y);
+        this->scale = sf::Vector2f(scale, scale);
+
+        this->shape.setPosition(position + offset);
+        this->shape.setFillColor(sf::Color::Transparent);
+        this->shape.setSize(sf::Vector2f(size.x * scale, size.y * scale));
+
+        this->shape.setOutlineColor(sf::Color::Red);
+        this->shape.setOutlineThickness(1.f);
+        std::cout << "Hitbox::Hitbox: " << this->shape.getPosition().x << std::endl;
+    }
+
     Hitbox::Hitbox() {}
 
     // Destructor
@@ -32,7 +55,7 @@ namespace CE_Components {
 
     // Functions
     void Hitbox::update(float frameTime) {
-        shape.setPosition(position + offset);
+        this->shape.setPosition(this->position + this->offset);
     }
 
     void Hitbox::render(sf::RenderTarget *target) {

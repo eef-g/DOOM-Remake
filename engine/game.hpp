@@ -14,6 +14,8 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
 #include <vector>
+#include <chrono>
+#include <thread>
 
 #include "gameobject.hpp"
 

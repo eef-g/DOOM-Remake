@@ -3,7 +3,6 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include "ce_components.hpp"
-
 namespace CE_Components {
     class Sprite : public IComponent {
         private:
@@ -29,18 +28,21 @@ namespace CE_Components {
                 sf::Vector2f imageSize
             );
             Sprite() {};
+
             // Destructor
             virtual ~Sprite() override {};
 
             // Functions
             void update(float frameTime) override;
             void render(sf::RenderTarget *target) override;
+            std::string getType() override { return "Sprite"; };
 
             // Getters
             sf::Vector2f getPosition() { return this->position; };
             sf::Vector2f getScale() { return this->scale; };
             sf::Vector2f getOffset() { return this->offset; };
             sf::Vector2f getSize() { return this->size; };
+            sf::Texture* getTexture() { return &this->texture; };
 
             // Setters
             void setPosition(sf::Vector2f position) { this->position = position; };

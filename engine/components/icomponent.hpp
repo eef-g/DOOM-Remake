@@ -2,6 +2,7 @@
 #define CE_COMPONENT_HPP
 
 #include <iostream>
+#include <string>
 #include <SFML/Graphics.hpp>
 
 namespace CE_Components{
@@ -14,6 +15,7 @@ namespace CE_Components{
             // Functions
             virtual void update(float frameTime) = 0;
             virtual void render(sf::RenderTarget *target) = 0;
+            virtual std::string getType() = 0;
     };
 }
 

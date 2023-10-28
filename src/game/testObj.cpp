@@ -2,18 +2,13 @@
 using namespace IsleGame;
 
 TestObj::TestObj() {
-    this->sprite = new Sprite("assets/character_single.png", sf::Vector2f(64.0f, 64.0f));
-    this->hitbox = new Hitbox(
-        sf::RectangleShape(sf::Vector2f(64.0f, 64.0f)),
-        sf::Vector2f(0.0f, 0.0f),
-        sf::Vector2f(64.0f * 0.1f, 64.0f * 0.1f),
-        sf::Vector2f(0.0f, 0.0f),
-        sf::Vector2f(1.0f, 1.0f),
-        true
-    );
+    // Create the playerController component
+    this->controller = new PlayerController("assets/character_single.png", sf::Vector2f(64.0f, 64.0f));
+    this->controller->setOffset(-2.0f, -1.0f);
 
-    this->addComponent(this->sprite);
-    this->addComponent(this->hitbox);
+
+    // Add all the compopnents to the game object
+    this->addComponent(this->controller);
 }
 
 TestObj::~TestObj() {

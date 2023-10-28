@@ -35,6 +35,9 @@ namespace CapulusEngine {
                 // Actual update logic
                 this->update(frameTime);
                 deltaTime -= frameTime;
+
+                // Sleep for 10 milliseconds to prevent the CPU from being overworked
+                std::this_thread::sleep_for(std::chrono::milliseconds(10));
             }
             // Whenever the update logic is done, render the frame
             this->render();

@@ -7,8 +7,9 @@ namespace IsleGame {
     class TestObj : public GameObject {
         private:
             // Variables
-        Sprite *sprite;
-        Hitbox *hitbox;
+        // Sprite *sprite;
+        // Hitbox *hitbox;
+        PlayerController *controller;
 
         public:
             // Constructor

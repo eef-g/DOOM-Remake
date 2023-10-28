@@ -1,12 +1,10 @@
 #include <iostream>
-#include "game.hpp"
+#include "Isle.hpp"
 
 int main() {
-    // Initialize the game engine
-    Game game;
+    MainGame main_game;
 
-    // Game loop
-    game.run();
+    main_game.run();
     
     return 0;
 }

@@ -10,13 +10,21 @@ FetchContent_Declare(SFML
     GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
+
+
 file(GLOB Isle_SRC
+    # Eventually want to also add a GLOB for the engine separately    
+    
+    # Add all the files in the engine folder
+    "engine/*.cpp"
+    "engine/*.hpp"
+    "engine/components/*.cpp"
+    "engine/components/*.hpp"
+    
+    # Finally, add the main.cpp file
+    "src/game/*.cpp"
+    "src/game/*.hpp"
     "src/*.cpp"
-    "src/*.hpp"
-    "src/components/*.cpp"
-    "src/components/*.hpp"
-    "src/entities/*.cpp"
-    "src/entities/*.hpp"
 )
 
 add_executable(TheIsle ${Isle_SRC})

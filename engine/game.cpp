@@ -26,10 +26,18 @@ namespace CapulusEngine {
         float deltaTime = 0.f;
         float maxFPS = 60.f;
         float frameTime = 1.f / maxFPS;
+        bool gamePaused = false;
 
         // Game loop
         while (this->running()) {
-            deltaTime += clock.restart().asSeconds();
+            // Update the delta time (the time between frames
+            if(!gamePaused) {
+                deltaTime += clock.restart().asSeconds();
+            }
+            else {
+                clock.restart();
+                gamePaused = false;
+            }
             this->pollEvents();
             while (deltaTime >= frameTime) {
                 // Actual update logic
@@ -41,6 +49,11 @@ namespace CapulusEngine {
             }
             // Whenever the update logic is done, render the frame
             this->render();
+            if(!this->window->hasFocus()) { gamePaused = true;}
+            while(!this->window->hasFocus() && this->running()) {
+                this->pollEvents();
+                std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            }
         }
     }
 

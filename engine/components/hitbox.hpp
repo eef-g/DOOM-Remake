@@ -14,6 +14,7 @@ namespace CE_Components {
             sf::Vector2f scale;
             sf::Vector2f position;
         public:
+            // TODO: Make this constructor more friendly to use (You can figure it out, idc)
             // Constructor
             Hitbox(
                 sf::RectangleShape shape,

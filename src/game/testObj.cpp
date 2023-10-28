@@ -6,9 +6,10 @@ TestObj::TestObj() {
     this->hitbox = new Hitbox(
         sf::RectangleShape(sf::Vector2f(64.0f, 64.0f)),
         sf::Vector2f(0.0f, 0.0f),
-        sf::Vector2f(64.0f, 64.0f),
+        sf::Vector2f(64.0f * 0.1f, 64.0f * 0.1f),
         sf::Vector2f(0.0f, 0.0f),
-        sf::Vector2f(1.0f, 1.0f)
+        sf::Vector2f(1.0f, 1.0f),
+        true
     );
 
     this->addComponent(this->sprite);

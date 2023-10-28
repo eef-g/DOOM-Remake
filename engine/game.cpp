@@ -83,6 +83,9 @@ namespace CapulusEngine {
         this->window->setView(this->view);
 
         // Render items -- Make sure that the bototm-most layer is rendered first
+        for(auto &gameObject : this->gameObjects) {
+            gameObject->render(this->window);
+        }
         // Display items
         this->window->display();
     }

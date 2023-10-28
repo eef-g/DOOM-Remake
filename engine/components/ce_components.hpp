@@ -11,4 +11,6 @@ namespace CE_Components {
 #include "ce_sprite.hpp"
 #include "transform.hpp"
 
+// TODO: Add a CharacterController component that will move a transform
+
 #endif

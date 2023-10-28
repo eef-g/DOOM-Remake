@@ -41,6 +41,7 @@ namespace CE_Components {
             // Setters
             void setSpeed(float speed) { this->speed = speed; };
             void setOffset(float offset_x, float offset_y);
+            void setSpriteScale(float scale_x, float scale_y);
              
 
     };

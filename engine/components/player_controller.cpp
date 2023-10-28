@@ -38,12 +38,14 @@ namespace CE_Components {
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
             this->velocity.x -= this->speed * frameTime;
+            this->setSpriteScale(-1.f, 1.f);
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
             this->velocity.y += this->speed * frameTime;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
             this->velocity.x += this->speed * frameTime;
+            this->setSpriteScale(1.f, 1.f);
         }
     }
 
@@ -51,6 +53,11 @@ namespace CE_Components {
     void PlayerController::setOffset(float offset_x, float offset_y) {
         CE_Components::Hitbox *hitbox = dynamic_cast<CE_Components::Hitbox*>(this->components[1]);
         hitbox->setOffset(sf::Vector2f(offset_x, offset_y));
+    }
+
+    void PlayerController::setSpriteScale(float scale_x, float scale_y) {
+        CE_Components::Sprite *sprite = dynamic_cast<CE_Components::Sprite*>(this->components[0]);
+        sprite->setScale(sf::Vector2f(scale_x, scale_y));
     }
 
     void PlayerController::update(float frameTime) {

@@ -22,7 +22,7 @@ namespace CE_Components {
         // Sprite specific variables
         sf::Texture texture;
         texture.loadFromFile(spritesheetPath);
-        sf::Vector2f imageSize = sf::Vector2f(texture.getSize().x / colCount, this->texture.getSize().y / rowCount);
+        sf::Vector2f imageSize = sf::Vector2f(texture.getSize().x / colCount, texture.getSize().y / rowCount);
         CE_Components::Sprite(
             texture,
             imageSize

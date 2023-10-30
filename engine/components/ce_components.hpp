@@ -10,7 +10,7 @@ namespace CE_Components {
 #include "hitbox.hpp"
 #include "ce_sprite.hpp"
 #include "player_controller.hpp"
-// #include "animated_sprite.hpp"
+#include "animated_sprite.hpp"
 
 
 #endif

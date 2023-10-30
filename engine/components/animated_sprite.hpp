@@ -7,8 +7,9 @@
 
 
 namespace CE_Components {
-    class AnimatedSprite : public CE_Components::Sprite{
+    class AnimatedSprite : public IComponent{
         private:
+            // TODO: Add all the sprite variables and logic bc can't inherit from Sprite class for some reason.
             // Variables
                 // Animation Logic
             int animFrames = 0;

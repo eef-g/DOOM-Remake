@@ -5,7 +5,7 @@
 #include "ce_components.hpp"
 namespace CE_Components {
     class Sprite : public IComponent {
-        private:
+        public:
             // Variables
             sf::Sprite sprite;
             sf::Texture texture;
@@ -13,7 +13,7 @@ namespace CE_Components {
             sf::Vector2f scale;
             sf::Vector2f offset;
             sf::Vector2f size;
-        public:
+
             // Constructor
             Sprite(
                 sf::Sprite sprite,
@@ -26,6 +26,10 @@ namespace CE_Components {
             Sprite(
                 std::string texturePath,
                 sf::Vector2f imageSize
+            );
+            Sprite(
+                sf::Texture textureObject,
+                sf::Vector2f spriteSize
             );
             Sprite() {};
 
@@ -43,12 +47,16 @@ namespace CE_Components {
             sf::Vector2f getOffset() { return this->offset; };
             sf::Vector2f getSize() { return this->size; };
             sf::Texture* getTexture() { return &this->texture; };
+            sf::Sprite* getSprite() { return &this->sprite; };
+
 
             // Setters
             void setPosition(sf::Vector2f position) { this->position = position; };
             void setScale(sf::Vector2f scale) { this->scale = scale; };
             void setOffset(sf::Vector2f offset) { this->offset = offset; };
             void setSize(sf::Vector2f size) { this->size = size; };
+            void setTexture(sf::Texture texture) { this->texture = texture; };
+            void setSprite(sf::Sprite sprite) { this->sprite = sprite; };
     };
 }
 

@@ -31,6 +31,20 @@ namespace CE_Components {
         this->size = sf::Vector2f(imageSize.x, imageSize.y);
     }
 
+    Sprite::Sprite(
+        sf::Texture textureObject,
+        sf::Vector2f spriteSize
+    ) {
+        this->texture = textureObject;
+        this->sprite.setTexture(this->texture);
+        this->sprite.setTextureRect(sf::IntRect(0, 0, spriteSize.x, spriteSize.y));
+        this->sprite.setOrigin(spriteSize.x / 2, spriteSize.y / 2);
+        this->position = sf::Vector2f(0.0f, 0.0f);
+        this->scale = sf::Vector2f(1.0f, 1.0f);
+        this->offset = sf::Vector2f(0.0f, 0.0f);
+        this->size = sf::Vector2f(spriteSize.x, spriteSize.y);
+    }
+
     void Sprite::update(float frameTime) {
         this->sprite.setPosition(this->position);
         this->sprite.setScale(this->scale);

@@ -10,9 +10,7 @@ namespace CE_Components {
 #include "hitbox.hpp"
 #include "ce_sprite.hpp"
 #include "player_controller.hpp"
-//#include "animated_sprite.hpp"
-
-//TODO: Implement the animated_sprite component and let the player_controller component use either the sprite or animated_sprite component
+// #include "animated_sprite.hpp"
 
 
 #endif

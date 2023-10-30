@@ -24,30 +24,6 @@ void Player::initVariables() {
     sf::FloatRect bounds = this->shape.getLocalBounds();
     this->shape.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
 
-
-    /*
-        Adding Components to GameObject
-    */
-
-    // Prep the hitbox & Add it to the player
-    // sf::RectangleShape hitboxShape = sf::RectangleShape(sf::Vector2f(this->uvRect.width * 0.1f, this->uvRect.height * 0.1f));
-    // this->hitbox = new Hitbox(
-    //     // Shape
-    //     hitboxShape,
-    //     // Position
-    //     this->shape.getPosition(),
-    //     // Size
-    //     sf::Vector2f(this->uvRect.width * 0.1f, this->uvRect.height * 0.1f),
-    //     // Offset
-    //     sf::Vector2f( (hitboxShape.getSize().x / 2.f) -7.f, (hitboxShape.getSize().y / 2.f) - 4.f),
-    //     // Scale
-    //     sf::Vector2f(1.f, 1.f),
-    //     // Rotation
-    //     0.f,
-    //     // Debug
-    //     true
-    // );
-    // this->addComponent(hitbox);
 }
 
 

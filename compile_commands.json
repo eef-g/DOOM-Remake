@@ -1,0 +1,17 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I",
+      "include",
+      "-o",
+      "bin/main.o",
+      "src/main.cpp"
+    ],
+    "directory": "/home/eef/Documents/GitHub/raylib-cpp-starter",
+    "file": "/home/eef/Documents/GitHub/raylib-cpp-starter/src/main.cpp",
+    "output": "/home/eef/Documents/GitHub/raylib-cpp-starter/bin/main.o"
+  }
+]

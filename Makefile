@@ -8,7 +8,7 @@
 # Define custom functions
 rwildcard = $(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 platformpth = $(subst /,$(PATHSEP),$1)
-
+fixraylib = $(FIXSCRIPT)
 # Set global macros
 buildDir := bin
 executable := app
@@ -30,6 +30,7 @@ ifeq ($(OS), Windows_NT)
 	MKDIR := -mkdir -p
 	RM := -del /q
 	COPY = -robocopy "$(call platformpth,$1)" "$(call platformpth,$2)" $3
+	FIXSCRIPT := powershell -File raylib-fix.ps1
 else
 	# Check for MacOS/Linux
 	UNAMEOS := $(shell uname)
@@ -52,6 +53,7 @@ else
 	MKDIR := mkdir -p
 	RM := rm -rf
 	COPY = cp $1$(PATHSEP)$3 $2
+	FIXSCRIPT := raylib-fix.sh
 endif
 
 # Lists phony targets for Makefile
@@ -66,6 +68,7 @@ setup: include lib
 # Pull and update the the build submodules
 submodules:
 	git submodule update --init --recursive --depth 1
+	$(call fixraylib)
 
 # Copy the relevant header files into includes
 include: submodules
@@ -79,6 +82,9 @@ lib: submodules
 	cd vendor/raylib/src $(THEN) "$(MAKE)" PLATFORM=PLATFORM_DESKTOP
 	$(MKDIR) $(call platformpth, lib/$(platform))
 	$(call COPY,vendor/raylib/src,lib/$(platform),libraylib.a)
+
+test_fixraylib:
+	$(call fixraylib)
 
 # Link the program and create the executable
 $(target): $(objects)

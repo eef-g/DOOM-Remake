@@ -11,7 +11,7 @@ RaycastCam::RaycastCam(Player* player, int* map) {
 
 // Helper Functions
 
-float DegToRad(int a) { return a*M_PI/180.0; }
+float DegToRad(float a) { return a*M_PI/180.0; }
 float RadToDeg(float a) { return a*180.0/M_PI; }
 
 int FixAng(int a) {

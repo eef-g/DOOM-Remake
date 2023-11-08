@@ -21,7 +21,10 @@ int main() {
   // Initialization
   int screenWidth = 1024;
   int screenHeight = 512;
+  SetConfigFlags(FLAG_WINDOW_RESIZABLE);
   raylib::Window w(screenWidth, screenHeight, "Example");
+  
+
   Player* p = new Player(64*4, 64*3);  
   int map[] = 
     {
@@ -35,10 +38,14 @@ int main() {
       1,1,1,1,1,1,1,1,
     };
   
+  p->SetMap(map);
 
   SetTargetFPS(60);
   RaycastCam camera = RaycastCam(p, map);
+
   camera.setMapSize(8, 8);
+
+
   // Main game loop
   while (!w.ShouldClose()) // Detect window close button or ESC key
   {

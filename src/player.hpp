@@ -12,13 +12,13 @@ private:
   float px,py, pdx, pdy, pa;
   float x2, y2;
   float speed;
-
+  int* map;
 public:
   Player();
   Player(float x, float y);
   void DrawPlayer();
   void MovePlayer();
-
+  void SetMap(int* map) { this->map = map; }
   float GetAngle() { return this->pa; }
   Vector2 GetPosition() { return (Vector2){this->px, this->py}; }
 };

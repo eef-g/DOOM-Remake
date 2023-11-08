@@ -27,7 +27,7 @@ ifeq ($(OS), Windows_NT)
 	linkFlags += -Wl,--allow-multiple-definition -pthread -lopengl32 -lgdi32 -lwinmm -mwindows -static -static-libgcc -static-libstdc++
 	THEN := &&
 	PATHSEP := \$(BLANK)
-	MKDIR := -mkdir -p
+	MKDIR := -mkdir
 	RM := -del /q
 	COPY = -robocopy "$(call platformpth,$1)" "$(call platformpth,$2)" $3
 	FIXSCRIPT := powershell -File raylib-fix.ps1

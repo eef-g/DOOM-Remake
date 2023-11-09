@@ -37,6 +37,8 @@ void RaycastCam::DrawRays() {
   py = this->player->GetPosition().y + 5;
   // Calculate Rays
   for(r = 0; r < 60; r++) {
+    // Get texture number
+    int vmt=0, hmt=0;
 
     // ---- Vertical Rays ---- 
 
@@ -52,7 +54,7 @@ void RaycastCam::DrawRays() {
     while(dof <8) {
       mx = (int)(rx)>>6; my = (int)(ry)>>6; mp=my*this->mapX+mx;
       // Hit
-      if(mp > 0 && mp < this->mapX*this->mapY && this->map[mp]==1) { dof = 8; disV = cos(DegToRad(ra)) *(rx - px) - sin(DegToRad(ra)) * (ry - py); }
+      if(mp > 0 && mp < this->mapX*this->mapY && this->map[mp]>0) { vmt = this->map[mp]; dof = 8; disV = cos(DegToRad(ra)) *(rx - px) - sin(DegToRad(ra)) * (ry - py); }
 
       // Check next horizontal
       else { rx += xo; ry += yo; dof += 1; }
@@ -73,31 +75,76 @@ void RaycastCam::DrawRays() {
     while(dof < 8) {
       // Check next horizontal
       mx = (int)(rx)>>6; my = (int)(ry)>>6; mp = my * this->mapX + mx;
-      if(mp>0 && mp<this->mapX*this->mapY && this->map[mp]==1) { dof = 8; disH = cos(DegToRad(ra)) * (rx - px) - sin(DegToRad(ra)) * (ry - py); }
+      if(mp>0 && mp<this->mapX*this->mapY && this->map[mp]>0) { hmt = this->map[mp]; dof = 8; disH = cos(DegToRad(ra)) * (rx - px) - sin(DegToRad(ra)) * (ry - py); }
       else { rx += xo; ry += yo; dof += 1; }
     }
     
-    drawColor = {0x80, 0x00, 0x00, 0xff};
+    float shade = 1;
     if(disV<disH) { 
         rx = vx; 
         ry = vy; 
-        disH = disV; 
-        drawColor = {0xbf, 0x00, 0x00, 0xff};
+        disH = disV;
+        shade = 0.5;
+        hmt = vmt; 
     }
 
     // Draw 2D Rays
     DrawLine(px, py, rx, ry, RED); // Draw the ray
     
     int ca = FixAng(pa - ra); disH = disH*cos(DegToRad(ca));
-    int lineH = (this->mapS * 320)/(disH); if (lineH>320){ lineH = 320; }
+    
+    int lineH = (this->mapS * 320)/(disH); 
+    float ty_step = 32.0/(float)lineH;
+    float ty_off = 0;
+    if (lineH>320){ ty_off = (lineH - 320)/2.0; lineH = 320; }
+    
     int lineOff = 160 - (lineH>>1);
     float startX = r * 8 + 530;
     Vector2 startPos = (Vector2){startX, (float)lineOff};
     Vector2 endPos = (Vector2){startX, (float)lineH+lineOff};
 
     // Draw 3D lineH
-    DrawLineEx(startPos, endPos, 8.0, drawColor);
+    float ty = ty_off * ty_step;
+    float tx;
+    if(shade == 1) { tx = (int)(rx/2.0) % 32; if(ra>180) { tx=31-tx; } }
+    else { tx = (int)(ry/2.0) % 32; if(ra>90 && ra<270) { tx = 31-tx; } }
 
+    // Figure out which texture we're going to use
+    int* texture;
+    switch (hmt) {
+      case 1:
+        texture = checkerboard;
+        break;
+      case 2:
+        texture = brick;
+        break;
+      case 4:
+        texture = door;
+        break;
+      default:
+        texture = checkerboard;
+        break;
+    }
+
+
+    for(int y = 0; y<lineH;y++) {
+      float c = texture[(int)(ty)*32 + (int)(tx)];
+      if(c == 0) { 
+        unsigned char r = static_cast<unsigned char>(0x00 * shade);
+        unsigned char g = static_cast<unsigned char>(0x00 * shade);
+        unsigned char b = static_cast<unsigned char>(0x00 * shade);
+        drawColor = {r, g, b, 0xff};
+      }
+      else { 
+        unsigned char r = static_cast<unsigned char>(0xff * shade);
+        unsigned char g = static_cast<unsigned char>(0xff * shade);
+        unsigned char b = static_cast<unsigned char>(0xff * shade);
+        drawColor = {r, g, b, 0xff};
+      }
+      // Treating this as drawing an 8x8 pixel
+      DrawRectangle(startX, y+lineOff, 8, 8, drawColor);
+      ty += ty_step;
+    }
 
     // Prep ra for next loop
     ra = FixAng(ra - 1);

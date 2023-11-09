@@ -6,6 +6,11 @@
 #define M_PI 3.14159265358979323846 
 #endif
 
+// Include the texture h files
+#include "../assets/checkerboard.h"
+#include "../assets/brick.h"
+#include "../assets/door.h"
+
 class RaycastCam {
 private:
 int num_rays = 60;

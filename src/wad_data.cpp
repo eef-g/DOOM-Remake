@@ -37,7 +37,6 @@ std::vector<Vector2> WADData::ReadVertexLump() {
     int header_length = 0;
 
     WADLump lump_info = this->reader.dir.lumps.at(lump_index);
-    this->reader.PrintLumpInfo(lump_info);
     int count = lump_info.lump_size / num_bytes;
     
     std::vector<Vector2> data;

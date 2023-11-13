@@ -42,6 +42,5 @@ public:
     int BytesToInt(const std::string& bytes);
     Vector2 ReadVertex(int offset);
     std::string ReadBytes(int offset, int num_bytes);
-    void PrintLumpInfo(WADLump lump);
 };
 #endif

@@ -68,11 +68,14 @@ WADReader::WADReader(std::string wad_path) {
     PrintHeader(this->header);
 
     this->dir = this->ReadDir();
+    int vertex_count = 0;
     for(const auto& lump : this->dir.lumps) {
         if(lump.lump_name == "VERTEXES") {
-            PrintLump(lump);
+            // PrintLump(lump);
+            vertex_count++;
         }
     }
+    std::cout << "There are " << vertex_count << " vertex lumps" << std::endl;
 }
 
 
@@ -114,12 +117,4 @@ Vector2 WADReader::ReadVertex(int offset) {
     int y = this->BytesToInt(this->ReadBytes(offset + 2, 2));
     Vector2 output = {x, y};
     return output;
-}
-
-void WADReader::PrintLumpInfo(WADLump lump) {
-  std::cout << "+---------------------+" << std::endl;
-  std::cout << "| Lump Name: " << lump.lump_name << std::endl;
-  std::cout << "| Lump Size: " << lump.lump_size << std::endl;
-  std::cout << "| Lump Position: " << lump.lump_pos << std::endl;
-  std::cout << "+---------------------+" << std::endl;
 }

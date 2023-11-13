@@ -3,7 +3,7 @@
 
 // Helper Functions
 
-int BytesToInt(const std::string& bytes) {
+int WADReader::BytesToInt(const std::string& bytes) {
     int result = 0;
     for (int i = 0; i < bytes.size(); ++i) {
         result |= (static_cast<unsigned char>(bytes[i]) << (i * 8));
@@ -89,8 +89,8 @@ std::string WADReader::ReadBytes(int offset, int num_bytes) {
 WADHeader WADReader::ReadHeader() {
     WADHeader header;
     header.wad_type = this->ReadBytes(0, 4);
-    header.lump_count = BytesToInt(this->ReadBytes(4, 4));
-    header.init_offset = BytesToInt(this->ReadBytes(8, 4));
+    header.lump_count = this->BytesToInt(this->ReadBytes(4, 4));
+    header.init_offset = this->BytesToInt(this->ReadBytes(8, 4));
     return header;
 }
 
@@ -100,8 +100,8 @@ WADDir WADReader::ReadDir() {
     for(int i = 0; i < this->header.lump_count;i++) {
         int offset = this->header.init_offset + i * 16;
         WADLump lump;
-        lump.lump_pos = BytesToInt(this->ReadBytes(offset, 4));
-        lump.lump_size = BytesToInt(this->ReadBytes(offset + 4, 4));
+        lump.lump_pos = this->BytesToInt(this->ReadBytes(offset, 4));
+        lump.lump_size = this->BytesToInt(this->ReadBytes(offset + 4, 4));
         std::string name = this->ReadBytes(offset + 8, 8);
         lump.lump_name = trim(name);
         dir.lumps.push_back(lump);
@@ -110,8 +110,16 @@ WADDir WADReader::ReadDir() {
 }
 
 Vector2 WADReader::ReadVertex(int offset) {
-    int x = BytesToInt(this->ReadBytes(offset, 2));
-    int y = BytesToInt(this->ReadBytes(offset + 2, 2));
+    int x = this->BytesToInt(this->ReadBytes(offset, 2));
+    int y = this->BytesToInt(this->ReadBytes(offset + 2, 2));
     Vector2 output = {x, y};
     return output;
+}
+
+void WADReader::PrintLumpInfo(WADLump lump) {
+  std::cout << "+---------------------+" << std::endl;
+  std::cout << "| Lump Name: " << lump.lump_name << std::endl;
+  std::cout << "| Lump Size: " << lump.lump_size << std::endl;
+  std::cout << "| Lump Position: " << lump.lump_pos << std::endl;
+  std::cout << "+---------------------+" << std::endl;
 }

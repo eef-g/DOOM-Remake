@@ -7,11 +7,56 @@
       "-I",
       "include",
       "-o",
+      "bin/capulus_engine.o",
+      "src/capulus_engine.cpp"
+    ],
+    "directory": "/home/eef/Documents/GitHub/Pebble",
+    "file": "/home/eef/Documents/GitHub/Pebble/src/capulus_engine.cpp",
+    "output": "/home/eef/Documents/GitHub/Pebble/bin/capulus_engine.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I",
+      "include",
+      "-o",
       "bin/main.o",
       "src/main.cpp"
     ],
-    "directory": "/home/eef/Documents/GitHub/raylib-cpp-starter",
-    "file": "/home/eef/Documents/GitHub/raylib-cpp-starter/src/main.cpp",
-    "output": "/home/eef/Documents/GitHub/raylib-cpp-starter/bin/main.o"
+    "directory": "/home/eef/Documents/GitHub/Pebble",
+    "file": "/home/eef/Documents/GitHub/Pebble/src/main.cpp",
+    "output": "/home/eef/Documents/GitHub/Pebble/bin/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I",
+      "include",
+      "-o",
+      "bin/wad_data.o",
+      "src/wad_data.cpp"
+    ],
+    "directory": "/home/eef/Documents/GitHub/Pebble",
+    "file": "/home/eef/Documents/GitHub/Pebble/src/wad_data.cpp",
+    "output": "/home/eef/Documents/GitHub/Pebble/bin/wad_data.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I",
+      "include",
+      "-o",
+      "bin/wad_reader.o",
+      "src/wad_reader.cpp"
+    ],
+    "directory": "/home/eef/Documents/GitHub/Pebble",
+    "file": "/home/eef/Documents/GitHub/Pebble/src/wad_reader.cpp",
+    "output": "/home/eef/Documents/GitHub/Pebble/bin/wad_reader.o"
   }
 ]

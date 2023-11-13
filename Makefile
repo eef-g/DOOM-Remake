@@ -53,7 +53,7 @@ else
 	MKDIR := mkdir -p
 	RM := rm -rf
 	COPY = cp $1$(PATHSEP)$3 $2
-	FIXSCRIPT := raylib-fix.sh
+	FIXSCRIPT := ./raylib-fix.sh
 endif
 
 # Lists phony targets for Makefile

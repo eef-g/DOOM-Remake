@@ -1,4 +1,5 @@
 #include "wad_data.hpp"
+#include "raylib.h"
 
 // Use this function to check the values of the ASCII characters on the string
 void PrintASCIIValues(std::string str) {
@@ -14,6 +15,11 @@ WADData::WADData(std::string path, std::string map_name) {
     this->reader = WADReader(path);
     this->map_index = this->GetLumpIndex(map_name);
     std::cout << "Lump index of map ['" << map_name << "']: " << this->map_index << std::endl;
+    // Parse vertexes
+    this->vertexes = this->ReadVertexLump();
+    // for(auto vertex : this->vertexes) {
+    //   std::cout << "{ " << vertex.x << " , " << vertex.y << " }" << std::endl; 
+    // }
 }
 
 int WADData::GetLumpIndex(std::string lump_name) {
@@ -25,15 +31,21 @@ int WADData::GetLumpIndex(std::string lump_name) {
     return -1;
 }
 
-std::vector<char> WADData::ReadLumpBytes(int lump_index, int num_bytes, int header_length) {
+std::vector<Vector2> WADData::ReadVertexLump() {
+    int lump_index = this->map_index + LUMP_INDICIES::VERTEXES;
+    int num_bytes = 4;
+    int header_length = 0;
+
     WADLump lump_info = this->reader.dir.lumps.at(lump_index);
+    this->reader.PrintLumpInfo(lump_info);
     int count = lump_info.lump_size / num_bytes;
     
-    std::vector<char> data;
+    std::vector<Vector2> data;
     int offset = 0;
     for(int i = 0; i < count; i++) {
         offset = lump_info.lump_pos + i * num_bytes + header_length;
-        char curr_data = this->reader.ReadBytes(offset, 1)[0]; 
+        Vector2 curr_data = this->reader.ReadVertex(offset);
         data.push_back(curr_data);
     }
+    return data;
 }

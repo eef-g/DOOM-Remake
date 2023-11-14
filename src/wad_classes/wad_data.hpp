@@ -9,7 +9,6 @@ enum LUMP_INDICIES {
 };
 
 
-
 class WADData {
 private:
     WADReader reader;
@@ -21,6 +20,7 @@ private:
 public:
     WADData() {};
     WADData(std::string path, std::string map_name);
+    std::vector<Vector2> GetVertexes() { return this->vertexes; };
 };
 
 #endif

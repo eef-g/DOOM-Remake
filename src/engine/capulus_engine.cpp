@@ -8,4 +8,9 @@ CapulusEngine::CapulusEngine(std::string wad_path) {
 
 void CapulusEngine::init() {
     this->wad_data = WADData(this->wad_path, this->map_name);
+    this->renderer = MapRenderer(this->wad_data);
+}
+
+void CapulusEngine::draw() {
+    this->renderer.DrawVertexes();
 }

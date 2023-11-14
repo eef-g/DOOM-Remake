@@ -1,18 +1,23 @@
 #include "raylib.h"
 #include <raylib-cpp.hpp>
-#include "capulus_engine.hpp"
+#include "engine/capulus_engine.hpp"
 
 int main() {
   
   // Initialization
-  int screenWidth = 1024;
-  int screenHeight = 512;
+
+  CapulusEngine engine = CapulusEngine("wad/doom1.wad");
   SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-  raylib::Window w(screenWidth, screenHeight, "Example");
+  raylib::Window w(engine.GetScreenWidth(), engine.GetScreenHeight(), "Example");
+  Camera2D cam = { 0 };
+  cam.zoom = 1;
+  cam.offset.x = GetScreenWidth() / 2.0f;
+  cam.offset.y = GetScreenHeight() / 2.0f;
+
+  Vector2 prevMousePos = GetMousePosition();
 
 
   SetTargetFPS(60);
-  CapulusEngine engine = CapulusEngine("wad/doom1.wad");
 
   // Main game loop
 
@@ -21,12 +26,27 @@ int main() {
   while (!w.ShouldClose()) // Detect window close button or ESC key
   {
     // Update
+    float mouseDelta = GetMouseWheelMove();
+
+    float newZoom = cam.zoom + mouseDelta * 0.01f;
+    if (newZoom <= 0) {
+      newZoom = 0.01f;
+    }
+    
+    cam.zoom = newZoom;
+
+
+
 
     // Draw
     BeginDrawing();
+    ClearBackground(BLACK);
+    BeginMode2D(cam);
     
-    ClearBackground(GRAY);
+    DrawCircle(0, 0, 15.0, GREEN);
 
+    engine.draw();
+    
     EndDrawing();
   }
   return 0;

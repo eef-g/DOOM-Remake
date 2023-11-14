@@ -39,8 +39,8 @@ public:
     WADReader() {};
     WADReader(std::string wad_path);
     
-    int BytesToInt(const std::string& bytes);
+    int32_t BytesToInt(std::vector<unsigned char> bytes);
     Vector2 ReadVertex(int offset);
-    std::string ReadBytes(int offset, int num_bytes);
+    std::vector<unsigned char> ReadBytes(int offset, int num_bytes);
 };
 #endif

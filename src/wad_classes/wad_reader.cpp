@@ -2,12 +2,17 @@
 
 
 // Helper Functions
+std::string BytesToString(std::vector<unsigned char> bytes) {
+    std::string output(bytes.begin(), bytes.end());
+    return output;
+}
 
-int WADReader::BytesToInt(const std::string& bytes) {
-    int result = 0;
-    for (int i = 0; i < bytes.size(); ++i) {
-        result |= (static_cast<unsigned char>(bytes[i]) << (i * 8));
-    }
+// TODO: Fix conversion from little endian to normal int
+int32_t WADReader::BytesToInt(std::vector<unsigned char> bytes) {
+    int32_t result = bytes[0] |
+                 bytes[1] << 8 |
+                 bytes[2] << 16 |
+                 bytes[3] << 24;
     return result;
 }
 
@@ -24,6 +29,7 @@ std::string trim(std::string& str) {
     else { return str.substr(0, end_index); }
 }
 
+
 void PrintHeader(WADHeader header) {
     std::cout << "+---------------------------------+" << std::endl;
     std::cout << "| WAD Filetype: " << header.wad_type << std::endl;
@@ -31,6 +37,7 @@ void PrintHeader(WADHeader header) {
     std::cout << "| Initial Offset: " << header.init_offset << std::endl;
     std::cout << "+---------------------------------+" << std::endl;
 }
+
 
 void PrintLump(WADLump lump) {
     std::cout << "+---------------------------------+" << std::endl;
@@ -41,10 +48,7 @@ void PrintLump(WADLump lump) {
 }
 
 
-
-
 // WADReader Functions
-
 WADReader::WADReader(std::string wad_path) {
     this->wad_path = wad_path;
 
@@ -61,37 +65,28 @@ WADReader::WADReader(std::string wad_path) {
         std::cout << "No file found!\n";
         exit(0);   
     }
-    std::cout << "WAD Reader created\n";
     
     // Initialize the WAD Info
     this->header = this->ReadHeader();
-    PrintHeader(this->header);
 
     this->dir = this->ReadDir();
     int vertex_count = 0;
-    for(const auto& lump : this->dir.lumps) {
-        if(lump.lump_name == "VERTEXES") {
-            // PrintLump(lump);
-            vertex_count++;
-        }
-    }
-    std::cout << "There are " << vertex_count << " vertex lumps" << std::endl;
 }
 
 
-std::string WADReader::ReadBytes(int offset, int num_bytes) {
+std::vector<unsigned char> WADReader::ReadBytes(int offset, int num_bytes) {
     if (offset < 0 || offset + num_bytes > this->buffer.size()) { 
         exit(0);
     }
 
-    std::string result(buffer.begin() + offset, buffer.begin() + offset + num_bytes);
+    std::vector<unsigned char> result(buffer.begin() + offset, buffer.begin() + offset + num_bytes);
     return result;
 }
 
 
 WADHeader WADReader::ReadHeader() {
     WADHeader header;
-    header.wad_type = this->ReadBytes(0, 4);
+    header.wad_type = BytesToString(this->ReadBytes(0, 4));
     header.lump_count = this->BytesToInt(this->ReadBytes(4, 4));
     header.init_offset = this->BytesToInt(this->ReadBytes(8, 4));
     return header;
@@ -105,7 +100,7 @@ WADDir WADReader::ReadDir() {
         WADLump lump;
         lump.lump_pos = this->BytesToInt(this->ReadBytes(offset, 4));
         lump.lump_size = this->BytesToInt(this->ReadBytes(offset + 4, 4));
-        std::string name = this->ReadBytes(offset + 8, 8);
+        std::string name = BytesToString(this->ReadBytes(offset + 8, 8));
         lump.lump_name = trim(name);
         dir.lumps.push_back(lump);
     }

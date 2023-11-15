@@ -44,9 +44,9 @@ MapRenderer::MapRenderer(WADData data) {
         Vector2 newVertex = {newX, newY};
         this->vertexes.push_back(newVertex);
     }
-    for(auto vertex : this->wad_data.GetVertexes()) {
-        std::cout << "{ " << static_cast<int>(vertex.x) << " , " << static_cast<int>(vertex.y) << " }" << std::endl;
-    }
+    // for(auto vertex : this->wad_data.GetVertexes()) {
+    //     std::cout << "{ " << static_cast<int>(vertex.x) << " , " << static_cast<int>(vertex.y) << " }" << std::endl;
+    // }
 }
 
 

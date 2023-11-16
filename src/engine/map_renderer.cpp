@@ -20,9 +20,6 @@ int MapRenderer::RemapX(int n, int out_min, int out_max) {
 }
 
 int MapRenderer::RemapY(int n, int out_min, int out_max) {
-    // return WIN_H - (max(this->y_min, min(n, this->y_max)) - this->y_min) * 
-    //         (out_max - out_min) / (this->y_max - this->y_min) - out_min;
-
     int remapped = static_cast<int>((max(this->y_min, min(n, this->y_max)) - this->y_min) * 
                 (static_cast<float>(out_max - out_min) / (this->y_max - this->y_min)) - out_min);
 
@@ -49,6 +46,14 @@ void MapRenderer::DrawVertexes() {
     for(auto vertex : this->vertexes) {
         DrawCircle(vertex.x, vertex.y, 2.5, WHITE);
     }
+
+    // Rudamentary line drawing (DO NOT UNCOMMENT, THIS MAKES THE MAP A MESS)
+    // for(int i = 0; i < this->vertexes.size(); i++) {
+    //     if (i < this->vertexes.size() - 1) {
+    //         DrawLineV(this->vertexes[i], this->vertexes[i + 1], WHITE);
+    //     }
+    //     else { DrawLineV(this->vertexes[i], this->vertexes[0], WHITE); }
+    // }
 }
 
 void MapRenderer::GetMapBounds() {

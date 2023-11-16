@@ -7,9 +7,11 @@ std::string BytesToString(std::vector<unsigned char> bytes) {
     return output;
 }
 
+
 void PrintIntToHex(int32_t num) {
     std::cout << "0x" << std::hex << num;
 }
+
 
 void PrintCharsToHex(std::vector<unsigned char> bytes) {
     std::cout << "[ ";
@@ -18,6 +20,7 @@ void PrintCharsToHex(std::vector<unsigned char> bytes) {
     }
     std::cout << "]" << std::endl;
 }
+
 
 // TODO: Fix conversion from little endian to normal int
 int32_t WADReader::BytesToInt(std::vector<unsigned char> bytes) {
@@ -30,13 +33,13 @@ int32_t WADReader::BytesToInt(std::vector<unsigned char> bytes) {
     return result;
 }
 
+
 int16_t LittleEndianToInt(std::vector<unsigned char> bytes) {
     // Split the vector into two different hex values
     int16_t first_hex = static_cast<uint16_t>(bytes[1]) << 8| static_cast<uint16_t>(bytes[0]);
     int16_t second_hex = static_cast<uint16_t>(bytes[3]) << 8 | static_cast<uint16_t>(bytes[2]);
     return first_hex;
 }
-
 
 
 // Let's us convert the bytes into a usable string value
@@ -135,10 +138,10 @@ Vector2 WADReader::ReadVertex(int offset) {
     int16_t y = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
 
     Vector2 output = {x, y}; 
-    std::cout << "+---------------+" << std::endl;
-    std::cout << "| " << output.x << std::endl;
-    std::cout << "| " << output.y << std::endl;
-    std::cout << "+---------------+\n" << std::endl;
+    // std::cout << "+---------------+" << std::endl;
+    // std::cout << "| " << output.x << std::endl;
+    // std::cout << "| " << output.y << std::endl;
+    // std::cout << "+---------------+\n" << std::endl;
 
     return output;
 }

@@ -38,6 +38,9 @@ int16_t LittleEndianToInt(std::vector<unsigned char> bytes) {
     // Split the vector into two different hex values
     int16_t first_hex = static_cast<uint16_t>(bytes[1]) << 8| static_cast<uint16_t>(bytes[0]);
     int16_t second_hex = static_cast<uint16_t>(bytes[3]) << 8 | static_cast<uint16_t>(bytes[2]);
+    // For whatever reason, I don't know why, but the second_hex is the issue and it does us NO GOOD AT ALL.
+    // So, we just ignore it and go on our merry way :)
+    // I kept it in the code here in case it turns out I actually need it, but I'm not sure about it yet.
     return first_hex;
 }
 
@@ -138,10 +141,5 @@ Vector2 WADReader::ReadVertex(int offset) {
     int16_t y = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
 
     Vector2 output = {x, y}; 
-    // std::cout << "+---------------+" << std::endl;
-    // std::cout << "| " << output.x << std::endl;
-    // std::cout << "| " << output.y << std::endl;
-    // std::cout << "+---------------+\n" << std::endl;
-
     return output;
 }

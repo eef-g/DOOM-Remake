@@ -42,15 +42,12 @@ MapRenderer::MapRenderer(WADData data) {
         Vector2 newVertex = {newX, newY};
         this->vertexes.push_back(newVertex);
     }
-    for(auto vertex : this->vertexes) {
-        std::cout << "{ " << vertex.x << " , " << vertex.y << " }" << std::endl;
-    }
 }
 
 
 void MapRenderer::DrawVertexes() {
     for(auto vertex : this->vertexes) {
-        DrawCircle(vertex.x, vertex.y, 5.0, WHITE);
+        DrawCircle(vertex.x, vertex.y, 2.5, WHITE);
     }
 }
 

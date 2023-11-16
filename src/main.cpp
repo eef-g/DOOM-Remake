@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include <raylib-cpp.hpp>
 #include "engine/capulus_engine.hpp"
+#include "settings.hpp"
 
 int main() {
   
@@ -11,11 +12,8 @@ int main() {
   raylib::Window w(engine.GetScreenWidth(), engine.GetScreenHeight(), "Example");
   Camera2D cam = { 0 };
   cam.zoom = 1;
-  cam.offset.x = GetScreenWidth() / 2.0f;
-  cam.offset.y = GetScreenHeight() / 2.0f;
-
-  Vector2 prevMousePos = GetMousePosition();
-
+  // cam.offset.x = GetScreenWidth() / 2.0f;
+  // cam.offset.y = GetScreenHeight() / 2.0f;
 
   SetTargetFPS(60);
 
@@ -43,7 +41,6 @@ int main() {
     ClearBackground(BLACK);
     BeginMode2D(cam);
     
-    DrawCircle(0, 0, 15.0, GREEN);
 
     engine.draw();
     

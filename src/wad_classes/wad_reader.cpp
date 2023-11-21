@@ -22,7 +22,6 @@ void PrintCharsToHex(std::vector<unsigned char> bytes) {
 }
 
 
-// TODO: Fix conversion from little endian to normal int
 int32_t WADReader::BytesToInt(std::vector<unsigned char> bytes) {
     // std::cout << "[ ";
     // for (unsigned char byte : bytes) {
@@ -136,10 +135,23 @@ WADDir WADReader::ReadDir() {
     return dir;
 }
 
+
 Vector2 WADReader::ReadVertex(int offset) {
     int16_t x = LittleEndianToInt(this->ReadBytes(offset, 2));
     int16_t y = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
 
     Vector2 output = {x, y}; 
+    return output;
+}
+
+LINEDEF WADReader::ReadLinedef(int offset) {
+    LINEDEF output;
+    output.start_vertex = LittleEndianToInt(this->ReadBytes(offset, 2));
+    output.end_vertex = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
+    output.flags = LittleEndianToInt(this->ReadBytes(offset + 4, 2));
+    output.special_type = LittleEndianToInt(this->ReadBytes(offset + 6, 2));
+    output.sector_tag = LittleEndianToInt(this->ReadBytes(offset + 8, 2));
+    output.front_sidedef = LittleEndianToInt(this->ReadBytes(offset + 10, 2));
+    output.back_sidedef = LittleEndianToInt(this->ReadBytes(offset + 12, 2));
     return output;
 }

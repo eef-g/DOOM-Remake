@@ -14,13 +14,17 @@ private:
     WADReader reader;
     int map_index;
     std::vector<Vector2> vertexes;
+    std::vector<LINEDEF> linedefs;
 
     int GetLumpIndex(std::string lump_name);
     std::vector<Vector2> ReadVertexLump();
+    std::vector<LINEDEF> ReadLinedefLump();
+
 public:
     WADData() {};
     WADData(std::string path, std::string map_name);
     std::vector<Vector2> GetVertexes() { return this->vertexes; };
+    std::vector<LINEDEF> GetLinedefs() { return this->linedefs; };
 };
 
 #endif

@@ -17,10 +17,11 @@ WADData::WADData(std::string path, std::string map_name) {
     std::cout << "Lump index of map ['" << map_name << "']: " << this->map_index << std::endl;
     // Parse vertexes
     this->vertexes = this->ReadVertexLump();
-    // for(auto vertex : this->vertexes) {
-    //   std::cout << "{ " << vertex.x << " , " << vertex.y << " }" << std::endl; 
-    // }
+
+    // Parse linedefs
+    this->linedefs = this->ReadLinedefLump();
 }
+
 
 int WADData::GetLumpIndex(std::string lump_name) {
     for(int i=0;i<this->reader.dir.lumps.size();i++) {
@@ -44,6 +45,24 @@ std::vector<Vector2> WADData::ReadVertexLump() {
     for(int i = 0; i < count; i++) {
         offset = lump_info.lump_pos + i * num_bytes + header_length;
         Vector2 curr_data = this->reader.ReadVertex(offset);
+        data.push_back(curr_data);
+    }
+    return data;
+}
+
+std::vector<LINEDEF> WADData::ReadLinedefLump() {
+    int lump_index = this->map_index + LUMP_INDICIES::LINEDEFFS;
+    int num_bytes = 14;
+    int header_length = 0;
+
+    WADLump lump_info = this->reader.dir.lumps.at(lump_index);
+    int count = lump_info.lump_size / num_bytes;
+
+    std::vector<LINEDEF> data;
+    int offset = 0;
+    for(int i = 0; i < count; i++) {
+        offset = lump_info.lump_pos + i * num_bytes + header_length;
+        LINEDEF curr_data = this->reader.ReadLinedef(offset);
         data.push_back(curr_data);
     }
     return data;

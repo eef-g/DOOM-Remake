@@ -12,8 +12,6 @@ int main() {
   raylib::Window w(engine.GetScreenWidth(), engine.GetScreenHeight(), "Example");
   Camera2D cam = { 0 };
   cam.zoom = 1;
-  // cam.offset.x = GetScreenWidth() / 2.0f;
-  // cam.offset.y = GetScreenHeight() / 2.0f;
 
   SetTargetFPS(60);
 

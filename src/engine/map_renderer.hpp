@@ -10,6 +10,7 @@ private:
     WADData wad_data;
     int x_min, x_max, y_min, y_max;
     std::vector<Vector2> vertexes;
+    std::vector<LINEDEF> lines;
 
     
     int RemapX(int n, int out_min=30, int out_max=WIN_W-30);

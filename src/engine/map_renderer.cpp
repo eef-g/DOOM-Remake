@@ -39,6 +39,11 @@ MapRenderer::MapRenderer(WADData data) {
         Vector2 newVertex = {newX, newY};
         this->vertexes.push_back(newVertex);
     }
+
+    this->lines = this->wad_data.GetLinedefs();
+    // for(auto line : this->lines) {
+    //     std::cout << "[ Start: " << line.start_vertex << " | End: " << line.end_vertex << " ]" << std::endl;
+    // }
 }
 
 
@@ -54,6 +59,9 @@ void MapRenderer::DrawVertexes() {
     //     }
     //     else { DrawLineV(this->vertexes[i], this->vertexes[0], WHITE); }
     // }
+    for(auto line : this->lines) {
+        DrawLineV(this->vertexes[line.start_vertex], this->vertexes[line.end_vertex], WHITE);
+    }
 }
 
 void MapRenderer::GetMapBounds() {

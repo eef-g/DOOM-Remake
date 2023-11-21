@@ -23,6 +23,15 @@ struct WADDir {
     std::vector<WADLump> lumps;
 };
 
+struct LINEDEF {
+    int16_t start_vertex;
+    int16_t end_vertex;
+    int16_t flags;
+    int16_t special_type;
+    int16_t sector_tag;
+    int16_t front_sidedef;
+    int16_t back_sidedef;
+};
 
 
 class WADReader {
@@ -41,6 +50,7 @@ public:
     
     int32_t BytesToInt(std::vector<unsigned char> bytes);
     Vector2 ReadVertex(int offset);
+    LINEDEF ReadLinedef(int offset);
     std::vector<unsigned char> ReadBytes(int offset, int num_bytes);
 };
 #endif

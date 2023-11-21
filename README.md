@@ -1,6 +1,6 @@
 <span>
-  <h1 align="center"> Project: Pebble -- WIP</h1>
-  <h3 align="center"> A roguelike where you must reclaim your pet rock. </h3>
+  <h1 align="center"> Just Another Doom Clone -- WIP</h1>
+  <h3 align="center"> A DOOM remake written in C++ without a game engine. </h3>
   <p align="center"></p>
 </span>
 

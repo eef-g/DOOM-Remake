@@ -13,12 +13,13 @@ private:
     std::vector<LINEDEF> lines;
 
     
-    int RemapX(int n, int out_min=30, int out_max=WIN_W-30);
-    int RemapY(int n, int out_min=30, int out_max=WIN_H-30);
+
 public:
     MapRenderer() {};
     MapRenderer(WADData data);
-
+ 
+    int RemapX(int n, int out_min=30, int out_max=WIN_W-30);
+    int RemapY(int n, int out_min=30, int out_max=WIN_H-30);
     void DrawVertexes();
     void GetMapBounds();
 };

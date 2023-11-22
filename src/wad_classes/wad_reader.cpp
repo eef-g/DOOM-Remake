@@ -155,3 +155,54 @@ LINEDEF WADReader::ReadLinedef(int offset) {
     output.back_sidedef = LittleEndianToInt(this->ReadBytes(offset + 12, 2));
     return output;
 }
+
+BBox WADReader::ReadBBox(int offset) {
+    BBox output;
+    output.top = LittleEndianToInt(this->ReadBytes(offset, 2));
+    output.bottom = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
+    output.left = LittleEndianToInt(this->ReadBytes(offset + 4, 2));
+    output.right = LittleEndianToInt(this->ReadBytes(offset + 6, 2));
+    return output;
+}
+
+NODE WADReader::ReadNode(int offset) {
+    NODE output;
+    output.x_partition = LittleEndianToInt(this->ReadBytes(offset, 2));
+    output.y_partition = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
+    output.dx_partition = LittleEndianToInt(this->ReadBytes(offset + 4, 2));
+    output.dy_partition = LittleEndianToInt(this->ReadBytes(offset + 6, 2));
+    output.left_bbox = this->ReadBBox(offset + 8);
+    output.right_bbox = this->ReadBBox(offset + 16);
+    output.front_child_id = LittleEndianToInt(this->ReadBytes(offset + 24, 2));
+    output.back_child_id = LittleEndianToInt(this->ReadBytes(offset + 26, 2));
+    return output;
+}
+
+SUBSECTOR WADReader::ReadSubsector(int offset) {
+    SUBSECTOR output;
+    output.seg_count = LittleEndianToInt(this->ReadBytes(offset, 2));
+    output.first_seg_id = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
+    return output;
+}
+
+SECTOR WADReader::ReadSector(int offset) {
+    SECTOR output;
+    output.start_vertex_id = LittleEndianToInt(this->ReadBytes(offset, 2));
+    output.end_vertex_id = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
+    output.angle = LittleEndianToInt(this->ReadBytes(offset + 4, 2));
+    output.linedef_id = LittleEndianToInt(this->ReadBytes(offset + 6, 2));
+    output.direction = LittleEndianToInt(this->ReadBytes(offset + 8, 2));
+    output.offset = LittleEndianToInt(this->ReadBytes(offset + 10, 2));
+    return output;
+}
+
+THING WADReader::ReadThing(int offset) {
+    THING output;
+    output.x_pos = LittleEndianToInt(this->ReadBytes(offset, 2));
+    output.y_pos = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
+    output.angle = LittleEndianToInt(this->ReadBytes(offset + 4, 2));
+    output.thing_type = LittleEndianToInt(this->ReadBytes(offset + 6, 2));
+    output.flags = LittleEndianToInt(this->ReadBytes(offset + 8, 2));
+    return output;
+}
+

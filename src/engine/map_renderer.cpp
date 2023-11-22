@@ -48,17 +48,11 @@ MapRenderer::MapRenderer(WADData data) {
 
 
 void MapRenderer::DrawVertexes() {
+    // Draw all the vertexes
     for(auto vertex : this->vertexes) {
         DrawCircle(vertex.x, vertex.y, 2.5, WHITE);
     }
-
-    // Rudamentary line drawing (DO NOT UNCOMMENT, THIS MAKES THE MAP A MESS)
-    // for(int i = 0; i < this->vertexes.size(); i++) {
-    //     if (i < this->vertexes.size() - 1) {
-    //         DrawLineV(this->vertexes[i], this->vertexes[i + 1], WHITE);
-    //     }
-    //     else { DrawLineV(this->vertexes[i], this->vertexes[0], WHITE); }
-    // }
+    // Draw all the lines
     for(auto line : this->lines) {
         DrawLineV(this->vertexes[line.start_vertex], this->vertexes[line.end_vertex], WHITE);
     }
@@ -73,9 +67,6 @@ void MapRenderer::GetMapBounds() {
     }
     std::sort(sorted_x.begin(), sorted_x.end());
     std::sort(sorted_y.begin(), sorted_y.end());
-    for(int x : sorted_x) {
-        std::cout << x << std::endl;
-    }
     this->x_min = sorted_x.front();
     this->x_max = sorted_x.back();
     this->y_min = sorted_y.front();

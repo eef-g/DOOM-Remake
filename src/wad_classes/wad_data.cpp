@@ -14,12 +14,20 @@ void PrintASCIIValues(std::string str) {
 WADData::WADData(std::string path, std::string map_name) {
     this->reader = WADReader(path);
     this->map_index = this->GetLumpIndex(map_name);
-    std::cout << "Lump index of map ['" << map_name << "']: " << this->map_index << std::endl;
+    // Now parse info from the map we're reading
+
     // Parse vertexes
     this->vertexes = this->ReadVertexLump();
-
     // Parse linedefs
     this->linedefs = this->ReadLinedefLump();
+    // Parse nodes
+    this->nodes = this->ReadNodeLump();
+    // Parse Subsectors
+    this->ssectors = this->ReadSubsectorLump();
+    // Parse Sectors
+    this->sectors = this->ReadSectorLump();
+    // Parse Things
+    this->things = this->ReadThingLump();
 }
 
 
@@ -31,6 +39,7 @@ int WADData::GetLumpIndex(std::string lump_name) {
     }
     return -1;
 }
+
 
 std::vector<Vector2> WADData::ReadVertexLump() {
     int lump_index = this->map_index + LUMP_INDICIES::VERTEXES;
@@ -50,8 +59,9 @@ std::vector<Vector2> WADData::ReadVertexLump() {
     return data;
 }
 
+
 std::vector<LINEDEF> WADData::ReadLinedefLump() {
-    int lump_index = this->map_index + LUMP_INDICIES::LINEDEFFS;
+    int lump_index = this->map_index + LUMP_INDICIES::LINEDEFS;
     int num_bytes = 14;
     int header_length = 0;
 
@@ -67,3 +77,72 @@ std::vector<LINEDEF> WADData::ReadLinedefLump() {
     }
     return data;
 }
+
+std::vector<NODE> WADData::ReadNodeLump() {
+    int lump_index = this->map_index + LUMP_INDICIES::NODES;
+    int num_bytes = 28;
+    int header_length = 0;
+
+    WADLump lump_info = this->reader.dir.lumps[lump_index];
+    int count = lump_info.lump_size / num_bytes;
+    std::vector<NODE> data;
+    int offset = 0;
+    for(int i = 0; i < count; i++) {
+        offset = lump_info.lump_pos + i * num_bytes + header_length;
+        NODE curr_data = this->reader.ReadNode(offset);
+        data.push_back(curr_data);
+    }
+    return data;
+}
+
+std::vector<SUBSECTOR> WADData::ReadSubsectorLump() {
+    int lump_index = this->map_index + LUMP_INDICIES::SSECTORS;
+    int num_bytes = 4;
+    int header_length = 0;
+
+    WADLump lump_info = this->reader.dir.lumps[lump_index];
+    int count = lump_info.lump_size / num_bytes;
+    std::vector<SUBSECTOR> data;
+    int offset = 0;
+    for(int i = 0; i < count; i++) {
+        offset = lump_info.lump_pos + i * num_bytes + header_length;
+        SUBSECTOR curr_data = this->reader.ReadSubsector(offset);
+        data.push_back(curr_data);
+    }
+    return data;
+}
+
+std::vector<SECTOR> WADData::ReadSectorLump() {
+    int lump_index = this->map_index + LUMP_INDICIES::SECTORS;
+    int num_bytes = 12;
+    int header_length = 0;
+
+    WADLump lump_info = this->reader.dir.lumps[lump_index];
+    int count = lump_info.lump_size / num_bytes;
+    std::vector<SECTOR> data;
+    int offset = 0;
+    for(int i = 0; i < count; i++) {
+        offset = lump_info.lump_pos + i * num_bytes + header_length;
+        SECTOR curr_data = this->reader.ReadSector(offset);
+        data.push_back(curr_data);
+    }
+    return data;
+}
+
+std::vector<THING> WADData::ReadThingLump() {
+    int lump_index = this->map_index + LUMP_INDICIES::THINGS;
+    int num_bytes = 10;
+    int header_length = 0;
+
+    WADLump lump_info = this->reader.dir.lumps[lump_index];
+    int count = lump_info.lump_size / num_bytes;
+    std::vector<THING> data;
+    int offset = 0;
+    for(int i = 0; i < count; i++) {
+        offset = lump_info.lump_pos + i * num_bytes + header_length;
+        THING curr_data = this->reader.ReadThing(offset);
+        data.push_back(curr_data);
+    }
+    return data;
+}
+

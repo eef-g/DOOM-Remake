@@ -7,3 +7,9 @@
 [submodule "vendor/raygui-cpp"]
 	path = vendor/raygui-cpp
 	url = https://github.com/scastd/raygui-cpp
+[submodule "vendor/imgui"]
+	path = vendor/imgui
+	url = https://github.com/ocornut/imgui
+[submodule "vendor/rlImGui"]
+	path = vendor/rlImGui
+	url = https://github.com/raylib-extras/rlImGui

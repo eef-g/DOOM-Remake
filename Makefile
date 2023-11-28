@@ -15,10 +15,10 @@ createBuildDir = $(BINSCRIPT)
 buildDir := bin
 executable := app
 target := $(buildDir)/$(executable)
-sources := $(call rwildcard,src/,*.cpp)
+sources := $(call rwildcard,src/,*.cpp) $(call rwildcard,include/,*.cpp)
 objects := $(patsubst src/%, $(buildDir)/%, $(patsubst %.cpp, %.o, $(sources)))
 depends := $(patsubst %.o, %.d, $(objects))
-compileFlags := -std=c++17 -I include include/raygui-cpp
+compileFlags := -std=c++17 -I include include/raygui-cpp include/extras
 linkFlags = -L lib/$(platform) -l raylib 
 
 # Check for Windows
@@ -80,13 +80,28 @@ submodules:
 # Copy the relevant header files into includes
 include: submodules
 	$(MKDIR) $(call platformpth, ./include)
+#	$(MKDIR) $(call platformpth, ./include/src)
+	$(MKDIR) $(call platformpth, include/raygui-cpp)
+	$(MKDIR) $(call platformpth, include/extras)
+
 	$(call COPY,vendor/raylib/src,./include,raylib.h)
 	$(call COPY,vendor/raylib/src,./include,raymath.h)
+	$(call COPY,vendor/raylib/src,./include,rlgl.h)
+
 	$(call COPY,vendor/raylib-cpp/include,./include,*.hpp)
 	$(call COPY,vendor/raygui-cpp/include,./include,raygui-cpp.h)
+
 	$(call COPY,vendor/raygui-cpp/dependencies/raylib/src,./include,raygui.h)
-	$(MKDIR) $(call platformpth, include/raygui-cpp)
 	$(call COPY,vendor/raygui-cpp/include/raygui-cpp,./include/raygui-cpp,*.h)
+
+	$(call COPY,vendor/imgui,./include,*.h)
+	$(call COPY,vendor/imgui,./include,*.cpp)
+#	$(call COPY,vendor/imgui,./include/src,*.cpp)
+
+	$(call COPY,vendor/rlImGui,./include,*.h)
+	$(call COPY,vendor/rlImGui,./include,*.cpp)
+#	$(call COPY,vendor/rlImGui,./include/src,*.cpp)
+	$(call COPY,vendor/rlImGui/extras,./include/extras,*.h)
 
 # Build the raylib static library file and copy it into lib
 lib: submodules

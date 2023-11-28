@@ -4,6 +4,7 @@
 #include "map_renderer.hpp"
 #include "player.hpp"
 #include "../settings.hpp"
+#include <raygui-cpp.h>
 
 class CapulusEngine {
 private:

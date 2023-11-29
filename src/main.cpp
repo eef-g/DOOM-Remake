@@ -46,7 +46,7 @@ int main() {
     engine.draw();
     bool open = true;
     ImGui::ShowDemoWindow(&open);
-
+    engine.debugMenu.Show();
 
     rlImGuiEnd();    
     EndDrawing();

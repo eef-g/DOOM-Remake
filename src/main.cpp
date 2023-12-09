@@ -45,7 +45,7 @@ int main() {
 
     engine.draw();
     bool open = true;
-    ImGui::ShowDemoWindow(&open);
+    // ImGui::ShowDemoWindow(&open);
     engine.debugMenu.Show();
 
     rlImGuiEnd();    

@@ -2,7 +2,7 @@
 
 CapulusEngine::CapulusEngine(std::string wad_path) {
     this->wad_path = wad_path;
-    this->map_name = "E1M1";
+    this->map_name = "E1M2";
     this->init();
 }
 
@@ -16,5 +16,6 @@ void CapulusEngine::init() {
 
 void CapulusEngine::draw() {
     this->renderer.DrawVertexes();
-    this->player.Draw();
+    this->renderer.DrawThings();
+    // this->player.Draw();
 }

@@ -18,6 +18,7 @@ void DebugMenu::Show() {
 
     if(ImGui::CollapsingHeader("Maps"))
     {
+
         ImGui::BeginChild("Scrolling");
         for(int i = 0; i < 9; i++) {
             std::string text = "Option " + i;

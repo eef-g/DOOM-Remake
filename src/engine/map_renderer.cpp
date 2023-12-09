@@ -41,9 +41,6 @@ MapRenderer::MapRenderer(WADData data) {
     }
 
     this->lines = this->wad_data.GetLinedefs();
-    // for(auto line : this->lines) {
-    //     std::cout << "[ Start: " << line.start_vertex << " | End: " << line.end_vertex << " ]" << std::endl;
-    // }
 }
 
 
@@ -55,6 +52,43 @@ void MapRenderer::DrawVertexes() {
     // Draw all the lines
     for(auto line : this->lines) {
         DrawLineV(this->vertexes[line.start_vertex], this->vertexes[line.end_vertex], WHITE);
+    }
+}
+
+void MapRenderer::DrawThings() {
+    // Go through each thing & find out the type it is. Based off of that, change the color
+    for(auto thing: this->wad_data.GetThings()) {
+        int x = this->RemapX(thing.x_pos);
+        int y = this->RemapY(thing.y_pos);
+        switch(getThingType(thing.thing_type)) {
+            case ENEMY:
+                DrawCircle(x, y, 5.0, RED);
+                break;
+            case WEAPON:
+                DrawCircle(x, y, 5.0, GRAY);
+                break;
+            case AMMO:
+                DrawCircle(x, y, 5.0, DARKGRAY);
+                break;
+            case ARTIFACT:
+                DrawCircle(x, y, 5.0, DARKBLUE);
+                break;
+            case POWERUP:
+                DrawCircle(x, y, 5.0, GREEN);
+                break;
+            case OBSTACLE:
+                DrawCircle(x, y, 5.0, BROWN);
+                break;
+            case DECOR:
+                DrawCircle(x, y, 5.0, LIGHTGRAY);
+                break;
+            case OTHER:
+                DrawCircle(x, y, 5.0, DARKGREEN);
+                break;
+            default:
+                DrawCircle(x, y, 5.0, DARKGREEN);
+                break;
+        }
     }
 }
 

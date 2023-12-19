@@ -51,8 +51,8 @@ public:
     BBox ReadBBox(int offset);
     NODE ReadNode(int offset);
     SECTOR ReadSector(int offset);
-    REJECT_LUMP ReadReject(int offset);
-    BLOCKMAP_LUMP ReadBlockmap(int offset);
+    REJECT ReadReject(int offset);
+    BLOCKMAP ReadBlockmap(int offset);
 
     std::vector<unsigned char> ReadBytes(int offset, int num_bytes);
 };

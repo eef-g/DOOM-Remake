@@ -229,15 +229,15 @@ SECTOR WADReader::ReadSector(int offset) {
     return output;
 }
 
-REJECT_LUMP WADReader::ReadReject(int offset) {
-    REJECT_LUMP output;
+REJECT WADReader::ReadReject(int offset) {
+    REJECT output;
     output.num_reject = LittleEndianToInt(this->ReadBytes(offset, 2));
     output.first_reject = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
     return output;
 }
 
-BLOCKMAP_LUMP WADReader::ReadBlockmap(int offset) {
-    BLOCKMAP_LUMP output;
+BLOCKMAP WADReader::ReadBlockmap(int offset) {
+    BLOCKMAP output;
     output.origin_x = LittleEndianToInt(this->ReadBytes(offset, 2));
     output.origin_y = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
     return output;

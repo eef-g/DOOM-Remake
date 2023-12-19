@@ -7,11 +7,9 @@ std::string BytesToString(std::vector<unsigned char> bytes) {
     return output;
 }
 
-
 void PrintIntToHex(int32_t num) {
     std::cout << "0x" << std::hex << num;
 }
-
 
 void PrintCharsToHex(std::vector<unsigned char> bytes) {
     std::cout << "[ ";
@@ -21,17 +19,10 @@ void PrintCharsToHex(std::vector<unsigned char> bytes) {
     std::cout << "]" << std::endl;
 }
 
-
 int32_t WADReader::BytesToInt(std::vector<unsigned char> bytes) {
-    // std::cout << "[ ";
-    // for (unsigned char byte : bytes) {
-    //     std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte) << " ";
-    // }
-    // std::cout << " ]" << std::endl;
     int32_t result = (bytes[3]) << 24 | static_cast<uint32_t>(bytes[2]) << 16 | static_cast<uint32_t>(bytes[1]) << 8 | static_cast<uint32_t>(bytes[0]);
     return result;
 }
-
 
 int16_t LittleEndianToInt(std::vector<unsigned char> bytes) {
     // Split the vector into two different hex values
@@ -42,7 +33,6 @@ int16_t LittleEndianToInt(std::vector<unsigned char> bytes) {
     // I kept it in the code here in case it turns out I actually need it, but I'm not sure about it yet.
     return first_hex;
 }
-
 
 // Let's us convert the bytes into a usable string value
 std::string trim(std::string& str) {
@@ -136,11 +126,13 @@ WADDir WADReader::ReadDir() {
 }
 
 
-Vector2 WADReader::ReadVertex(int offset) {
-    int16_t x = LittleEndianToInt(this->ReadBytes(offset, 2));
-    int16_t y = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
-
-    Vector2 output = {x, y}; 
+THING WADReader::ReadThing(int offset) {
+    THING output;
+    output.x_pos = LittleEndianToInt(this->ReadBytes(offset, 2));
+    output.y_pos = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
+    output.angle = LittleEndianToInt(this->ReadBytes(offset + 4, 2));
+    output.thing_type = LittleEndianToInt(this->ReadBytes(offset + 6, 2));
+    output.flags = LittleEndianToInt(this->ReadBytes(offset + 8, 2));
     return output;
 }
 
@@ -153,6 +145,49 @@ LINEDEF WADReader::ReadLinedef(int offset) {
     output.sector_tag = LittleEndianToInt(this->ReadBytes(offset + 8, 2));
     output.front_sidedef = LittleEndianToInt(this->ReadBytes(offset + 10, 2));
     output.back_sidedef = LittleEndianToInt(this->ReadBytes(offset + 12, 2));
+    return output;
+}
+
+SIDEDEF WADReader::ReadSidedef(int offset) {
+    SIDEDEF output;
+    output.x_offset = LittleEndianToInt(this->ReadBytes(offset, 2));
+    output.y_offset = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
+    std::string upper_texture = BytesToString(this->ReadBytes(offset + 4, 8));
+    std::string lower_texture = BytesToString(this->ReadBytes(offset + 12, 8));
+    std::string middle_texture = BytesToString(this->ReadBytes(offset + 20, 8));
+    // Convert the upper_texture, lower_texture, and middle_texture to a usable 8 character array of chars
+    for (int i = 0; i < 8; i++) {
+        output.upper_texture[i] = upper_texture[i];
+        output.lower_texture[i] = lower_texture[i];
+        output.middle_texture[i] = middle_texture[i];
+    }
+    output.sector_id = LittleEndianToInt(this->ReadBytes(offset + 28, 2));
+    return output;
+}
+
+Vector2 WADReader::ReadVertex(int offset) {
+    int16_t x = LittleEndianToInt(this->ReadBytes(offset, 2));
+    int16_t y = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
+
+    Vector2 output = {x, y}; 
+    return output;
+}
+
+SEG WADReader::ReadSeg(int offset) {
+    SEG output;
+    output.start_vertex_id = LittleEndianToInt(this->ReadBytes(offset, 2));
+    output.end_vertex_id = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
+    output.angle = LittleEndianToInt(this->ReadBytes(offset + 4, 2));
+    output.linedef_id = LittleEndianToInt(this->ReadBytes(offset + 6, 2));
+    output.direction = LittleEndianToInt(this->ReadBytes(offset + 8, 2));
+    output.offset = LittleEndianToInt(this->ReadBytes(offset + 10, 2));
+    return output;
+}
+
+SUBSECTOR WADReader::ReadSubsector(int offset) {
+    SUBSECTOR output;
+    output.seg_count = LittleEndianToInt(this->ReadBytes(offset, 2));
+    output.first_seg_id = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
     return output;
 }
 
@@ -178,31 +213,32 @@ NODE WADReader::ReadNode(int offset) {
     return output;
 }
 
-SUBSECTOR WADReader::ReadSubsector(int offset) {
-    SUBSECTOR output;
-    output.seg_count = LittleEndianToInt(this->ReadBytes(offset, 2));
-    output.first_seg_id = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
-    return output;
-}
-
 SECTOR WADReader::ReadSector(int offset) {
     SECTOR output;
-    output.start_vertex_id = LittleEndianToInt(this->ReadBytes(offset, 2));
-    output.end_vertex_id = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
-    output.angle = LittleEndianToInt(this->ReadBytes(offset + 4, 2));
-    output.linedef_id = LittleEndianToInt(this->ReadBytes(offset + 6, 2));
-    output.direction = LittleEndianToInt(this->ReadBytes(offset + 8, 2));
-    output.offset = LittleEndianToInt(this->ReadBytes(offset + 10, 2));
+    output.floor_height = LittleEndianToInt(this->ReadBytes(offset, 2));
+    output.ceiling_height = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
+    std::string floor_texture = BytesToString(this->ReadBytes(offset + 4, 8));
+    std::string ceiling_texture = BytesToString(this->ReadBytes(offset + 12, 8));
+    for (int i = 0; i < 8; i++) {
+        output.floor_texture[i] = floor_texture[i];
+        output.ceiling_texture[i] = ceiling_texture[i];
+    }
+    output.light_level = LittleEndianToInt(this->ReadBytes(offset + 20, 2));
+    output.special_type = LittleEndianToInt(this->ReadBytes(offset + 22, 2));
+    output.sector_tag = LittleEndianToInt(this->ReadBytes(offset + 24, 2));
     return output;
 }
 
-THING WADReader::ReadThing(int offset) {
-    THING output;
-    output.x_pos = LittleEndianToInt(this->ReadBytes(offset, 2));
-    output.y_pos = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
-    output.angle = LittleEndianToInt(this->ReadBytes(offset + 4, 2));
-    output.thing_type = LittleEndianToInt(this->ReadBytes(offset + 6, 2));
-    output.flags = LittleEndianToInt(this->ReadBytes(offset + 8, 2));
+REJECT_LUMP WADReader::ReadReject(int offset) {
+    REJECT_LUMP output;
+    output.num_reject = LittleEndianToInt(this->ReadBytes(offset, 2));
+    output.first_reject = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
     return output;
 }
 
+BLOCKMAP_LUMP WADReader::ReadBlockmap(int offset) {
+    BLOCKMAP_LUMP output;
+    output.origin_x = LittleEndianToInt(this->ReadBytes(offset, 2));
+    output.origin_y = LittleEndianToInt(this->ReadBytes(offset + 2, 2));
+    return output;
+}

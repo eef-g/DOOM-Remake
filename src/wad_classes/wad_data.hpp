@@ -14,7 +14,7 @@ private:
     std::vector<LINEDEF> linedefs;
     std::vector<NODE> nodes;
     std::vector<SUBSECTOR> ssectors;
-    std::vector<SECTOR> sectors;
+    std::vector<SEG> segs;
     std::vector<THING> things;
 
 
@@ -23,7 +23,7 @@ private:
     std::vector<LINEDEF> ReadLinedefLump();
     std::vector<NODE> ReadNodeLump();
     std::vector<SUBSECTOR> ReadSubsectorLump();
-    std::vector<SECTOR> ReadSectorLump();
+    std::vector<SEG> ReadSegLump();
     std::vector<THING> ReadThingLump();
 
 public:

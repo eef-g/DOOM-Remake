@@ -24,8 +24,8 @@ WADData::WADData(std::string path, std::string map_name) {
     this->nodes = this->ReadNodeLump();
     // Parse Subsectors
     this->ssectors = this->ReadSubsectorLump();
-    // Parse Sectors
-    this->sectors = this->ReadSectorLump();
+    // Parse Segs 
+    this->segs= this->ReadSegLump();
     // Parse Things
     this->things = this->ReadThingLump();
 }
@@ -112,18 +112,18 @@ std::vector<SUBSECTOR> WADData::ReadSubsectorLump() {
     return data;
 }
 
-std::vector<SECTOR> WADData::ReadSectorLump() {
-    int lump_index = this->map_index + LUMP_INDICIES::SECTORS;
+std::vector<SEG> WADData::ReadSegLump() {
+    int lump_index = this->map_index + LUMP_INDICIES::SEGS;
     int num_bytes = 12;
     int header_length = 0;
 
     WADLump lump_info = this->reader.dir.lumps[lump_index];
     int count = lump_info.lump_size / num_bytes;
-    std::vector<SECTOR> data;
+    std::vector<SEG> data;
     int offset = 0;
     for(int i = 0; i < count; i++) {
         offset = lump_info.lump_pos + i * num_bytes + header_length;
-        SECTOR curr_data = this->reader.ReadSector(offset);
+        SEG curr_data = this->reader.ReadSeg(offset);
         data.push_back(curr_data);
     }
     return data;

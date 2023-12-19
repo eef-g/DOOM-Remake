@@ -25,16 +25,6 @@ int main() {
   while (!w.ShouldClose()) // Detect window close button or ESC key
   {
     // Update
-    // float mouseDelta = GetMouseWheelMove();
-
-    // float newZoom = cam.zoom + mouseDelta * 0.01f;
-    // if (newZoom <= 0) {
-    //   newZoom = 0.01f;
-    // }
-    
-    // cam.zoom = newZoom;
-
-
 
 
     // Draw

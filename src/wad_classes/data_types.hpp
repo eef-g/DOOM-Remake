@@ -10,47 +10,6 @@ enum LUMP_INDICIES {
     SSECTORS = 6, NODES = 7, SECTORS = 8, REJECT = 9, BLOCKMAP = 10,
 };
 
-struct LINEDEF {
-    // 14 bytes total
-    int16_t start_vertex;
-    int16_t end_vertex;
-    int16_t flags;
-    int16_t special_type;
-    int16_t sector_tag;
-    int16_t front_sidedef;
-    int16_t back_sidedef;
-};
-
-struct BBox {
-    // 8 bytes total
-    int16_t top;
-    int16_t bottom;
-    int16_t left;
-    int16_t right;
-};
-
-struct NODE {
-    // 28 bytes total
-    int16_t x_partition;
-    int16_t y_partition;
-    int16_t dx_partition;
-    int16_t dy_partition;
-    BBox left_bbox;
-    BBox right_bbox;
-    int16_t front_child_id;
-    int16_t back_child_id;
-};
-
-struct SECTOR {
-    // 12 bytes
-    int16_t start_vertex_id;
-    int16_t end_vertex_id;
-    int16_t angle;
-    int16_t linedef_id;
-    int16_t direction;
-    int16_t offset;
-};
-
 struct THING {
     // 10 bytes
     int16_t x_pos;
@@ -93,10 +52,87 @@ THING_TYPE getThingType(int thing_type) {
 }
 
 
+struct LINEDEF {
+    // 14 bytes total
+    int16_t start_vertex;
+    int16_t end_vertex;
+    int16_t flags;
+    int16_t special_type;
+    int16_t sector_tag;
+    int16_t front_sidedef;
+    int16_t back_sidedef;
+};
+
+struct SIDEDEF {
+    // 30 bytes total
+    int16_t x_offset;
+    int16_t y_offset;
+    char upper_texture[8];
+    char lower_texture[8];
+    char middle_texture[8];
+    int16_t sector_id;
+};
+
+// VERTEX struct is just a Vector2, no need to make a custom one for this struct
+
+struct SEG {
+    // 12 bytes total
+    int16_t start_vertex_id;
+    int16_t end_vertex_id;
+    int16_t angle;
+    int16_t linedef_id;
+    int16_t direction;
+    int16_t offset;
+};
+
 struct SUBSECTOR {
     // 4 bytes
     int16_t seg_count;
     int16_t first_seg_id;
 };
+
+struct BBox {
+    // 8 bytes total
+    int16_t top;
+    int16_t bottom;
+    int16_t left;
+    int16_t right;
+};
+
+struct NODE {
+    // 28 bytes total
+    int16_t x_partition;
+    int16_t y_partition;
+    int16_t dx_partition;
+    int16_t dy_partition;
+    BBox left_bbox;
+    BBox right_bbox;
+    int16_t front_child_id;
+    int16_t back_child_id;
+};
+
+struct SECTOR {
+    // 26 bytes total
+    int16_t floor_height;
+    int16_t ceiling_height;
+    char floor_texture[8];
+    char ceiling_texture[8];
+    int16_t light_level;
+    int16_t special_type;
+    int16_t sector_tag;
+};
+
+struct REJECT_LUMP {
+    // 4 bytes total
+    int16_t num_reject;
+    int16_t first_reject;
+};
+
+struct BLOCKMAP_LUMP {
+    // 4 bytes total
+    int16_t origin_x;
+    int16_t origin_y;
+};
+
 
 #endif

@@ -42,13 +42,17 @@ public:
     
     int32_t BytesToInt(std::vector<unsigned char> bytes);
 
-    Vector2 ReadVertex(int offset);
+    THING ReadThing(int offset);
     LINEDEF ReadLinedef(int offset);
+    SIDEDEF ReadSidedef(int offset);
+    Vector2 ReadVertex(int offset);
+    SEG ReadSeg(int offset);
+    SUBSECTOR ReadSubsector(int offset);
     BBox ReadBBox(int offset);
     NODE ReadNode(int offset);
-    SUBSECTOR ReadSubsector(int offset);
     SECTOR ReadSector(int offset);
-    THING ReadThing(int offset);
+    REJECT_LUMP ReadReject(int offset);
+    BLOCKMAP_LUMP ReadBlockmap(int offset);
 
     std::vector<unsigned char> ReadBytes(int offset, int num_bytes);
 };

@@ -41,26 +41,54 @@ MapRenderer::MapRenderer(WADData data) {
     }
 
     this->lines = this->wad_data.GetLinedefs();
-    // for(auto line : this->lines) {
-    //     std::cout << "[ Start: " << line.start_vertex << " | End: " << line.end_vertex << " ]" << std::endl;
-    // }
 }
 
 
 void MapRenderer::DrawVertexes() {
+    // Draw all the vertexes
     for(auto vertex : this->vertexes) {
         DrawCircle(vertex.x, vertex.y, 2.5, WHITE);
     }
-
-    // Rudamentary line drawing (DO NOT UNCOMMENT, THIS MAKES THE MAP A MESS)
-    // for(int i = 0; i < this->vertexes.size(); i++) {
-    //     if (i < this->vertexes.size() - 1) {
-    //         DrawLineV(this->vertexes[i], this->vertexes[i + 1], WHITE);
-    //     }
-    //     else { DrawLineV(this->vertexes[i], this->vertexes[0], WHITE); }
-    // }
+    // Draw all the lines
     for(auto line : this->lines) {
         DrawLineV(this->vertexes[line.start_vertex], this->vertexes[line.end_vertex], WHITE);
+    }
+}
+
+void MapRenderer::DrawThings() {
+    // Go through each thing & find out the type it is. Based off of that, change the color
+    for(auto thing: this->wad_data.GetThings()) {
+        int x = this->RemapX(thing.x_pos);
+        int y = this->RemapY(thing.y_pos);
+        switch(getThingType(thing.thing_type)) {
+            case ENEMY:
+                DrawCircle(x, y, 5.0, RED);
+                break;
+            case WEAPON:
+                DrawCircle(x, y, 5.0, GRAY);
+                break;
+            case AMMO:
+                DrawCircle(x, y, 5.0, DARKGRAY);
+                break;
+            case ARTIFACT:
+                DrawCircle(x, y, 5.0, DARKBLUE);
+                break;
+            case POWERUP:
+                DrawCircle(x, y, 5.0, GREEN);
+                break;
+            case OBSTACLE:
+                DrawCircle(x, y, 5.0, BROWN);
+                break;
+            case DECOR:
+                DrawCircle(x, y, 5.0, LIGHTGRAY);
+                break;
+            case OTHER:
+                DrawCircle(x, y, 5.0, DARKGREEN);
+                break;
+            default:
+                DrawCircle(x, y, 5.0, DARKGREEN);
+                break;
+        }
     }
 }
 
@@ -73,9 +101,6 @@ void MapRenderer::GetMapBounds() {
     }
     std::sort(sorted_x.begin(), sorted_x.end());
     std::sort(sorted_y.begin(), sorted_y.end());
-    for(int x : sorted_x) {
-        std::cout << x << std::endl;
-    }
     this->x_min = sorted_x.front();
     this->x_max = sorted_x.back();
     this->y_min = sorted_y.front();

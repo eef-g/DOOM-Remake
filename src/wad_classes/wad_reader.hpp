@@ -7,6 +7,8 @@
 #include <iostream>
 #include <raylib-cpp.hpp>
 
+#include "data_types.hpp"
+
 struct WADHeader {
     std::string wad_type;
     int lump_count;
@@ -21,16 +23,6 @@ struct WADLump {
 
 struct WADDir {
     std::vector<WADLump> lumps;
-};
-
-struct LINEDEF {
-    int16_t start_vertex;
-    int16_t end_vertex;
-    int16_t flags;
-    int16_t special_type;
-    int16_t sector_tag;
-    int16_t front_sidedef;
-    int16_t back_sidedef;
 };
 
 
@@ -49,8 +41,19 @@ public:
     WADReader(std::string wad_path);
     
     int32_t BytesToInt(std::vector<unsigned char> bytes);
-    Vector2 ReadVertex(int offset);
+
+    THING ReadThing(int offset);
     LINEDEF ReadLinedef(int offset);
+    SIDEDEF ReadSidedef(int offset);
+    Vector2 ReadVertex(int offset);
+    SEG ReadSeg(int offset);
+    SUBSECTOR ReadSubsector(int offset);
+    BBox ReadBBox(int offset);
+    NODE ReadNode(int offset);
+    SECTOR ReadSector(int offset);
+    REJECT ReadReject(int offset);
+    BLOCKMAP ReadBlockmap(int offset);
+
     std::vector<unsigned char> ReadBytes(int offset, int num_bytes);
 };
 #endif

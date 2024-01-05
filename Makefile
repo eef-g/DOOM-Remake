@@ -9,4 +9,4 @@ compile:
 	cd build && make
 
 run: 
-	cd build && DOOM.exe
+	cd build && game.exe

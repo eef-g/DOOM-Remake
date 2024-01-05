@@ -1,9 +1,21 @@
 cmake_minimum_required(VERSION 3.15)
 
 project(DOOM-Remake)
-set(This DOOM)
 
 enable_testing()
+
+set(This doom)
+
+project(${This} C CXX)
+
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+enable_testing()
+
+add_subdirectory(vendor/googletest)
+add_subdirectory(test)
 
 set(RAYLIB_VERSION 5.0)
 find_package(raylib ${RAYLIB_VERSION} QUIET)
@@ -36,14 +48,20 @@ file (GLOB HEADERS
     "src/*.hpp"
 )
 
+set(MainFile "main.cpp")
+
 include_directories(
     "vendor/wad_reader/src"
+    "${raylib_SOURCE_DIR}/src"
 )
 
-add_executable(DOOM ${SOURCES} ${HEADERS})
+add_library(${This} STATIC ${SOURCES} ${HEADERS})
+
+add_executable(game ${MainFile})
 
 # Link the libraries to your target
-target_link_libraries(${This} 
+target_link_libraries(game
+    ${This}
     ${WAD_READER_LIB}
     raylib
 )

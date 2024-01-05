@@ -1,30 +1,15 @@
-#include "settings.hpp"
+#include "src/model.hpp"
 #include <iostream>
-#include <raylib.h>
 
 int main() {
-  const int screenWidth = 800;
-  const int screenHeight = 600;
-  std::cout << "Screen Width: " << screenWidth << std::endl;
-  std::cout << "Screen Height: " << screenHeight << std::endl;
-  InitWindow(screenWidth, screenHeight, "Capulus");
-  SetTargetFPS(60);
-
-  while (!WindowShouldClose()) {
-    BeginDrawing();
-    ClearBackground(RAYWHITE);
-    DrawText("Capulus", 190, 200, 20, LIGHTGRAY);
-    EndDrawing();
-  }
-
-  CloseWindow();
-
+  doom::Model model = doom::Model();
+  model.runGame();
   return 0;
 }
 
-// int main() {
-//   // Initialization
-//   CapulusEngine engine = CapulusEngine("wad/doom1.wad");
+
+
+#pragma region old_main
 //   SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 //   raylib::Window w(engine.GetScreenWidth(), engine.GetScreenHeight(), "Example");
 //   Camera2D cam = { 0 };
@@ -59,3 +44,4 @@ int main() {
 
 //   return 0;
 // }
+#pragma endregion

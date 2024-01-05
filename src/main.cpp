@@ -5,18 +5,20 @@
 int main() {
   const int screenWidth = 800;
   const int screenHeight = 600;
-
-  InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+  std::cout << "Screen Width: " << screenWidth << std::endl;
+  std::cout << "Screen Height: " << screenHeight << std::endl;
+  InitWindow(screenWidth, screenHeight, "Capulus");
   SetTargetFPS(60);
 
   while (!WindowShouldClose()) {
     BeginDrawing();
     ClearBackground(RAYWHITE);
-    DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+    DrawText("Capulus", 190, 200, 20, LIGHTGRAY);
     EndDrawing();
   }
 
   CloseWindow();
+
   return 0;
 }
 

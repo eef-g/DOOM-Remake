@@ -38,7 +38,8 @@ endif()
 
 # Specify the paths to the libraries
 set(WAD_READER_LIB "${CMAKE_SOURCE_DIR}/vendor/wad_reader/libwad.a")
-
+set(WAD_FILE "doom1.wad")
+configure_file(${WAD_FILE} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
 file(GLOB SOURCES 
     "src/*.cpp"
@@ -50,9 +51,11 @@ file (GLOB HEADERS
 
 set(MainFile "main.cpp")
 
+message("${CMAKE_SOURCE_DIR}/build/_deps/raylib-src/src")
+
 include_directories(
-    "vendor/wad_reader/src"
-    "${raylib_SOURCE_DIR}/src"
+    "${CMAKE_SOURCE_DIR}/vendor/wad_reader/src"
+    "${CMAKE_SOURCE_DIR}/build/_deps/raylib-src/src"
 )
 
 add_library(${This} STATIC ${SOURCES} ${HEADERS})

@@ -1,14 +1,16 @@
 #ifndef SETTINGS_HPP
+
 #define SETTINGS_HPP
-int DOOM_RES[] = {320, 200};
-int DOOM_W = DOOM_RES[0];
-int DOOM_H = DOOM_RES[1];
+extern int DOOM_RES[];
+extern int DOOM_W;
+extern int DOOM_H;
 
-float SCALE = 5.0f;
-int WIN_RES[] = {DOOM_W * SCALE, DOOM_H * SCALE};
-int WIN_W = WIN_RES[0];
-int WIN_H = WIN_RES[1];
+extern float SCALE;
+extern int WIN_RES[];
+extern int WIN_W;
+extern int WIN_H;
 
-int H_WIDTH = WIN_W / 2;
-int H_HEIGHT = WIN_H / 2;
+extern int H_WIDTH;
+extern int H_HEIGHT;
+
 #endif

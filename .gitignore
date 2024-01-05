@@ -1,5 +1,4 @@
 build/*
-bin/*
 include/*
 .vscode/*
 .cache/*

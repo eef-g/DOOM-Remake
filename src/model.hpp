@@ -5,7 +5,7 @@
 #include <raylib.h>
 #include "settings.hpp"
 
-namespace doom {
+namespace dm {
     class Model{
     private:
         int screenWidth;

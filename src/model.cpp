@@ -1,5 +1,5 @@
 #include "model.hpp"
-namespace doom {
+namespace dm {
     Model::Model() {
         this->screenWidth = WIN_W;
         this->screenHeight = WIN_H;

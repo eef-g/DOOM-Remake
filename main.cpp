@@ -2,7 +2,7 @@
 #include <iostream>
 
 int main() {
-  doom::Model model = doom::Model();
+  dm::Model model = dm::Model();
   model.runGame();
   return 0;
 }

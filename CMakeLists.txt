@@ -37,7 +37,7 @@ if (NOT raylib_FOUND)
 endif()
 
 # Specify the paths to the libraries
-set(WAD_READER_LIB "${CMAKE_SOURCE_DIR}/vendor/wad_reader/libwad.a")
+set(WAD_READER_LIB "${CMAKE_SOURCE_DIR}/vendor/wad_reader/release/libwad.a")
 set(WAD_FILE "doom1.wad")
 configure_file(${WAD_FILE} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 

@@ -12,12 +12,14 @@ namespace dm {
             int screen_height;
             int max_fps;
         } settings;
-        wad::WADFile wad;
+        wad::WADFile *wad = nullptr;
 
 
     public:
+        void SelectWad(std::string wadName);
         void SelectMap(std::string mapName);
         Model();
+        ~Model() { delete this->wad; };
 
         // Getters
         int GetScreenWidth() { return this->settings.screen_width; };

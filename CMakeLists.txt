@@ -18,9 +18,15 @@ enable_testing()
 set(WAD_READER_LIB "${CMAKE_SOURCE_DIR}/vendor/wad_reader/release/libwad.a")
 add_library(wad_reader STATIC IMPORTED)
 set_property(TARGET wad_reader PROPERTY IMPORTED_LOCATION ${WAD_READER_LIB})
+
+# Set up the resources directory for the build
 set(WAD_FILE "src/resources/doom1.wad")
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/resources)
-file(COPY ${WAD_FILE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/resources/wads)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/resources/decompiled_wad_files)
+
+# Put the WAD file into the build directory
+file(COPY ${WAD_FILE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources/wads)
 
 # configure_file(${WAD_FILE} ${CMAKE_CURRENT_BINARY_DIR}/resources COPYONLY)
 include_directories(
@@ -77,6 +83,9 @@ message("${CMAKE_SOURCE_DIR}/build/_deps/raylib-src/src")
 
 
 add_library(${This} STATIC ${SOURCES} ${HEADERS})
+set_target_properties(doom PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/lib"
+)
 
 add_executable(game ${MainFile} ${SOURCES} ${HEADERS})
 

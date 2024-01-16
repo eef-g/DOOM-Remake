@@ -6,14 +6,15 @@
 namespace dc {
     class Controller {
     private:
-        dm::Model model;
+        dm::Model *model = nullptr;
     public:
         Controller();
+        ~Controller() { delete this->model; };
 
         // Getters
-        int GetScreenWidth() { return this->model.GetScreenHeight(); };
-        int GetScreenHeight() { return this->model.GetScreenWidth(); };
-        int GetMaxFPS() { return this->model.GetMaxFPS(); };
+        int GetScreenWidth() { return this->model->GetScreenHeight(); };
+        int GetScreenHeight() { return this->model->GetScreenWidth(); };
+        int GetMaxFPS() { return this->model->GetMaxFPS(); };
 
         void SelectMap(std::string mapName);
     };

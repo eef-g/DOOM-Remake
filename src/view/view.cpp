@@ -2,13 +2,13 @@
 
 namespace dv {
     View::View() {
-        this->controller = dc::Controller();
+        this->controller = new dc::Controller();
     };
 
     void View::runGame() {
         SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-        InitWindow(this->controller.GetScreenHeight(), this->controller.GetScreenWidth(), "Doom Clone");
-        SetTargetFPS(this->controller.GetMaxFPS());
+        InitWindow(this->controller->GetScreenHeight(), this->controller->GetScreenWidth(), "Doom Clone");
+        SetTargetFPS(this->controller->GetMaxFPS());
 
         while(!WindowShouldClose()) {
             BeginDrawing();

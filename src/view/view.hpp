@@ -7,9 +7,10 @@
 namespace dv {
     class View {
     private:
-        dc::Controller controller;
+        dc::Controller *controller = nullptr;
     public:
         View();
+        ~View() { delete this->controller; };
         void runGame();
     };
 }

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../src/model.hpp"
+#include "../src/model/model.hpp"
 
 TEST(DoomTests, exampleTest) {
   EXPECT_EQ(1, 1);

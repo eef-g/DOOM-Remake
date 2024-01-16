@@ -13,4 +13,6 @@ extern int WIN_H;
 extern int H_WIDTH;
 extern int H_HEIGHT;
 
+extern int FPS;
+
 #endif

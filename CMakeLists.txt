@@ -14,6 +14,23 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 enable_testing()
 
+# Specify the paths to the libraries
+set(WAD_READER_LIB "${CMAKE_SOURCE_DIR}/vendor/wad_reader/release/libwad.a")
+add_library(wad_reader STATIC IMPORTED)
+set_property(TARGET wad_reader PROPERTY IMPORTED_LOCATION ${WAD_READER_LIB})
+set(WAD_FILE "src/resources/doom1.wad")
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/resources)
+file(COPY ${WAD_FILE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources)
+
+# configure_file(${WAD_FILE} ${CMAKE_CURRENT_BINARY_DIR}/resources COPYONLY)
+include_directories(
+    "${CMAKE_SOURCE_DIR}/src"
+    "${CMAKE_SOURCE_DIR}/vendor/wad_reader/src"
+    "${CMAKE_SOURCE_DIR}/build/_deps/raylib-src/src"
+)
+
+
+# Add the subdirectories
 add_subdirectory(vendor/googletest)
 add_subdirectory(test)
 
@@ -36,31 +53,32 @@ if (NOT raylib_FOUND)
     endif()
 endif()
 
-# Specify the paths to the libraries
-set(WAD_READER_LIB "${CMAKE_SOURCE_DIR}/vendor/wad_reader/release/libwad.a")
-set(WAD_FILE "doom1.wad")
-configure_file(${WAD_FILE} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+
 
 file(GLOB SOURCES 
     "src/*.cpp"
+    "src/model/*.cpp"
+    "src/view/*.cpp"
+    "src/controller/*.cpp"
 )
+
 
 file (GLOB HEADERS
     "src/*.hpp"
+    "src/model/*.hpp"
+    "src/view/*.hpp"
+    "src/controller/*.hpp"
 )
 
 set(MainFile "main.cpp")
 
 message("${CMAKE_SOURCE_DIR}/build/_deps/raylib-src/src")
 
-include_directories(
-    "${CMAKE_SOURCE_DIR}/vendor/wad_reader/src"
-    "${CMAKE_SOURCE_DIR}/build/_deps/raylib-src/src"
-)
+
 
 add_library(${This} STATIC ${SOURCES} ${HEADERS})
 
-add_executable(game ${MainFile})
+add_executable(game ${MainFile} ${SOURCES} ${HEADERS})
 
 # Link the libraries to your target
 target_link_libraries(game

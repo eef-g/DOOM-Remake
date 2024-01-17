@@ -2,7 +2,11 @@
 #define VIEW_HPP
 
 #include <raylib.h>
+
+
+
 #include "../controller/controller.hpp"
+#include "main_menu.hpp"
 
 namespace dv {
     class View {

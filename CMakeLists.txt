@@ -20,19 +20,28 @@ add_library(wad_reader STATIC IMPORTED)
 set_property(TARGET wad_reader PROPERTY IMPORTED_LOCATION ${WAD_READER_LIB})
 
 # Set up the resources directory for the build
-set(WAD_FILE "src/resources/doom1.wad")
+set(WAD_FILE "src/resources/wads/doom1.wad")
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/resources)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/resources/wads)
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/resources/decompiled_wad_files)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/resources/decompiled_wad_resources)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/resources/default_resources)
 
 # Put the WAD file into the build directory
-file(COPY ${WAD_FILE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources/wads)
+if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/resources/wads/doom1.wad)
+    message("Copying WAD file to build directory")
+    file(COPY ${WAD_FILE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources/wads)
+endif()
+
+# Copy the default resources to the build directory
+file(COPY ${CMAKE_SOURCE_DIR}/src/resources/default_resources/ 
+     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources/default_resources)
 
 # configure_file(${WAD_FILE} ${CMAKE_CURRENT_BINARY_DIR}/resources COPYONLY)
 include_directories(
     "${CMAKE_SOURCE_DIR}/src"
     "${CMAKE_SOURCE_DIR}/vendor/wad_reader/src"
     "${CMAKE_SOURCE_DIR}/build/_deps/raylib-src/src"
+    "${CMAKE_SOURCE_DIR}/build/_deps/raygui-src/src"
 )
 
 
@@ -59,6 +68,26 @@ if (NOT raylib_FOUND)
     endif()
 endif()
 
+set(RAYGUI_VERSION 4.0)
+find_package(raygui ${RAYGUI_VERSION} QUIET)
+if (NOT raygui_FOUND)
+    include(FetchContent)
+    FetchContent_Declare(
+        raygui
+        DOWNLOAD_EXTRACT_TIMESTAMP OFF
+        URL https://github.com/raysan5/raygui/archive/refs/tags/${RAYGUI_VERSION}.tar.gz
+    )
+    FetchContent_GetProperties(raygui)
+    if (NOT raygui_POPULATED)
+        message("Fetching raygui")
+        set(FETCHCONTENT_QUIET NO)
+        FetchContent_Populate(raygui)
+        set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+        add_subdirectory(${raygui_SOURCE_DIR}/projects/CMake ${raygui_BINARY_DIR})
+    else()
+        message("raygui already populated")
+    endif()
+endif()
 
 
 file(GLOB SOURCES 
@@ -94,4 +123,5 @@ target_link_libraries(game
     ${This}
     ${WAD_READER_LIB}
     raylib
+    raygui
 )

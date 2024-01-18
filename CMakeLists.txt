@@ -41,7 +41,6 @@ include_directories(
     "${CMAKE_SOURCE_DIR}/src"
     "${CMAKE_SOURCE_DIR}/vendor/wad_reader/src"
     "${CMAKE_SOURCE_DIR}/build/_deps/raylib-src/src"
-    "${CMAKE_SOURCE_DIR}/build/_deps/raygui-src/src"
 )
 
 
@@ -65,27 +64,6 @@ if (NOT raylib_FOUND)
         set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
         set(BUILD_GAMES    OFF CACHE BOOL "" FORCE)
         add_subdirectory(${raylib_SOURCE_DIR} ${raylib_BINARY_DIR})
-    endif()
-endif()
-
-set(RAYGUI_VERSION 4.0)
-find_package(raygui ${RAYGUI_VERSION} QUIET)
-if (NOT raygui_FOUND)
-    include(FetchContent)
-    FetchContent_Declare(
-        raygui
-        DOWNLOAD_EXTRACT_TIMESTAMP OFF
-        URL https://github.com/raysan5/raygui/archive/refs/tags/${RAYGUI_VERSION}.tar.gz
-    )
-    FetchContent_GetProperties(raygui)
-    if (NOT raygui_POPULATED)
-        message("Fetching raygui")
-        set(FETCHCONTENT_QUIET NO)
-        FetchContent_Populate(raygui)
-        set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-        add_subdirectory(${raygui_SOURCE_DIR}/projects/CMake ${raygui_BINARY_DIR})
-    else()
-        message("raygui already populated")
     endif()
 endif()
 
@@ -123,5 +101,4 @@ target_link_libraries(game
     ${This}
     ${WAD_READER_LIB}
     raylib
-    raygui
 )

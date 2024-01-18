@@ -10,14 +10,22 @@ namespace dv {
         InitWindow(this->controller->GetScreenHeight(), this->controller->GetScreenWidth(), "Doom Clone");
         SetTargetFPS(this->controller->GetMaxFPS());
 
-        MainMenu menu;
+        MainMenu menu(this);
         while(!WindowShouldClose()) {
             BeginDrawing();
             ClearBackground(BLACK);
-            menu.draw();
-            // BeginMode2D(controller.getCamera());
-            // controller.draw();
-            // EndMode2D();
+            switch(this->gameState) {
+                case GameState::MAIN_MENU:
+                    menu.draw();
+                    break;
+                case GameState::GAME:
+                    // controller->update();
+                    break;
+                case GameState::PAUSE_MENU:
+                    break;
+                case GameState::GAME_OVER:
+                    break;
+            }
             EndDrawing();
         }
 

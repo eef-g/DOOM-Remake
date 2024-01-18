@@ -2,6 +2,7 @@
 #define VIEW_HPP
 
 #include <raylib.h>
+#include <unistd.h>
 
 #include "../controller/controller.hpp"
 #include "main_menu.hpp"
@@ -9,6 +10,7 @@
 namespace dv {
     enum class GameState {
         MAIN_MENU,
+        MAP_TESTING,
         GAME,
         PAUSE_MENU,
         GAME_OVER

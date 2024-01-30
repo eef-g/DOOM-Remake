@@ -15,11 +15,12 @@ namespace dv {
         SetWindowIcon(icon);
         UnloadImage(icon);
 
+        
 
         // TODO: Finish making the different scenes that will be used
         // Scene Setup
         MainMenu menu(this);
-        // MapTest mapTest(this);
+        MapTest mapTest(this);
         // Game game(this);
         // PauseMenu pauseMenu(this);
         // GameOver gameOver(this);
@@ -32,6 +33,7 @@ namespace dv {
                     menu.draw();
                     break;
                 case GameState::MAP_TESTING:
+                    mapTest.draw();
                     break;
                 case GameState::GAME:
                     break;

@@ -6,6 +6,7 @@
 
 #include "../controller/controller.hpp"
 #include "main_menu.hpp"
+#include "map_test.hpp"
 
 namespace dv {
     enum class GameState {

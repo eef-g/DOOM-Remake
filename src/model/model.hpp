@@ -21,7 +21,8 @@ namespace dm {
         Model();
         ~Model() { delete this->wad; };
 
-        // Getters
+        // Gettersr
+        
         int GetScreenWidth() { return this->settings.screen_width; };
         int GetScreenHeight() { return this->settings.screen_height; };
         int GetMaxFPS() { return this->settings.max_fps; };

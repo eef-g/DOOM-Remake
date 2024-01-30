@@ -14,7 +14,7 @@ namespace dv {
             MapTest() { this->init();};
             MapTest(View* view) : view(view) { this->view = view; this->init();};
 
-            ~MapTest() {};
+            ~MapTest() {this->view = nullptr;};
             void draw();
             void update();
         private:
@@ -28,13 +28,30 @@ namespace dv {
             const Color BACKGROUND_COLOR = BLACK;
             const Color HOVER_COLOR = CLITERAL(Color){0x5F, 0x60, 0x61, 0x80};
             const Color TEXT_COLOR = WHITE;
+            bool mapLoaded = false;
 
-            // Back button variables
-            Rectangle backRec = { 190, 400, 200, 50 };
+            // Back button variables -- Placed in top-right corner
+            Rectangle backRec = { 1500, 25, 200, 50 };
             Color backColor = this->BACKGROUND_COLOR;
-            std::string quitText = "Back";
+            std::string backText = "Back";
+
+            // Map title -- Placed in top-center
+            Rectangle mapTitleRec = { 700, 50, 200, 50 };
+            Color mapTitleColor = this->BACKGROUND_COLOR;
+            std::string mapTitleText = "<MAP_NAME>";
+
+            // Load Button -- Placed below the map title
+            Rectangle loadRec = { 700, 125, 200, 50 };
+            Color loadColor = this->BACKGROUND_COLOR;
+            std::string loadText = "Load";
+
+            // Left & Right Arrows -- Placed on the sides of the load button
+            Rectangle leftArrowRec = { 650, 125, 50, 50 };
+            Color leftArrowColor = this->BACKGROUND_COLOR;
+            std::string leftArrowText = "<";
+            Rectangle rightArrowRec = { 900, 125, 50, 50 };
+            Color rightArrowColor = this->BACKGROUND_COLOR;
+            std::string rightArrowText = ">";
     };
 }
-
-
 #endif

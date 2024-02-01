@@ -160,7 +160,6 @@ namespace dv {
                 std::cout << "Map Test Button pressed" << std::endl;
             }
             if (CheckCollisionPointRec(GetMousePosition(), this->mapTestRec)) {
-                std::cout << "Map Test Button pressed" << std::endl;
                 // Switch to map testing
                 this->view->setGameState(GameState::MAP_TESTING);
             }

@@ -48,6 +48,9 @@ namespace dv {
                 case GameState::MAIN_MENU:
                     menu.update();
                     break;
+                case GameState::MAP_TESTING:
+                    mapTest.update();
+                    break;
                 case GameState::GAME:
                     // controller->update();
                     break;

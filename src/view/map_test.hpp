@@ -38,7 +38,8 @@ namespace dv {
             // Map title -- Placed in top-center
             Rectangle mapTitleRec = { 700, 50, 200, 50 };
             Color mapTitleColor = this->BACKGROUND_COLOR;
-            std::string mapTitleText = "<MAP_NAME>";
+            // TODO: Replace with dynamically changing map name
+            std::string mapTitleText = "E1M1";
 
             // Load Button -- Placed below the map title
             Rectangle loadRec = { 700, 125, 200, 50 };

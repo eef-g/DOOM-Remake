@@ -26,6 +26,7 @@ namespace dv {
         ~View() { delete this->controller; };
         void runGame();
         void setGameState(GameState gameState) { this->gameState = gameState; };
+        dc::Controller* getController() { return this->controller; };
     };
 }
 

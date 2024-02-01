@@ -21,11 +21,12 @@ namespace dm {
         Model();
         ~Model() { delete this->wad; };
 
-        // Gettersr
-        
+        // Getters
         int GetScreenWidth() { return this->settings.screen_width; };
         int GetScreenHeight() { return this->settings.screen_height; };
         int GetMaxFPS() { return this->settings.max_fps; };
+        std::vector<wad::VERTEX> GetMapVertexes() { return this->wad->GetVertexes(); };
+        std::vector<wad::LINEDEF> GetMapLinedefs() { return this->wad->GetLinedefs(); };
     };
 }
 #endif

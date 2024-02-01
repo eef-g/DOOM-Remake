@@ -14,6 +14,37 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 enable_testing()
 
+# Specify the paths to the libraries
+set(WAD_READER_LIB "${CMAKE_SOURCE_DIR}/vendor/wad_reader/release/libwad.a")
+add_library(wad_reader STATIC IMPORTED)
+set_property(TARGET wad_reader PROPERTY IMPORTED_LOCATION ${WAD_READER_LIB})
+
+# Set up the resources directory for the build
+set(WAD_FILE "src/resources/wads/doom1.wad")
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/resources)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/resources/wads)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/resources/decompiled_wad_resources)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/resources/default_resources)
+
+# Put the WAD file into the build directory
+if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/resources/wads/doom1.wad)
+    message("Copying WAD file to build directory")
+    file(COPY ${WAD_FILE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources/wads)
+endif()
+
+# Copy the default resources to the build directory
+file(COPY ${CMAKE_SOURCE_DIR}/src/resources/default_resources/ 
+     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources/default_resources)
+
+# configure_file(${WAD_FILE} ${CMAKE_CURRENT_BINARY_DIR}/resources COPYONLY)
+include_directories(
+    "${CMAKE_SOURCE_DIR}/src"
+    "${CMAKE_SOURCE_DIR}/vendor/wad_reader/src"
+    "${CMAKE_SOURCE_DIR}/build/_deps/raylib-src/src"
+)
+
+
+# Add the subdirectories
 add_subdirectory(vendor/googletest)
 add_subdirectory(test)
 
@@ -36,28 +67,34 @@ if (NOT raylib_FOUND)
     endif()
 endif()
 
-# Specify the paths to the libraries
-set(WAD_READER_LIB "${CMAKE_SOURCE_DIR}/vendor/wad_reader/libwad.a")
-
 
 file(GLOB SOURCES 
     "src/*.cpp"
+    "src/model/*.cpp"
+    "src/view/*.cpp"
+    "src/controller/*.cpp"
 )
+
 
 file (GLOB HEADERS
     "src/*.hpp"
+    "src/model/*.hpp"
+    "src/view/*.hpp"
+    "src/controller/*.hpp"
 )
 
 set(MainFile "main.cpp")
 
-include_directories(
-    "vendor/wad_reader/src"
-    "${raylib_SOURCE_DIR}/src"
-)
+message("${CMAKE_SOURCE_DIR}/build/_deps/raylib-src/src")
+
+
 
 add_library(${This} STATIC ${SOURCES} ${HEADERS})
+set_target_properties(doom PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/lib"
+)
 
-add_executable(game ${MainFile})
+add_executable(game ${MainFile} ${SOURCES} ${HEADERS})
 
 # Link the libraries to your target
 target_link_libraries(game

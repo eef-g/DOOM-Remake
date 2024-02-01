@@ -20,3 +20,20 @@
     <li>I'll get to finishing the Readme later, I promise :)</li>
   </ul>
 </span>
+
+
+### Build Instructions:
+ This project uses CMake as the primary method of compiling and building. It includes a makefile in the root of the project to make the use of CMake streamlined and only a single command to build.
+
+* __First time build__
+```bash
+  make setup
+  make
+```
+
+* __Subsequent builds__
+```bash
+  make
+```
+
+__NOTE:__ If you wish to manually run the project after building, the game executable is located at build/game.exe

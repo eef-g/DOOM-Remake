@@ -11,3 +11,4 @@ int WIN_H = WIN_RES[1];
 int H_WIDTH = WIN_W / 2;
 int H_HEIGHT = WIN_H / 2;
 
+int FPS = 60;

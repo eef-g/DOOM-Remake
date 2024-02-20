@@ -18,4 +18,12 @@ namespace dm {
     void Model::SelectMap(std::string mapName) {
         this->wad->ReadMap(mapName);
     }
+
+    wad::VERTEX Model::GetPlayerStart() {
+        for (auto thing : this->wad->GetThings()) {
+            if (thing.thing_type == 1) {
+                return {thing.x_pos, thing.y_pos};
+            }
+        }
+    }
 }

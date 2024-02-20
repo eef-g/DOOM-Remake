@@ -4,6 +4,7 @@
 #include "../model/model.hpp"
 #include <vector>
 #include <wad/data_types.hpp>
+#include <raylib.h>
 
 namespace dc {
     class Controller {
@@ -18,6 +19,10 @@ namespace dc {
         int x_min, x_max, y_min, y_max;
         void GetMapBounds();
 
+        // Functions and Variables for the Player
+        int player_x, player_y;
+        int player_radius = 5;
+
     public:
         Controller();
         ~Controller() { delete this->model; };
@@ -31,6 +36,11 @@ namespace dc {
         void SelectMap(std::string mapName); 
         std::vector<wad::VERTEX> map_vertexes_2D;
         std::vector<wad::LINEDEF> map_linedefs_2D;
+
+
+        // Player-based data
+        Vector2 GetPlayerPosition() { return {this->player_x, this->player_y}; };
+        void MovePlayer(Vector2 delta);
     };
 }
 

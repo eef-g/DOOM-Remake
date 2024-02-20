@@ -27,6 +27,7 @@ namespace dm {
         int GetMaxFPS() { return this->settings.max_fps; };
         std::vector<wad::VERTEX> GetMapVertexes() { return this->wad->GetVertexes(); };
         std::vector<wad::LINEDEF> GetMapLinedefs() { return this->wad->GetLinedefs(); };
+        wad::VERTEX GetPlayerStart();
     };
 }
 #endif

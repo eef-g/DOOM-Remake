@@ -46,6 +46,9 @@ namespace dv {
             wad::VERTEX end = this->view->getController()->map_vertexes_2D[line.end_vertex];
             DrawLine(start.x, start.y, end.x, end.y, WHITE);
         }
+        // Draw the player
+        Vector2 playerPos = this->view->getController()->GetPlayerPosition();
+        DrawCircle(playerPos.x, playerPos.y, 5, GREEN);
     }
 
 
@@ -57,6 +60,27 @@ namespace dv {
 
     void MapTest::updateMap() {
         // Update the map
+
+        // Check for player movement with WASD keys
+        Vector2 delta = {0, 0};
+        if(IsKeyDown(KEY_W)) {
+            // Move the player forward
+            delta.y -= 1;
+        }
+        if(IsKeyDown(KEY_S)) {
+            // Move the player backward
+            delta.y += 1;
+        }
+        if(IsKeyDown(KEY_A)) {
+            // Move the player left
+            delta.x -= 1;
+        }
+        if(IsKeyDown(KEY_D)) {
+            // Move the player right
+            delta.x += 1;
+        }
+        // Move the player
+        this->view->getController()->MovePlayer(delta);
     }
 
     void MapTest::updateSettings() {

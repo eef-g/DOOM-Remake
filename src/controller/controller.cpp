@@ -23,6 +23,10 @@ namespace dc {
         }
         std::cout << "Getting  map linedefs" << std::endl;
         this->map_linedefs_2D = this->model->GetMapLinedefs();
+
+        // Set the player's position to the player position
+        this->player_x = this->Remap2DX(this->model->GetPlayerStart().x);
+        this->player_y = this->Remap2DY(this->model->GetPlayerStart().y);
     }
 
 
@@ -55,5 +59,12 @@ namespace dc {
         // Invert the y-coordinate to match the screen's coordinate system
         remapped = WIN_H - remapped;
         return remapped;
+    }
+
+
+    void Controller::MovePlayer(Vector2 delta) {
+        // Move the player
+        this->player_x += delta.x;
+        this->player_y += delta.y;
     }
 }
